@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# PHP_CodeBrowser Wrapper
+# PHP file called from the command line with arguments
+#
+# @package     PHP_CodeBrowser
+# @version     CVS: $Id: phpcb,v 1.8 2008/03/19 09:58:26 christopher Exp $
+# @author	   Elger Thiele <elger.thiele@mayflower.de>
+# @author      Christopher Weckerle <Christopher.Weckerle@Mayflower.de>
+# @copyright   2008 Mayflower GmbH
+
+
+# merge all xml files into one xml file 
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" > /tmp/codebrowser_$PPID.xml
+echo "<cruisecontrol>\n" >> /tmp/codebrowser_$PPID.xml
+xmllint $1/*.xml --format --recover | grep -v "<?xml" >> /tmp/codebrowser_$PPID.xml
+echo "</cruisecontrol>" >> /tmp/codebrowser_$PPID.xml
+
+# call code browser
+php -f @install@CodeBrowser.php -- --xml /tmp/codebrowser_$PPID.xml --source $2 --output $3/
+
+# delete temporary xml file
+rm /tmp/codebrowser_$PPID.xml

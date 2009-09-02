@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cruisecontrol>
+<mock-plugin version="1.2.0RC3">
+ <file name="/opt/cruisecontrol/projects/phpUnderControl/source/src/Commands/ExampleCommand.php">
+    <error line="59" column="1" severity="error" message="Class name must begin with a capital letter" source="PEAR.NamingConventions.ValidClassNameSniff"/>
+    <error line="59" column="87" severity="warning" message="Line exceeds 85 characters; contains 86 characters" source="PEAR.Files.LineLengthSniff"/>
+    <error line="67" column="13" severity="error" message="Private member variable &quot;exampleFiles&quot; must be prefixed with an underscore" source="PEAR.NamingConventions.ValidVariableNameSniff"/>
+    <error line="81" column="17" severity="error" message="Space after opening parenthesis of function call prohibited" source="PEAR.Functions.FunctionCallSignatureSniff"/>
+    <error line="81" column="39" severity="error" message="Space before closing parenthesis of function call prohibited" source="PEAR.Functions.FunctionCallSignatureSniff"/>
+    <error line="83" column="16" severity="error" message="Space after opening parenthesis of function call prohibited" source="PEAR.Functions.FunctionCallSignatureSniff"/>
+    <error line="83" column="75" severity="error" message="Space before closing parenthesis of function call prohibited" source="PEAR.Functions.FunctionCallSignatureSniff"/>
+  </file>
+</mock-plugin>
+<coverage generated="1249309698" phpunit="3.3.17">
+  <project name="phpUnderControl - AllTests" timestamp="1249309698">
+    <file name="/opt/cruisecontrol/projects/phpUnderControl/source/src/Util/PhpFileFilterIterator.php">
+      <class name="phpucPhpFileFilterIterator" namespace="global" fullPackage="Util" category="QualityAssurance" package="Util">
+        <metrics methods="2" coveredmethods="2" statements="3" coveredstatements="3" elements="5" coveredelements="5"/>
+      </class>
+      <line num="0" type="stmt" count="77"/>
+      <line num="66" type="method" count="77"/>
+      <line num="68" type="stmt" count="77"/>
+      <line num="70" type="stmt" count="77"/>
+      <line num="78" type="method" count="77"/>
+      <line num="80" type="stmt" count="77"/>
+      <metrics loc="82" ncloc="16" classes="1" methods="2" coveredmethods="2" statements="4" coveredstatements="4" elements="6" coveredelements="6"/>
+    </file>
+  </project>
+</coverage>
+<metrics files="86" functions="0" cls="77" clsa="6" clsc="71" roots="6" leafs="78" interfs="10" maxdit="3">
+  <file name="/opt/cruisecontrol/projects/phpUnderControl/source/src/Commands/DeleteCommand.php" classes="1" functions="0" loc="131" cloc="80" ncloc="51" locExecutable="28" locExecuted="26" coverage="92.857143">
+    <class name="phpucDeleteCommand" loc="73" locExecutable="28" locExecuted="26" aif="100.000000" ahf="100.000000" ca="0" ce="8" csz="4" cis="3" coverage="92.857143" dit="1" i="1.000000" impl="2" mif="55.555556" mhf="11.111111" noc="0" pf="25.000000" vars="0" varsnp="0" varsi="2" wmc="5" wmcnp="4" wmci="13">
+      <method name="validate" loc="14" locExecutable="7" locExecuted="6" coverage="85.714286" ccn="2" crap="2.011662" npath="2" parameters="0"/>
+      <method name="getCommandId" loc="4" locExecutable="1" locExecuted="1" coverage="100.000000" ccn="1" crap="1.000000" npath="1" parameters="0"/>
+      <method name="registerCommand" loc="21" locExecutable="15" locExecuted="15" coverage="100.000000" ccn="1" crap="1.000000" npath="1" parameters="1"/>
+      <method name="doCreateTasks" loc="6" locExecutable="2" locExecuted="2" coverage="100.000000" ccn="1" crap="1.000000" npath="1" parameters="0"/>
+    </class>
+  </file>
+</metrics>
+<pmd-cpd version="PHPUnit 3.3.17"/>
+<pmd version="PHPUnit 3.3.17">
+  <file name="/opt/cruisecontrol/projects/phpUnderControl/source/src/Tasks/MergePhpunitTask.php">
+    <violation rule="NPathComplexity" priority="1" line="85" to-line="196" package="Tasks" class="phpucMergePhpunitTask" method="validate">The NPath complexity is 1848.
+The NPath complexity of a function or method is the number of acyclic execution paths through that method. A threshold of 200 is generally considered the point where measures should be taken to reduce complexity.</violation>
+  </file>
+  <file name="/opt/cruisecontrol/projects/phpUnderControl/source/src/Util/Autoloader.php">
+    <violation rule="CodeCoverage" priority="1" line="77" to-line="88" package="Util" class="phpucAutoloader" method="__construct">The code coverage is 0.00 which is considered low.</violation>
+  </file>
+</pmd>
+<testsuites>
+  <testsuite name="phpUnderControl - AllTests" tests="159" assertions="742" failures="0" errors="2" time="34.519543">
+    <testsuite name="phpUnderControl - ConsoleAllTests" tests="29" assertions="58" failures="0" errors="0" time="1.574123">
+      <testsuite name="phpucConsoleArgsTest" file="/opt/cruisecontrol/projects/phpUnderControl/source/tests/Console/ConsoleArgsTest.php" fullPackage="Console" category="QualityAssurance" package="Console" tests="4" assertions="10" failures="0" errors="0" time="0.117762">
+        <testcase name="testConsoleInstallCommandWithoutOptions" class="phpucConsoleArgsTest" file="/opt/cruisecontrol/projects/phpUnderControl/source/tests/Console/ConsoleArgsTest.php" line="69" assertions="3" time="0.088759"/>
+        <testcase name="testConsoleArgsWithUnknownOptionFail" class="phpucConsoleArgsTest" file="/opt/cruisecontrol/projects/phpUnderControl/source/tests/Console/ConsoleArgsTest.php" line="109" assertions="2" time="0.008846"/>
+        <testcase name="testConsoleArgsSetOption" class="phpucConsoleArgsTest" file="/opt/cruisecontrol/projects/phpUnderControl/source/tests/Console/ConsoleArgsTest.php" line="124" assertions="3" time="0.010352"/>
+        <testcase name="testConsoleArgsMagicGetterWithUnknownPropertyFail" class="phpucConsoleArgsTest" file="/opt/cruisecontrol/projects/phpUnderControl/source/tests/Console/ConsoleArgsTest.php" line="139" assertions="2" time="0.009805"/>
+      </testsuite>
+	</testsuite>
+  </testsuite>
+</testsuites>
+</cruisecontrol>
