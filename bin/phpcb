@@ -48,8 +48,8 @@
 
 
 # merge all xml files into one xml file 
-echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" > /tmp/codebrowser_$PPID.xml
-echo "<cruisecontrol>\n" >> /tmp/codebrowser_$PPID.xml
+echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > /tmp/codebrowser_$PPID.xml
+echo "<cruisecontrol>" >> /tmp/codebrowser_$PPID.xml
 xmllint $1/*.xml --format --recover | grep -v "<?xml" >> /tmp/codebrowser_$PPID.xml
 echo "</cruisecontrol>" >> /tmp/codebrowser_$PPID.xml
 

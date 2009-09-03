@@ -158,7 +158,7 @@ class cbHTMLGenerator
         
         $dataGenrate['title']   = $data['title'];
         $dataGenrate['csspath'] = '';
-        $dataGenrate['content'] = $this->render('flatView', $data);
+        $dataGenrate['content'] = $this->_render('flatView', $data);
         
         $this->_generateView($dataGenrate, 'flatView.html');
     }
@@ -182,7 +182,7 @@ class cbHTMLGenerator
         
         $dataGenrate['title']   = $data['title'];
         $dataGenrate['csspath'] = '';
-        $dataGenrate['content'] = $this->render('tree', $data);
+        $dataGenrate['content'] = $this->_render('tree', $data);
         
         $this->_generateView($dataGenrate, 'tree.html');
     }
@@ -216,7 +216,7 @@ class cbHTMLGenerator
             
             $dataGenrate['title']   = $data['title'];
             $dataGenrate['csspath'] = $data['csspath'];
-            $dataGenrate['content'] = $this->render('reviewView', $data);
+            $dataGenrate['content'] = $this->_render('reviewView', $data);
             
             $this->_generateView($dataGenrate, $file['complete'] . '.html');
         }

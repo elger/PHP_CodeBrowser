@@ -194,7 +194,7 @@ class cbCLIController
         foreach ($this->_registeredErrorPlugins as $className) {
             $plugin = new $className($this->_projectSourceDir, $cbXMLHandler);
             $plugin->setXML($this->_ccXMLFile);
-            $list = $list + $plugin->parseXMLError();
+            $list = array_merge_recursive($list, $plugin->parseXMLError());
         }
         
         // construct the error list
