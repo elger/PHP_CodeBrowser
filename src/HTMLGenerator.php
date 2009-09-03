@@ -1,31 +1,153 @@
 <?php
+/**
+ * HTML Generator
+ *
+ * Copyright (c) 2007-2009, Mayflower GmbH
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *
+ *   * Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in
+ *     the documentation and/or other materials provided with the
+ *     distribution.
+ *
+ *   * Neither the name of Mayflower GmbH nor the names of his
+ *     contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @category   PHP_CodeBrowser
+ * @package    PHP_CodeBrowser
+ * @author     Elger Thiele <elger.thiele@mayflower.de>
+ * @copyright  2007-2009 Mayflower GmbH
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    SVN: $Id$
+ * @link       http://www.phpunit.de/
+ * @since      File available since 1.0
+ */
 
+/**
+ * cbHTMLGenerator
+ *
+ * @category   PHP_CodeBrowser
+ * @package    PHP_CodeBrowser
+ * @author     Elger Thiele <elger.thiele@mayflower.de>
+ * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
+ * @copyright  2007-2009 Mayflower GmbH
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    Release: @package_version@
+ * @link       http://www.phpunit.de/
+ * @since      Class available since 1.0
+ */
 class cbHTMLGenerator
 {
-    private $templateDir;
-    private $outputDir;
-    private $ressourceFolders = array('css' , 'js' , 'img');
-    private $cbFDHandler;
-    private $cbErrorHandler;
-    private $cbJSGenerator;
+    /**
+     * Template directory
+     * 
+     * @var string
+     */
+    private $_templateDir;
+    
+    /**
+     * Output directory
+     * 
+     * @var string
+     */
+    private $_outputDir;
+    
+    /**
+     * Available ressource folders
+     * 
+     * @var array
+     */
+    private $_ressourceFolders = array('css' , 'js' , 'img');
+    
+    /**
+     * File handler object
+     * 
+     * @var cbFDHandler
+     */
+    private $_cbFDHandler;
+    
+    /**
+     * Error handler object
+     * 
+     * @var cbErrorHandler
+     */
+    private $_cbErrorHandler;
+    
+    /**
+     * JS / HTML generator object
+     * 
+     * @var cbJSGenerator
+     */
+    private $_cbJSGenerator;
 
+    /**
+     * Constructor
+     * 
+     * @param cbFDHandler    $cbFDHandler    File handler object
+     * @param cbErrorHandler $cbErrorHandler Error handler object
+     * @param cbJsGenerator  $cbJSGenerator  JS / HTML generator object
+     */
     public function __construct (cbFDHandler $cbFDHandler, cbErrorHandler $cbErrorHandler, cbJSGenerator $cbJSGenerator)
     {
-        $this->cbFDHandler    = $cbFDHandler;
-        $this->cbErrorHandler = $cbErrorHandler;
-        $this->cbJSGenerator  = $cbJSGenerator;
+        $this->_cbFDHandler    = $cbFDHandler;
+        $this->_cbErrorHandler = $cbErrorHandler;
+        $this->_cbJSGenerator  = $cbJSGenerator;
     }
     
+    /**
+     * Setter method
+     * 
+     * @param string $templateDir Path to template diretory
+     * 
+     * @return void
+     */
     public function setTemplateDir ($templateDir)
     {
-        $this->templateDir = $templateDir;
+        $this->_templateDir = $templateDir;
     }
     
+    /**
+     * Setter mothod
+     * Path where generated view-files should be saved.
+     * 
+     * @param string $outputDir Path to output directory
+     * 
+     * @return void
+     */
     public function setOutputDir ($outputDir)
     {
-        $this->outputDir = $outputDir;
+        $this->_outputDir = $outputDir;
     }
     
+    /**
+     * Default start page
+     * 
+     * @param array $errors List of all PHP_CodeBrowser errors
+     * 
+     * @return void
+     * @throws Exception
+     */
     public function generateViewFlat ($errors)
     {
         if (! is_array($errors)) throw new Exception('Wrong data format for errorlist!');
@@ -38,9 +160,17 @@ class cbHTMLGenerator
         $dataGenrate['csspath'] = '';
         $dataGenrate['content'] = $this->render('flatView', $data);
         
-        $this->generateView($dataGenrate, 'flatView.html');
+        $this->_generateView($dataGenrate, 'flatView.html');
     }
     
+    /**
+     * JS Tree view page
+     * 
+     * @param array $errors List of all PHP_CodeBrowser errors
+     * 
+     * @return void
+     * @throws Exception
+     */
     public function generateViewTree ($errors)
     {
         if (! is_array($errors)) throw new Exception('Wrong data format for errorlist!');
@@ -48,23 +178,35 @@ class cbHTMLGenerator
         $data['title']   = 'Code Browser - Tree View';
         $data['files']   = $errors;
         $data['csspath'] = '';
-        $data['tree']    = $this->cbJSGenerator->getJSTree($errors);
+        $data['tree']    = $this->_cbJSGenerator->getJSTree($errors);
         
         $dataGenrate['title']   = $data['title'];
         $dataGenrate['csspath'] = '';
         $dataGenrate['content'] = $this->render('tree', $data);
         
-        $this->generateView($dataGenrate, 'tree.html');
+        $this->_generateView($dataGenrate, 'tree.html');
     }
     
+    /**
+     * Code Browser for each file with errors
+     * 
+     * @param array  $errors        List of all PHP_CodeBrowser errors
+     * @param string $cbXMLFile     Name of the PHP_CodeBrowser error XML file
+     * @param string $projectSource Path to project source files
+     * 
+     * @return void
+     * @throws Exception
+     * @see cbErrorHandler::getErrorsByFile
+     * @see cbJSGenerator::getHighlightedSource
+     */
     public function generateViewReview ($errors, $cbXMLFile, $projectSource)
     {
         if (! is_array($errors)) throw new Exception('Wrong data format for errorlist!');
         
         $data['title'] = 'Code Browser - Review View';
         foreach ($errors as $file) {
-            $data['errors']   = $this->cbErrorHandler->getErrorsByFile($cbXMLFile, $file['complete']);
-            $data['source']   = $this->cbJSGenerator->getHighlightedSource($file['complete'], $data['errors'], $projectSource);
+            $data['errors']   = $this->_cbErrorHandler->getErrorsByFile($cbXMLFile, $file['complete']);
+            $data['source']   = $this->_cbJSGenerator->getHighlightedSource($file['complete'], $data['errors'], $projectSource);
             $data['filepath'] = $file['complete'];
             $data['csspath']  = '';
             
@@ -76,37 +218,61 @@ class cbHTMLGenerator
             $dataGenrate['csspath'] = $data['csspath'];
             $dataGenrate['content'] = $this->render('reviewView', $data);
             
-            $this->generateView($dataGenrate, $file['complete'] . '.html');
+            $this->_generateView($dataGenrate, $file['complete'] . '.html');
         }
     }
     
+    /**
+     * Copy needed resources to output directory
+     * 
+     * @return void
+     * @throws Exception
+     * @see cbFDHandler::copyFile
+     */
     public function copyRessourceFolders ()
     {
-        if (! isset($this->outputDir)) throw new Exception('Output directory is not set!');
+        if (! isset($this->_outputDir)) throw new Exception('Output directory is not set!');
         
-        foreach ($this->ressourceFolders as $folder) {
-            $this->cbFDHandler->copyDirectory($this->templateDir . '/' . $folder, $this->outputDir . '/' . $folder);
+        foreach ($this->_ressourceFolders as $folder) {
+            $this->_cbFDHandler->copyDirectory($this->_templateDir . '/' . $folder, $this->_outputDir . '/' . $folder);
         }
-        $this->cbFDHandler->copyFile($this->templateDir . '/treeView.html', $this->outputDir);
+        $this->_cbFDHandler->copyFile($this->_templateDir . '/treeView.html', $this->_outputDir);
     }
     
-    private function render ($templateName, $data)
+    /**
+     * Render different template types
+     * 
+     * @param string $templateName Template file to use for rendering
+     * @param array  $data         Given dataset to use for rendering
+     * 
+     * @return string              HTML files as string from output buffer
+     */
+    private function _render ($templateName, $data)
     {
-        if (! file_exists(realpath($this->templateDir) . '/' . $templateName . '.tpl')) {
+        if (! file_exists(realpath($this->_templateDir) . '/' . $templateName . '.tpl')) {
             throw new Exception('Template ' . $templateName . '.tpl could not be found!');
         }
         if (! count($data)) return '';
         
         extract($data, EXTR_SKIP);
         ob_start();
-        include realpath($this->templateDir) . '/' . $templateName . '.tpl';
+        include realpath($this->_templateDir) . '/' . $templateName . '.tpl';
         $contents = ob_get_contents();
         ob_end_clean();
         return $contents;
     }
     
-    private function generateView ($data, $fileName)
+    /**
+     * Save rendered file to output directory
+     * 
+     * @param array  $data     Dataset information used for rendering
+     * @param string $fileName The filename of analyzed file
+     * 
+     * @return void
+     * @see cbFDHandler::createFile
+     */
+    private function _generateView ($data, $fileName)
     {
-        $this->cbFDHandler->createFile($this->outputDir . '/' . $fileName, $this->render('page', $data));
+        $this->_cbFDHandler->createFile($this->_outputDir . '/' . $fileName, $this->_render('page', $data));
     }
 }
