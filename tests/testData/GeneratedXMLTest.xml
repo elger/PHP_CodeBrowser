@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<codebrowser>
-	<file name="/opt/cruisecontrol/projects/testPagckage/source/src/cbTestClass.php">
-		<item description="The NPath complexity is 1848. The NPath complexity of a function or method is the number of acyclic execution paths through that method. A threshold of 200 is generally considered the point where measures should be taken to reduce complexity." line="85" to-line="196" source="NPathComplexity" severity="error"/>
-		<item description="The code coverage is 0.00 which is considered low." line="77" to-line="88" source="CodeCoverage" severity="error"/>
-	</file>
-</codebrowser>

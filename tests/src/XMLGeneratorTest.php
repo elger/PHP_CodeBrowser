@@ -1,73 +1,148 @@
 <?php
+/**
+ * Test case
+ *
+ * Copyright (c) 2007-2009, Mayflower GmbH
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *
+ *   * Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in
+ *     the documentation and/or other materials provided with the
+ *     distribution.
+ *
+ *   * Neither the name of Mayflower GmbH nor the names of his
+ *     contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @category   PHP_CodeBrowser
+ * @package    PHP_CodeBrowser
+ * @subpackage PHPUnit
+ * @author     Elger Thiele <elger.thiele@mayflower.de>
+ * @copyright  2007-2009 Mayflower GmbH
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    SVN: $Id$
+ * @link       http://www.phpunit.de/
+ * @since      File available since 1.0
+ */
 
 require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
 
 /**
- * cbXMLGenerator test case.
+ * cbXMLGeneratorrTests
+ *
+ * @category   PHP_CodeBrowser
+ * @package    PHP_CodeBrowser
+ * @subpackage PHPUnit
+ * @author     Elger Thiele <elger.thiele@mayflower.de>
+ * @copyright  2007-2009 Mayflower GmbH
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    Release: @package_version@
+ * @link       http://www.phpunit.de/
+ * @since      Class available since 1.0
  */
 class cbXMLGeneratorTest extends cbAbstractTests 
 {
     /**
+     * XMLGenerator object to test
+     * 
      * @var cbXMLGenerator
      */
-    private $cbXMLGenerator;
+    protected $_cbXMLGenerator;
     
-    private $xmlName = 'TestXMLGenerator.xml';
+    /**
+     * Mock object for cbFDHandler
+     * 
+     * @var object
+     */
+    protected $_mockFDHandler;
     
-    protected $mockFDHandler;
-    
-    protected function setUp ()
+    /**
+     * (non-PHPdoc)
+     * @see tests/cbAbstractTests#setUp()
+     */
+    protected function setUp()
     {
         parent::setUp();
-        $this->mockFDHandler = $this->getMockFDHandler();
-        $this->cbXMLGenerator = new cbXMLGenerator($this->mockFDHandler);
+        $this->_mockFDHandler = $this->_getMockFDHandler();
+        $this->_cbXMLGenerator = new cbXMLGenerator($this->_mockFDHandler);
     }
     
-    protected function tearDown ()
+    /**
+     * (non-PHPdoc)
+     * @see tests/cbAbstractTests#tearDown()
+     */
+    protected function tearDown()
     {
-        $this->cbXMLGenerator = null;
+        $this->_cbXMLGenerator = null;
         parent::tearDown();
     }
     
     /**
-     * @dataProvider parsedValues
+     * Test if expected XML generation from errors match stored XML file.
+     * 
+     * @return void
      */
-    public function testGenerateXMLFromErrors ($errors)
+    public function testGenerateXMLFromErrors()
     {
-        $this->cbXMLGenerator->cbXMLName = $this->xmlName;    
-        $element = $this->cbXMLGenerator->generateXMLFromErrors($errors);
-        
-        $this->assertEquals($element, simplexml_load_file(self::$cbGeneratedXMLTest));
+        $this->_cbXMLGenerator->cbXMLName = 'TestXMLGenerator.xml';    
+        $this->assertEquals($this->_cbXMLGenerator->generateXMLFromErrors($this->_getSerializedErrors()), 
+                            simplexml_load_file(self::$_cbXMLFile));
     }
     
     /**
-     * Tests cbXMLGenerator->setXMLName()
+     * Test setter method
+     * 
+     * @return void
      */
-    public function testSetXMLName ()
+    public function testSetXMLName()
     {
-        $this->cbXMLGenerator->setXMLName($this->xmlName);
-        $this->assertSame($this->xmlName, $this->cbXMLGenerator->cbXMLName);
+        $this->_cbXMLGenerator->setXMLName('TestXMLGenerator.xml');
+        $this->assertSame('TestXMLGenerator.xml', $this->_cbXMLGenerator->cbXMLName);
     }
     
     /**
-     * @dataProvider parsedValues
+     * Test error sorting by hash key
+     * 
+     * @return void
      */
-    public function testSortErrorList($values) 
+    public function testSortErrorList() 
     {
-        $sorted = $this->cbXMLGenerator->sortErrorList($values);
-        $this->assertArrayHasKey('5d9801a4b38d4f8b21994064df52f0e9', $sorted);
+        $sorted = $this->_cbXMLGenerator->sortErrorList($this->_getSerializedErrors());
+        $this->assertArrayHasKey('b0456446720360d02791c1a3d143f703', $sorted);
         $this->assertTrue(count($sorted) == 1);
         $this->assertType('string', array_shift($sorted));
     }
     
+    /**
+     * This method is just a wrapper on parent class.
+     * Functionality is tested in parent class.
+     * 
+     * @return void
+     */
     public function testSaveCbXML() 
     {
-        $this->markTestSkipped("Save functionality is resolved in cbXMLHandler and cbFDHandler");
+        $this->markTestSkipped("Wrapper method. Functionality is tested in parent.");
     }
     
-    public function parsedValues() 
-    {
-        return array(array(unserialize('a:1:{s:32:"5d9801a4b38d4f8b21994064df52f0e9";a:2:{i:0;a:6:{s:4:"name";s:67:"/opt/cruisecontrol/projects/testPagckage/source/src/cbTestClass.php";s:4:"line";i:85;s:7:"to-line";i:196;s:6:"source";s:15:"NPathComplexity";s:8:"severity";s:5:"error";s:11:"description";s:242:"The NPath complexity is 1848. The NPath complexity of a function or method is the number of acyclic execution paths through that method. A threshold of 200 is generally considered the point where measures should be taken to reduce complexity.";}i:1;a:6:{s:4:"name";s:67:"/opt/cruisecontrol/projects/testPagckage/source/src/cbTestClass.php";s:4:"line";i:77;s:7:"to-line";i:88;s:6:"source";s:12:"CodeCoverage";s:8:"severity";s:5:"error";s:11:"description";s:50:"The code coverage is 0.00 which is considered low.";}}}')));
-    }
 }
 
