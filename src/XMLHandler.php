@@ -112,7 +112,13 @@ class cbXMLHandler
      */
     public function saveXML ($fileName, SimpleXMLElement $resource)
     {
-        $this->cbFDHandler->createFile($fileName, $resource->asXML());
+        $domSXE = dom_import_simplexml($resource);
+        $dom    = new DOMDocument('1.0');
+        
+        $dom->appendChild($dom->importNode($domSXE, true));
+        $dom->formatOutput = true;
+        
+        $this->cbFDHandler->createFile($fileName, $dom->saveXML());
     }
     
     /**
