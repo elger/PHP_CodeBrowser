@@ -80,16 +80,17 @@ class cbErrorCPD extends cbPluginError
      */
     public function mapError (SimpleXMLElement $xmlElement)
     {
+        $attributes            = $xmlElement->attributes();
         $attributesF           = $xmlElement->file[0]->attributes();
         $attributesS           = $xmlElement->file[1]->attributes();
         $errorF['line']        = (int) $attributesF['line'];
-        $errorF['to-line']     = (int) $attributesF['line'] + (int)$attributesF['lines'];
+        $errorF['to-line']     = (int) $attributesF['line'] + (int) $attributes['lines'];
         $errorF['source']      = 'Duplication';
         $errorF['severity']    = 'notice';
         $errorF['description'] = htmlentities('... ' . substr($attributesS['path'], strlen($attributesS['path']) - 30));
         
         $errorS['line']        = (int) $attributesS['line'];
-        $errorS['to-line']     = (int) $attributesS['line'] + (int) $attributesS['lines'];
+        $errorS['to-line']     = (int) $attributesS['line'] + (int) $attributes['lines'];
         $errorS['source']      = 'Duplication';
         $errorS['severity']    = 'notice';
         $errorS['description'] = htmlentities('... ' . substr($attributesF['path'], strlen($attributesF['path']) - 30));
