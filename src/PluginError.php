@@ -95,7 +95,7 @@ abstract class cbPluginError
      * @param string       $sourcePath   The project source path
      * @param cbXMLHandler $cbXMLHandler xbXMLHandler object
      */
-    public function __construct ($projectSourceDir, cbXMLHandler $cbXMLHandler)
+    public function __construct($projectSourceDir, cbXMLHandler $cbXMLHandler)
     {
         $this->setPluginName();
         $this->setSourcePath($projectSourceDir);
@@ -109,7 +109,7 @@ abstract class cbPluginError
      * 
      * @return void
      */
-    public function setXML ($ccXMLFile)
+    public function setXML($ccXMLFile)
     {
         $this->_ccXMLFile = $this->_cbXMLHandler->loadXML($ccXMLFile);
     }
@@ -121,7 +121,7 @@ abstract class cbPluginError
      * 
      * @return void
      */
-    public function setSourcePath ($projectSourceDir)
+    public function setSourcePath($projectSourceDir)
     {
         $this->projectSourceDir = $projectSourceDir;
     }
@@ -132,11 +132,12 @@ abstract class cbPluginError
      *
      * @return array
      */
-    public function parseXMLError ()
+    public function parseXMLError()
     {
-        if (! isset($this->_ccXMLFile)) throw new Exception('XML file not loaded!');
-        if (! isset($this->_ccXMLFile->{$this->pluginName}) 
-        || ! is_object($children = $this->_ccXMLFile->{$this->pluginName}->children())) return array();
+        if (!isset($this->_ccXMLFile)) throw new Exception('XML file not loaded!');
+        
+        if (!isset($this->_ccXMLFile->{$this->pluginName}) 
+        || !is_object($children = $this->_ccXMLFile->{$this->pluginName}->children())) return array();
         
         $errors = array();
         foreach ($children as $child) $errors[] = $this->mapError($child);
@@ -153,7 +154,7 @@ abstract class cbPluginError
      * Cut off the difference between absolute/relative path.
      * e.g.
      * /home/www/htdocs/myProject/source/index.php
-     * /myProject
+     * /foo/bar/source/myProject
      * will leave source/index.php
      *
      * @param string $absolutePath The absolute path to file
@@ -163,7 +164,9 @@ abstract class cbPluginError
      */
     public function getRelativeFilePath ($absolutePath, $relativePath)
     {
-        return preg_replace(array(sprintf('(.*%s/)', $relativePath)), '', $absolutePath);
+        if (empty($relativePath)) return $absolutePath;
+        
+        return preg_replace(array(sprintf('(.*%s/)', basename($relativePath))), '', $absolutePath);
     }
     
     /**

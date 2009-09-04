@@ -90,7 +90,7 @@ class cbErrorPMD extends cbPluginError
             $error['to-line']     = (int) $attributes['to-line'];
             $error['source']      = (string) $attributes['rule'];
             $error['severity']    = 'error';
-            $error['description'] = htmlentities((string) $child);
+            $error['description'] = str_replace('&#10;', '', htmlentities((string) $child));
             $errorList[]          = $error;
         }
         return $errorList;

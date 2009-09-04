@@ -86,11 +86,11 @@ class cbErrorCheckstyle extends cbPluginError
         
         foreach ($element->error as $child) {
             $attributes           = $child->attributes();
-            $error['line']        = $attributes['line'];
-            $error['to-line']     = $attributes['line'];
+            $error['line']        = (int) $attributes['line'];
+            $error['to-line']     = (int) $attributes['line'];
             $error['source']      = 'Checkstyle';
-            $error['severity']    = $attributes['severity'];
-            $error['description'] = htmlentities($attributes['message']);
+            $error['severity']    = (string) $attributes['severity'];
+            $error['description'] = htmlentities((string)$attributes['message']);
             $errorList[]          = $error;
         }
         return $errorList;

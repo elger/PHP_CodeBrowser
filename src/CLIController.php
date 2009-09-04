@@ -104,7 +104,7 @@ class cbCLIController
      * @param string $htmlOutputDir    The html output dir, where new files will be created
      * @param string $cbXMLFile        The (path-to) PHP_CodeBrowser XML file
      */
-    public function __construct ($ccXMLFile, $projectSourceDir, $htmlOutputDir, $cbXMLFile)
+    public function __construct($ccXMLFile, $projectSourceDir, $htmlOutputDir, $cbXMLFile)
     {
         $this->setXMLFile($ccXMLFile, 'cc');
         $this->setXMLFile($cbXMLFile, 'cb');
@@ -120,7 +120,7 @@ class cbCLIController
      * 
      * @return void
      */
-    public function setXMLFile ($fileName, $type)
+    public function setXMLFile($fileName, $type)
     {
         if ('cc' == $type) $this->_ccXMLFile = $fileName;
         if ('cb' == $type) $this->_cbXMLFile = $fileName;
@@ -133,7 +133,7 @@ class cbCLIController
      * 
      * @return void
      */
-    public function setProjectSourceDir ($projectSourceDir)
+    public function setProjectSourceDir($projectSourceDir)
     {
         $this->_projectSourceDir = $projectSourceDir;
     }
@@ -145,7 +145,7 @@ class cbCLIController
      * 
      * @return void
      */
-    public function setHtmlOutputDir ($htmlOutputDir)
+    public function setHtmlOutputDir($htmlOutputDir)
     {
         $this->_htmlOutputDir = $htmlOutputDir;
     }
@@ -158,7 +158,7 @@ class cbCLIController
      * 
      * @return void
      */
-    public function addErrorPlugins ($classNames)
+    public function addErrorPlugins($classNames)
     {
         foreach ((array) $classNames as $className) {
             $this->_registeredErrorPlugins[] = $className;
@@ -177,7 +177,7 @@ class cbCLIController
      * 
      * @return void
      */
-    public function run ()
+    public function run()
     {
         // init needed classes
         $cbFDHandler    = new cbFDHandler();
