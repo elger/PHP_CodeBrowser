@@ -177,12 +177,13 @@ class cbFDHandler
     /**
      * Copy a directory within all its items.
      *
-     * @param string $source The source directoryö
-     * @param string $target The target to create
+     * @param string $source  The source directoryö
+     * @param string $target  The target to create
+     * @param array  $exclude List of files / folders that should not be copyed
      * 
      * @return void
      */
-    public function copyDirectory ($source, $target)
+    public function copyDirectory ($source, $target, $exclude = array())
     {
         // first check for target itself
         $this->createDirectory($target);
@@ -195,7 +196,7 @@ class cbFDHandler
             if ($iterator->isFile()) $this->copyFile($source . '/' . $item, $target);
 
             // create folder recursive
-            if (! $iterator->isDot() && $iterator->isDir()) {
+            if (! $iterator->isDot() && $iterator->isDir() && !in_array($item, $exclude)) {
                 $this->copyDirectory($source . '/' . $item, $target . '/' . $item);
             }
             $iterator->next();
