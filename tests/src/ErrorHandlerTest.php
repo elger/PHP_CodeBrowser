@@ -48,7 +48,7 @@
 require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
 
 /**
- * cbErrorHandlerTests
+ * cbErrorHandlerTest
  *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -82,7 +82,7 @@ class cbErrorHandlerTest extends cbAbstractTests
      * 
      * @var string
      */
-    protected $_fileName = 'JSGenerator.php';
+    protected $_fileName = 'src/JSGenerator.php';
     
     /**
      * Needed attributes for phpcb errors

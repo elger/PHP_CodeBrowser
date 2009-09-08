@@ -125,6 +125,8 @@ class cbAbstractTests extends PHPUnit_Framework_TestCase
         self::$_cbTestXML          = PHPCB_TEST_OUTPUT . '/cbTestXML.xml';
         self::$_cbGeneratedXMLTest = PHPCB_TEST_DIR . '/GeneratedXMLTest.xml';
         self::$_serializedErrors   = PHPCB_TEST_DIR . '/serializedErrors.txt';
+        
+        mkdir(PHPCB_TEST_OUTPUT);
     }
 
     /**
@@ -136,6 +138,7 @@ class cbAbstractTests extends PHPUnit_Framework_TestCase
     {
         parent::tearDown();
         $this->_cleanUp(PHPCB_TEST_OUTPUT);
+        rmdir(PHPCB_TEST_OUTPUT);
     }
     
     /**
@@ -161,7 +164,7 @@ class cbAbstractTests extends PHPUnit_Framework_TestCase
      */
     protected function _getMockFDHandler() 
     {
-        $functions = array('createFile', 'loadFile');
+        $functions = array('createFile', 'loadFile', 'copyFile', 'copyDirectory');
         $mockFDHandler = $this->getMock('cbFDHandler', $functions);
         
         return $mockFDHandler;

@@ -1,56 +1,162 @@
 <?php
+/**
+ * Test case
+ *
+ * Copyright (c) 2007-2009, Mayflower GmbH
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ *
+ *   * Redistributions of source code must retain the above copyright
+ *     notice, this list of conditions and the following disclaimer.
+ *
+ *   * Redistributions in binary form must reproduce the above copyright
+ *     notice, this list of conditions and the following disclaimer in
+ *     the documentation and/or other materials provided with the
+ *     distribution.
+ *
+ *   * Neither the name of Mayflower GmbH nor the names of his
+ *     contributors may be used to endorse or promote products derived
+ *     from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+ * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+ * COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+ * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+ * BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * @category   PHP_CodeBrowser
+ * @package    PHP_CodeBrowser
+ * @subpackage PHPUnit
+ * @author     Elger Thiele <elger.thiele@mayflower.de>
+ * @copyright  2007-2009 Mayflower GmbH
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    SVN: $Id$
+ * @link       http://www.phpunit.de/
+ * @since      File available since 1.0
+ */
 
 require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
 
+/**
+ * cbJSGeneratorTest
+ *
+ * @category   PHP_CodeBrowser
+ * @package    PHP_CodeBrowser
+ * @subpackage PHPUnit
+ * @author     Elger Thiele <elger.thiele@mayflower.de>
+ * @copyright  2007-2009 Mayflower GmbH
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    Release: @package_version@
+ * @link       http://www.phpunit.de/
+ * @since      Class available since 1.0
+ */
 class cbJSGeneratorTest extends cbAbstractTests 
 {
     /**
+     * cbJSGenerator object to test
+     * 
      * @var cbJSGenerator
      */
-    private $cbJSGenerator;
+    protected $_cbJSGenerator;
     
-    protected $mockFDHandler;
+    /**
+     * Mock object for cbFDHandler
+     * 
+     * @var object
+     */
+    protected $_mockFDHandler;
     
+    /**
+     * (non-PHPdoc)
+     * @see tests/cbAbstractTests#setUp()
+     */
     protected function setUp ()
     {
         parent::setUp();
         
-        $this->mockFDHandler = $this->getMockFDhandler();   
-        $this->cbJSGenerator = new cbJSGenerator($this->mockFDHandler);
+        $this->_mockFDHandler = $this->_getMockFDhandler();   
+        $this->_cbJSGenerator = new cbJSGenerator($this->_mockFDHandler);
     }
     
+    /**
+     * (non-PHPdoc)
+     * @see tests/cbAbstractTests#tearDown()
+     */
     protected function tearDown ()
     {
-        $this->cbJSGenerator = null;
+        $this->_cbJSGenerator = null;
         parent::tearDown();
     }
    
     /**
-     * @dataProvider parsedValues
+     * Test if proper content is generated.
+     * It is expeceted that source code from file is present and error Highlighting
+     * is resolved the right way.
+     * 
+     * @return void
      */
-    public function testGetHighlightedSource ($errors)
+    public function testGetHighlightedSource()
     {
-        $this->mockFDHandler
+        $mockErrors = unserialize(file_get_contents(self::$_serializedErrors));
+        
+        $this->_mockFDHandler
             ->expects($this->once())
             ->method('loadFile')
-            ->will($this->returnValue(trim(file_get_contents(self::$cbGeneratedXMLTest))));
+            ->with($this->equalTo(PHPCB_TEST_DIR . '/src/MyJSGenerator.php'))
+            ->will($this->returnValue(trim(file_get_contents(PHPCB_TEST_DIR . '/src/JSGenerator.php'))));
             
-        $bufferedContent = $this->cbJSGenerator->getHighlightedSource(self::$cbGeneratedXMLTest, $errors['5d9801a4b38d4f8b21994064df52f0e9']);
+        $bufferedContent = $this->_cbJSGenerator
+                                ->getHighlightedSource('MyJSGenerator.php', 
+                                                       $mockErrors['b0456446720360d02791c1a3d143f703'], 
+                                                       PHPCB_TEST_DIR . '/src');
+        $this->assertNotNull($bufferedContent);   
+        $this->assertContains('<li id="line-249" class="white"> <a name="line-249"></a> <code><span class="comment">', $bufferedContent);  
+        $this->assertContains('<li id="line-250-254" class="moreErrors" ><ul><li id="line-250" class="transparent"> <a name="line-250"></a> <code><span class="comment">    </span><span class="keyword">private function </span><span class="default">getFoldersFilesTree </span><span class="keyword">(</span><span class="default">$files</span><span class="keyword">)</span></code></li>', $bufferedContent);
+        $this->assertContains('<li id="line-251" class="transparent"> <a name="line-251"></a> <code><span class="keyword">', $bufferedContent);                                          
         
-        $this->markTestSkipped("TODO: not checks are implementes yet!");
         
     }
     
-    public function testGetJSTree ()
+    /**
+     * Test if expected javascript source is generated.
+     * Using data provider getErrorsFromFile for getting files with errors.
+     * 
+     * @return void
+     * 
+     * @dataProvider getErrorsFromFile
+     */
+    public function testGetJSTree($errors)
     {
-        // TODO Auto-generated cbJSGeneratorTest->testGetJSTree()
-        $this->markTestIncomplete("getJSTree test not implemented");
-        $this->cbJSGenerator->getJSTree(/* parameters */);
+        $bufferedContent = $this->_cbJSGenerator->getJSTree($errors);
+        $this->assertContains('a.add(2,1,\'JSGenerator.php ( <span class="errors">29E</span> | <span class="notices">29N</span> )\',\'./src/JSGenerator.php.html\',\'\',\'reviewView\')', $bufferedContent);
     }
     
-    public function parsedValues() 
+    /**
+     * Data provider for file errors
+     * 
+     * @return array
+     */
+    public function getErrorsFromFile()
     {
-        return array(array(unserialize('a:1:{s:32:"5d9801a4b38d4f8b21994064df52f0e9";a:2:{i:0;a:6:{s:4:"name";s:67:"/opt/cruisecontrol/projects/testPagckage/source/src/cbTestClass.php";s:4:"line";i:85;s:7:"to-line";i:196;s:6:"source";s:15:"NPathComplexity";s:8:"severity";s:5:"error";s:11:"description";s:242:"The NPath complexity is 1848. The NPath complexity of a function or method is the number of acyclic execution paths through that method. A threshold of 200 is generally considered the point where measures should be taken to reduce complexity.";}i:1;a:6:{s:4:"name";s:67:"/opt/cruisecontrol/projects/testPagckage/source/src/cbTestClass.php";s:4:"line";i:77;s:7:"to-line";i:88;s:6:"source";s:12:"CodeCoverage";s:8:"severity";s:5:"error";s:11:"description";s:50:"The code coverage is 0.00 which is considered low.";}}}')));
+        return array(array(array (0 => 
+                                  array (
+                                    'complete' => 'src/JSGenerator.php',
+                                    'file' => 'JSGenerator.php',
+                                    'path' => 'src',
+                                    'count_errors' => 29,
+                                    'count_notices' => 29,
+                                  ),
+                                )));
     }
 }
 

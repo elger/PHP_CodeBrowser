@@ -95,15 +95,11 @@ class cbAllTests extends PHPUnit_Framework_TestSuite
         $this->addTestSuite('cbXMLGeneratorTest');
         $this->addTestSuite('cbErrorHandlerTest');
         $this->addTestSuite('cbPluginErrorTest');
-        
-        // plugins
-        /* Not implemented properly
-        $this->addTestSuite('cbErrorPMDTest');
-        
-        $this->addTestSuite('cbCLIControllerTest');
         $this->addTestSuite('cbHTMLGeneratorTest');
         $this->addTestSuite('cbJSGeneratorTest');
-        */
+                
+        // plugins
+        $this->addTestSuite('cbErrorPMDTest');
     }
     
     /**
