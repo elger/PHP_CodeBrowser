@@ -64,7 +64,7 @@ class cbJSGenerator
      * 
      * @var cbFDHandler
      */
-    private $cbFDHandler;
+    private $_cbFDHandler;
     
     /**
      * Constructor
@@ -83,7 +83,7 @@ class cbJSGenerator
      * 
      * @return string
      */
-    public function getJSTree ($errors)
+    public function getJSTree($errors)
     {
         ob_start();
         echo "<script type=\"text/javascript\">";
@@ -92,7 +92,7 @@ class cbJSGenerator
         echo "a.config.useSelection=false;";
         echo "a.config.useCookies=false;";
         echo "a.add(0,-1,'Code Browser','./flatView.html','','reviewView');";
-        $this->echoJSTreeNodes($this->getFoldersFilesTree($errors), 0, $errors);
+        $this->_echoJSTreeNodes($this->_getFoldersFilesTree($errors), 0, $errors);
         echo "document.write(a);";
         echo "</script>";
         $contents = ob_get_contents();
@@ -109,10 +109,10 @@ class cbJSGenerator
      * @return string
      * @see cbFDHandler::loadFile
      */
-    public function getHighlightedSource ($fileName, $errors, $projectSource)
+    public function getHighlightedSource($fileName, $errors, $projectSource)
     {
         ob_start();
-        $code = $this->cbFDHandler->loadFile($projectSource . '/' . $fileName);
+        $code = $this->_cbFDHandler->loadFile($projectSource . '/' . $fileName);
         ini_set('highlight.comment', 'comment');
         ini_set('highlight.default', 'default');
         ini_set('highlight.keyword', 'keyword');
@@ -223,14 +223,14 @@ class cbJSGenerator
      * 
      * @return void
      */
-    private function echoJSTreeNodes ($tree, $parentId, $errors)
+    private function _echoJSTreeNodes($tree, $parentId, $errors)
     {
         static $id = 0;
         foreach ($tree as $key => $value) {
             $id ++;
             if (is_array($value)) {
                 echo sprintf("a.add(%d,%d,'%s', '');", $id, $parentId, $key);
-                $this->echoJSTreeNodes($value, $id, $errors);
+                $this->_echoJSTreeNodes($value, $id, $errors);
             } else {
                 $key = sprintf('%s ( <span class="errors">%sE</span> | <span class="notices">%sN</span> )', 
                                $key, $errors[$value]['count_errors'], $errors[$value]['count_notices']);
@@ -247,7 +247,7 @@ class cbJSGenerator
      *
      * @return array
      */
-    private function getFoldersFilesTree ($files)
+    private function _getFoldersFilesTree($files)
     {
         $result = array();
         if (is_array($files)) {

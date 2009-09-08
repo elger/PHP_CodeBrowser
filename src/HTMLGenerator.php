@@ -108,7 +108,7 @@ class cbHTMLGenerator
      * @param cbErrorHandler $cbErrorHandler Error handler object
      * @param cbJsGenerator  $cbJSGenerator  JS / HTML generator object
      */
-    public function __construct (cbFDHandler $cbFDHandler, cbErrorHandler $cbErrorHandler, cbJSGenerator $cbJSGenerator)
+    public function __construct(cbFDHandler $cbFDHandler, cbErrorHandler $cbErrorHandler, cbJSGenerator $cbJSGenerator)
     {
         $this->_cbFDHandler    = $cbFDHandler;
         $this->_cbErrorHandler = $cbErrorHandler;
@@ -135,7 +135,7 @@ class cbHTMLGenerator
      * 
      * @return void
      */
-    public function setOutputDir ($outputDir)
+    public function setOutputDir($outputDir)
     {
         $this->_outputDir = $outputDir;
     }
@@ -148,9 +148,9 @@ class cbHTMLGenerator
      * @return void
      * @throws Exception
      */
-    public function generateViewFlat ($errors)
+    public function generateViewFlat($errors)
     {
-        if (! is_array($errors)) throw new Exception('Wrong data format for errorlist!');
+        if (!is_array($errors)) throw new Exception('Wrong data format for errorlist!');
         
         $data['title']   = 'Code Browser - Overview (flat view mode)';
         $data['files']   = $errors;
@@ -171,9 +171,9 @@ class cbHTMLGenerator
      * @return void
      * @throws Exception
      */
-    public function generateViewTree ($errors)
+    public function generateViewTree($errors)
     {
-        if (! is_array($errors)) throw new Exception('Wrong data format for errorlist!');
+        if (!is_array($errors)) throw new Exception('Wrong data format for errorlist!');
         
         $data['title']   = 'Code Browser - Tree View';
         $data['files']   = $errors;
@@ -199,9 +199,9 @@ class cbHTMLGenerator
      * @see cbErrorHandler::getErrorsByFile
      * @see cbJSGenerator::getHighlightedSource
      */
-    public function generateViewReview ($errors, $cbXMLFile, $projectSource)
+    public function generateViewReview($errors, $cbXMLFile, $projectSource)
     {
-        if (! is_array($errors)) throw new Exception('Wrong data format for errorlist!');
+        if (!is_array($errors)) throw new Exception('Wrong data format for errorlist!');
         
         $data['title'] = 'Code Browser - Review View';
         foreach ($errors as $file) {
@@ -209,7 +209,6 @@ class cbHTMLGenerator
             $data['source']   = $this->_cbJSGenerator->getHighlightedSource($file['complete'], $data['errors'], $projectSource);
             $data['filepath'] = $file['complete'];
             $data['csspath']  = '';
-            
             for ($i = 1; $i <= substr_count($file['complete'], '/'); $i ++) {
                 $data['csspath'] .= '../';
             }
@@ -229,9 +228,9 @@ class cbHTMLGenerator
      * @throws Exception
      * @see cbFDHandler::copyFile
      */
-    public function copyRessourceFolders ()
+    public function copyRessourceFolders()
     {
-        if (! isset($this->_outputDir)) throw new Exception('Output directory is not set!');
+        if (!isset($this->_outputDir)) throw new Exception('Output directory is not set!');
         
         foreach ($this->_ressourceFolders as $folder) {
             $this->_cbFDHandler->copyDirectory($this->_templateDir . '/' . $folder, $this->_outputDir . '/' . $folder);
@@ -247,12 +246,13 @@ class cbHTMLGenerator
      * 
      * @return string              HTML files as string from output buffer
      */
-    private function _render ($templateName, $data)
+    private function _render($templateName, $data)
     {
-        if (! file_exists(realpath($this->_templateDir) . '/' . $templateName . '.tpl')) {
+        if (!file_exists(realpath($this->_templateDir) . '/' . $templateName . '.tpl')) {
             throw new Exception('Template ' . $templateName . '.tpl could not be found!');
         }
-        if (! count($data)) return '';
+        
+        if (!count($data)) return '';
         
         extract($data, EXTR_SKIP);
         ob_start();
@@ -271,7 +271,7 @@ class cbHTMLGenerator
      * @return void
      * @see cbFDHandler::createFile
      */
-    private function _generateView ($data, $fileName)
+    private function _generateView($data, $fileName)
     {
         $this->_cbFDHandler->createFile($this->_outputDir . '/' . $fileName, $this->_render('page', $data));
     }

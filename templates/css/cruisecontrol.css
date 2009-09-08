@@ -332,12 +332,12 @@ body.codebrowser {
 	float: left;
 	overflow: hidden !important;
 	width: 600px;
-	height: 600px;
+	height: 400px;
 }
 
 .codebrowser #sideBarContentsInner {
 	width: 580px;
 	overflow: auto;
-	height: 600px;
+	height: 380px;
 	margin: 10px;
 }
