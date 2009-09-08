@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <codebrowser>
-  <file name="JSGenerator.php">
+  <file name="src/JSGenerator.php">
     <item description="@category tag comment indented incorrectly. Expected 2 spaces but found 3." line="37" to-line="37" source="Checkstyle" severity="error"/>
     <item description="@package tag comment indented incorrectly. Expected 3 spaces but found 4." line="38" to-line="38" source="Checkstyle" severity="error"/>
     <item description="@author tag comment indented incorrectly. Expected 4 spaces but found 5." line="39" to-line="39" source="Checkstyle" severity="error"/>
