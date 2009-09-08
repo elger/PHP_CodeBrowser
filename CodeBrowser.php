@@ -44,7 +44,7 @@
  * @since      File available since 1.0
  */
 
-define('PHPCB_INSTALL_DIR', q);
+define('PHPCB_INSTALL_DIR', dirname(__FILE__));
 
 require_once PHPCB_INSTALL_DIR . "/src/Util/Autoloader.php";
 
