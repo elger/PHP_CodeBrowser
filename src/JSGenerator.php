@@ -73,7 +73,7 @@ class cbJSGenerator
      */
     public function __construct(cbFDHandler $cbFDHandler) 
     {
-        $this->cbFDHandler = $cbFDHandler;    
+        $this->_cbFDHandler = $cbFDHandler;    
     }
     
     /**
