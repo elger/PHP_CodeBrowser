@@ -128,7 +128,8 @@ class cbJSGenerator
         $code     = preg_replace("!\n\n\n+!", "\n\n", $code);
         $lines    = explode("\n", $code);
         $previous = false;
-
+        $openTag  = 0;
+        
         // Output Listing 
         echo " <ol class=\"code\">\n";
         foreach ($lines as $key => $line) {
@@ -137,28 +138,19 @@ class cbJSGenerator
                 $line     = substr($line, 7);
             }
             
-            if (empty($line)) {
-                $line = '&#160;';   
-            }
-            
-            if ($previous) {
-                $line = "<span class=\"$previous\">" . $line;
-            }
+            if (empty($line))  $line = '&#160;';   
+            if ($previous)     $line = "<span class=\"$previous\">" . $line;
             
             // Set Previous Style
             if (strpos($line, '<span') !== false) {
                 switch (substr($line, strrpos($line, '<span') + 13, 1)) {
-                    case 'c':
-                        $previous = 'comment';
+                    case 'c': $previous = 'comment';
                         break;
-                    case 'd':
-                        $previous = 'default';
+                    case 'd': $previous = 'default';
                         break;
-                    case 'k':
-                        $previous = 'keyword';
+                    case 'k': $previous = 'keyword';
                         break;
-                    case 's':
-                        $previous = 'string';
+                    case 's': $previous = 'string';
                         break;
                 }
             }
@@ -177,35 +169,41 @@ class cbJSGenerator
             $suffix        = '';
             $max           = 0;
             $min           = count($lines);
-            $singleRow     = false;
+            $amountOfErr   = 1;
             
             foreach ($errors as $error) {
                 
                 if (($error['line'] <= $num) && ($error['to-line'] >= $num)) {
                     
-                    if ($max <= (int)$error['to-line']) {
-                        $max = (int)$error['to-line'];    
-                    }
-                    if ($min >= (int)$error['line']) {
-                        $min = (int)$error['line'];   
-                    }
+                    if ($max <= (int)$error['to-line'])  $max = (int)$error['to-line'];    
+                    if ($min >= (int)$error['line'])     $min = (int)$error['line'];   
                     
                     $classnameEven = 'transparent';
                     $classname     = 'transparent';
                     
-                    if ((int)$error['line'] == $num) {
+                    if ((int)$error['line'] == (int)$num) { 
                         $prefix = sprintf('<li id="line-%s-%s" class="%s" ><ul>', 
                                           $error['line'], 
                                           $error['to-line'], 
-                                          (($prefix != '') ? 'moreErrors' : $error['source']));
+                                          ($openTag > 0 ) ? 'transparent' : (($prefix != '') ? 'moreErrors' : $error['source']));
                     }
-                    if ((int)$error['to-line'] == $num) {
+                    
+                    if ((int)$error['to-line'] == (int)$num) {
+                        if ($min != $max) $amountOfErr++;
                         $suffix = "</ul></li>";
                     }
                 }
             }
-            if ($num < $max && $min == $num) $suffix = ''; 
-            echo sprintf('%s<li id="line-%d" class="%s"> <a name="line-%d"></a> <code>%s</code></li>%s' . "\n", 
+            
+            if ($prefix != '') $openTag++;
+            if ($num < $max && $min == $num) $suffix = '';   
+            if ($suffix != '') if ($openTag > 0) $openTag--;
+            
+            if ($amountOfErr > 1 && $suffix != '') {
+                if ($openTag > 0) $openTag--;
+                $suffix .= $suffix;
+            }
+            echo sprintf('%s<li id="line-%d" class="%s"><a name="line-%d"></a><code>%s</code></li>%s' . "\n", 
                          $prefix, $num, (($key % 2) ? $classnameEven : $classname), $num, $line, $suffix);
         }
         echo "</ol>\n";

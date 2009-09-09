@@ -113,7 +113,7 @@ class cbJSGeneratorTest extends cbAbstractTests
             ->expects($this->once())
             ->method('loadFile')
             ->with($this->equalTo(PHPCB_TEST_DIR . '/src/MyJSGenerator.php'))
-            ->will($this->returnValue(trim(file_get_contents(PHPCB_TEST_DIR . '/src/JSGenerator.php'))));
+            ->will($this->returnValue(trim(file_get_contents(PHPCB_TEST_DIR . '/src/JSTestGenerator.php'))));
             
         $bufferedContent = $this->_cbJSGenerator
                                 ->getHighlightedSource('MyJSGenerator.php', 
