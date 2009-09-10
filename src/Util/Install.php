@@ -44,7 +44,7 @@
  * @since      File available since 1.0
  */
 
-require_once '../FDHandler.php';
+require_once dirname(__FILE__) . '/../FDHandler.php';
 
 /**
  * cbInstall
@@ -66,23 +66,23 @@ class cbInstall
      * 
      * @var cbFDhandler
      */
-    private $_cbFDHandler;
+    protected $_cbFDHandler;
     
     /**
      * Installation path
      * 
      * @var string
      */
-    private $_cbInstallPath = '/usr/share/php5/PHP_CodeBrowser';
+    protected $_cbInstallPath = '/usr/share/php5/PHP_CodeBrowser';
     
     /**
      * Constructor
      * 
-     * @param cbFDHandler $cbFDHandler File handler object
+     * @param string $installPath The installation path
      */
-    public function __construct(cbFDHandler $cbFDHandler)
+    public function __construct()
     {
-        $this->setFDHandler($cbFDHandler);
+        $this->setFDHandler(new cbFDHandler());
     }
     
     /**
@@ -106,28 +106,71 @@ class cbInstall
      */
     public function setInstallPath($cbInstallPath)
     {
-        $this->_cbInstallPath = $cbInstallPath;
+        $this->_cbInstallPath = realpath($cbInstallPath . '/PHP_CodeBrowser');
     }
-
+    
     /**
-     * Method for phpcb installation
+     * Start the installation routine
+     * 
+     * @param string $system System dependent installation
      * 
      * @return void
      */
-    public function install()
+    public function install($system = null)
     {
-        $content = $this->_cbFDHandler->loadFile('../../bin/phpcb');
-        $str_replace('@install@', $this->_cbInstallPath . '/');
+        $this->_cleanOldInstallation();
+        $this->_cbFDHandler->copyDirectory(dirname(__FILE__) . '/../../src', $this->_cbInstallPath . '/src', array('.svn'));
+        $this->_cbFDHandler->copyDirectory(dirname(__FILE__) . '/../../templates', $this->_cbInstallPath . '/templates', array('.svn'));
+        $this->_cbFDHandler->copyFile(dirname(__FILE__) . '/../../CodeBrowser.php', $this->_cbInstallPath);
+        
+        switch ($system) {
+            case 'win':
+                $this->_installWin();
+                break;
+            default:
+                $this->_installLinux();
+        }
+    }
+    
+    /**
+     * Cleaning up possible old installations
+     * 
+     * @return void
+     */
+    private function _cleanOldInstallation()
+    {
+        $this->_cbFDHandler->deleteDirectory($this->_cbInstallPath);
+        $this->_cbFDHandler->createDirectory($this->_cbInstallPath);
+    }
+
+    /**
+     * Method for phpcb installation on a Linux system
+     * 
+     * @return void
+     */
+    private function _installLinux()
+    {
+        $content = $this->_cbFDHandler->loadFile(dirname(__FILE__) . '/../../bin/phpcb');
+        $content = str_replace('@install@', $this->_cbInstallPath . '/', $content);
         $this->_cbFDHandler->createFile($this->_cbInstallPath . '/bin/phpcb', $content);
         
-        // check if allowed        
-        // system(sprintf('chmod a+x %/bin/phpcb', $this->cbInstallPath));
-        // system(sprintf('ln -s %/bin/phpcb /usr/bin/phpcb', $this->cbInstallPath));
-        
-        $this->_cbFDHandler->copyDirectory('../../src', $this->_cbInstallPath . '/src');
-        $this->_cbFDHandler->copyDirectory('../../templates', $this->_cbInstallPath . '/templates');
-        $this->_cbFDHandler->copyFile('../../CodeBrowser.php', $this->_cbInstallPath);
+        // linux specific commands 
+        $this->_cbFDHandler->deleteFile('/usr/bin/phpcb');
+        system(sprintf('chmod a+x %s/bin/phpcb', $this->_cbInstallPath));
+        system(sprintf('chmod a+x %s/CodeBrowser.php', $this->_cbInstallPath));
+        system(sprintf('ln -s %s/bin/phpcb /usr/bin/phpcb', $this->_cbInstallPath));
     }
-    // copy / create files
+    
+    /**
+     * Method for phpcb installation on a Linux system
+     * 
+     * @return void
+     */
+    private function _installWin()
+    {
+        $content = $this->_cbFDHandler->loadFile(dirname(__FILE__) . '/../../bin/phpcb.bat');
+        $content = str_replace('@install@', $this->_cbInstallPath . '\\', $content);
+        $this->_cbFDHandler->createFile($this->_cbInstallPath . '\bin\phpcb.bat', $content);
+    }
    
 }

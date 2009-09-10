@@ -75,7 +75,7 @@ class cbFDHandler
         $path     = substr($fileName, 0, - 1 * (strlen($realName)));
         
         if (!empty($path)) $this->createDirectory($path);
-        file_put_contents($path . $realName, $fileContent);
+        file_put_contents(realpath($path) . $realName, $fileContent);
     }
     
     /**
@@ -159,9 +159,10 @@ class cbFDHandler
         $iterator = new DirectoryIterator($source);
         while ($iterator->valid()) {
             
-            $src = $source . '/' . $iterator->current();
+            $src = realpath($source . '/' . $iterator->current());
+            
             // delete file
-            if ($iterator->isFile()) $this->deleteFile(realpath($src));
+            if ($iterator->isFile()) $this->deleteFile($src);
             
             // delete folder recursive
             if (! $iterator->isDot() && $iterator->isDir()) $this->deleteDirectory($src);

@@ -169,7 +169,7 @@ class cbJSGenerator
             $suffix        = '';
             $max           = 0;
             $min           = count($lines);
-            $amountOfErr   = 1;
+            $amountOfErr   = 0;
             
             foreach ($errors as $error) {
                 
@@ -189,7 +189,7 @@ class cbJSGenerator
                     }
                     
                     if ((int)$error['to-line'] == (int)$num) {
-                        if ($min != $max) $amountOfErr++;
+                        if ($min != $max && $suffix != '') $amountOfErr++;
                         $suffix = "</ul></li>";
                     }
                 }
@@ -200,11 +200,11 @@ class cbJSGenerator
             }
             if (($num < $max && $min == $num) || $openTag == 0) {
                 $suffix = '';
-            }   
+            }
             if ($suffix != '' && $openTag > 0) {
                 $openTag--;
             }
-            if ($amountOfErr > 1 && $suffix != '' && $openTag > 0) {
+            if ($amountOfErr > 0 && $suffix != '' && $openTag > 0) {
                     $openTag--;
                     $suffix .= '</ul></li>';    
             }
