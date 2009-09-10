@@ -115,16 +115,16 @@ class cbJSGeneratorTest extends cbAbstractTests
             ->with($this->equalTo(PHPCB_TEST_DIR . '/src/MyJSGenerator.php'))
             ->will($this->returnValue(trim(file_get_contents(PHPCB_TEST_DIR . '/src/JSTestGenerator.php'))));
             
-        $bufferedContent = $this->_cbJSGenerator
+        $content = $this->_cbJSGenerator
                                 ->getHighlightedSource('MyJSGenerator.php', 
                                                        $mockErrors['b0456446720360d02791c1a3d143f703'], 
                                                        PHPCB_TEST_DIR . '/src');
-        $this->assertNotNull($bufferedContent);   
-        $this->assertContains('<li id="line-249" class="white"> <a name="line-249"></a> <code><span class="comment">', $bufferedContent);  
-        $this->assertContains('<li id="line-250-254" class="moreErrors" ><ul><li id="line-250" class="transparent"> <a name="line-250"></a> <code><span class="comment">    </span><span class="keyword">private function </span><span class="default">getFoldersFilesTree </span><span class="keyword">(</span><span class="default">$files</span><span class="keyword">)</span></code></li>', $bufferedContent);
-        $this->assertContains('<li id="line-251" class="transparent"> <a name="line-251"></a> <code><span class="keyword">', $bufferedContent);                                          
-        
-        
+        $this->assertNotNull($content);   
+        $this->assertContains('<li id="line-249" class="white"><a name="line-249"></a><code><span class="comment">', $content);  
+        $this->assertContains('<li id="line-250-254" class="moreErrors" ><ul><li id="line-250" class="transparent"><a name="line-250"></a><code><span class="comment">    </span><span class="keyword">private function </span><span class="default">getFoldersFilesTree </span><span class="keyword">(</span><span class="default">$files</span><span class="keyword">)</span></code></li>', $content);
+        $this->assertContains('<li id="line-251" class="transparent"><a name="line-251"></a><code><span class="keyword">', $content);
+        $this->assertTrue((int)substr_count($content, '<ul>', 0) == (int)substr_count($content, '</ul>', 0));  
+        $this->assertTrue((int)substr_count($content, '<li ', 0) == (int)substr_count($content, '</li>', 0));                                        
     }
     
     /**

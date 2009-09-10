@@ -195,13 +195,18 @@ class cbJSGenerator
                 }
             }
             
-            if ($prefix != '') $openTag++;
-            if ($num < $max && $min == $num) $suffix = '';   
-            if ($suffix != '') if ($openTag > 0) $openTag--;
-            
-            if ($amountOfErr > 1 && $suffix != '') {
-                if ($openTag > 0) $openTag--;
-                $suffix .= $suffix;
+            if ($prefix != '') {
+                $openTag++;    
+            }
+            if (($num < $max && $min == $num) || $openTag == 0) {
+                $suffix = '';
+            }   
+            if ($suffix != '' && $openTag > 0) {
+                $openTag--;
+            }
+            if ($amountOfErr > 1 && $suffix != '' && $openTag > 0) {
+                    $openTag--;
+                    $suffix .= '</ul></li>';    
             }
             echo sprintf('%s<li id="line-%d" class="%s"><a name="line-%d"></a><code>%s</code></li>%s' . "\n", 
                          $prefix, $num, (($key % 2) ? $classnameEven : $classname), $num, $line, $suffix);
