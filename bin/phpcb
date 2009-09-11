@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# PHP_CodeBrowser Wrapper
-# PHP file called from the command line with arguments
+# PHP_CodeBrowser shell script Wrapper for Linux
+# Bash file called from the command line
 #
 # Copyright (c) 2007-2009, Mayflower GmbH
 # All rights reserved.
