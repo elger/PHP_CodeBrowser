@@ -75,7 +75,7 @@ class cbFDHandler
         $path     = substr($fileName, 0, - 1 * (strlen($realName)));
         
         if (!empty($path)) $this->createDirectory($path);
-        file_put_contents(realpath($path) . $realName, $fileContent);
+        file_put_contents(realpath($path) . '/' . $realName, $fileContent);
     }
     
     /**
