@@ -54,7 +54,7 @@ xmllint $1/*.xml --format --recover | grep -v "<?xml" >> /tmp/codebrowser_$PPID.
 echo "</cruisecontrol>" >> /tmp/codebrowser_$PPID.xml
 
 # call code browser
-php -f @install@CodeBrowser.php -- --xml /tmp/codebrowser_$PPID.xml --source $2 --output $3/
+php -f @install@bin/phpcb.php -- --xml /tmp/codebrowser_$PPID.xml --source $2 --output $3/
 
 # delete temporary xml file
 rm /tmp/codebrowser_$PPID.xml

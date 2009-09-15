@@ -1,1 +1,97 @@
-Readme.txt
+    PHP_CodeBrowser
+
+
+    1. Structure
+    2. Installation
+    3. Usage
+    4. View the results
+    5. Contact information
+
+
+1. Structure
+------------------------------------------------------------------------
+
+    |--> bin/           PHP_CodeBrowser scripts
+    |--> src/           Source files for PHP_CodeBrowser
+    |   |--> Plugins/   Plugins for different error handling/types
+    |
+    |--> templates/     Template files for PHP_CodeBrowser 
+    |   |--> css/       Used CSS by templates, Color definition for errors
+    |   |--> img/       Used images for PHP_CodeBrowser
+    |   |--> js/        Used javascript for PHP_CodeBrowser
+    |
+    |--> tests/         PHPUnit test suite 
+    |
+    |--> LICENCE        Licence information
+    |--> README         Structure and install information
+
+
+2. Installation
+------------------------------------------------------------------------
+
+    a) Copy files
+    ==============
+    A installation is also possible by copying the svn export (ressource)
+    directly to the installation folder. 
+    The needed structure / files are:
+
+    |--> bin/         
+    |--> src/         
+    |   |--> Plugins/ 
+    |--> templates/
+
+    b) Using the script
+    ===================
+    php install.php linux|win /path/to/my/installation/folder 
+
+
+3. Usage
+------------------------------------------------------------------------
+
+    There are several ways and needed conditions for using PHP_CodeBrowser. 
+    The ouput folder has to exists, the xml error files should match the 
+    project source (do not use old files or xml files genereated from a 
+    different source).
+    The xml error file must match the attributes used in Plugin errors.
+
+    a) Usage on a Windows system
+    =========================
+    phpcb.bat /generated/xml/error/files /path/to/project/source /path/to/ouput/folder
+
+    b) Usage on a Linux system
+    =======================
+    phpcb /generated/xml/error/files /path/to/project/source /path/to/ouput/folder
+
+    c) Call PHP_Codebrowser directly
+    ================================
+    php phpcb.php --xml /path/to/merged/errors.xml --source /path/to/project/source --ouput /path/to/output/folder
+
+    If option c) will be used please assure that the used xml file is a 
+    proper merge of desired xml error log files in the following format: 
+    
+    <?xml version="1.0" encoding="utf-8"?>
+    <codebrowser>
+        <error-type1>
+            ...
+        </error-type1>
+        <error-type2>
+            ...
+    </codebrowser>
+
+
+4. View the results
+------------------------------------------------------------------------
+
+    PHP_CodeBrowser will handle all files that have known errors.
+    For each file an own view is generated. 
+    
+    Open the file /path/to/output/folder/treeView.html in your webbrowser.
+    
+
+5. Contact information
+------------------------------------------------------------------------
+
+    If you have any questions you may get in contact with:
+    Elger Thiele <elger.thiele@mayflower.de> 
+    
+    

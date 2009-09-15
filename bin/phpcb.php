@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /**
  * PHP_CodeBrowser
@@ -44,7 +45,7 @@
  * @since      File available since 1.0
  */
 
-define('PHPCB_INSTALL_DIR', dirname(__FILE__));
+define('PHPCB_INSTALL_DIR', dirname(__FILE__) . '/../');
 
 require_once PHPCB_INSTALL_DIR . "/src/Util/Autoloader.php";
 
@@ -123,7 +124,7 @@ if (file_exists($ccXMLFile) && is_dir($sourceFolder) && is_dir($htmlOutput)) {
     if (! file_exists($ccXMLFile)) print "XML file could not be found\n";
     if (! is_dir($sourceFolder)) print "Source folder not found!\n";
     if (! is_dir($htmlOutput)) print "Ouput folder not found!\n";
-    print "\nError: please check arguments\n\n --xml \t\t[/path/to/xml/]\t$ccXMLFile \n --source \t[/path/to/source/]\t$sourceFolder \n --out \t\t[/path/to/html/output]\t$htmlOutput";
+    print "\nError: please check arguments\n\n --xml \t\t[/path/to/xml/]\t$ccXMLFile \n --source \t[/path/to/source/]\t$sourceFolder \n --output \t\t[/path/to/html/output]\t$htmlOutput";
     exit();
 }
 

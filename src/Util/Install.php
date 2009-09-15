@@ -121,7 +121,7 @@ class cbInstall
         $this->_cleanOldInstallation();
         $this->_cbFDHandler->copyDirectory(dirname(__FILE__) . '/../../src', $this->_cbInstallPath . '/src', array('.svn'));
         $this->_cbFDHandler->copyDirectory(dirname(__FILE__) . '/../../templates', $this->_cbInstallPath . '/templates', array('.svn'));
-        $this->_cbFDHandler->copyFile(dirname(__FILE__) . '/../../CodeBrowser.php', $this->_cbInstallPath);
+        $this->_cbFDHandler->copyFile(dirname(__FILE__) . '/../../bin/phpcb.php', $this->_cbInstallPath . '/bin');
         
         switch ($system) {
             case 'win':
@@ -153,11 +153,10 @@ class cbInstall
         $content = $this->_cbFDHandler->loadFile(dirname(__FILE__) . '/../../bin/phpcb');
         $content = str_replace('@install@', $this->_cbInstallPath . '/', $content);
         $this->_cbFDHandler->createFile($this->_cbInstallPath . '/bin/phpcb', $content);
-        
-        // linux specific commands 
+         
         $this->_cbFDHandler->deleteFile('/usr/bin/phpcb');
         system(sprintf('chmod a+x %s/bin/phpcb', $this->_cbInstallPath));
-        system(sprintf('chmod a+x %s/CodeBrowser.php', $this->_cbInstallPath));
+        system(sprintf('chmod a+x %s/bin/phpcb.php', $this->_cbInstallPath));
         system(sprintf('ln -s %s/bin/phpcb /usr/bin/phpcb', $this->_cbInstallPath));
     }
     

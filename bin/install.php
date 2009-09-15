@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 /**
  * Installation
@@ -54,14 +55,13 @@ if (!isset($_SERVER['argv'][1])) {
 
 if (isset($_SERVER['argv'][2])) {
     if (!is_dir($_SERVER['argv'][2])) {
-        $scriptError = sprintf("You are trying to install phpcb to a non valid directory: [%s]!\n", $_SERVER['argv'][1]);
+        $scriptError[] = sprintf("You are trying to install phpcb to an invalid directory: [%s]!\n", $_SERVER['argv'][2]);
     } else {
     	$cbInstall->setInstallPath($_SERVER['argv'][2]);
 	}
 }
 
 if (!empty($scriptError)) {
-	printf("\n");
 	echo implode('', $scriptError);
 	printf("Example: php install.php linux [/usr/share/php5]\n");
 	exit;

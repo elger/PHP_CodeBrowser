@@ -132,8 +132,8 @@ class cbFDHandlerTest extends cbAbstractTests
     public function testCopyFile()
     {
         $this->assertFalse(is_dir(PHPCB_TEST_OUTPUT . '/foo/bar'));
-        $this->_cbFDHandler->copyFile(PHPCB_SOURCE . '/../CodeBrowser.php', PHPCB_TEST_OUTPUT . '/foo/bar');
-        $this->assertFileExists(PHPCB_TEST_OUTPUT . '/foo/bar/CodeBrowser.php');
+        $this->_cbFDHandler->copyFile(PHPCB_SOURCE . '/../bin/phpcb.php', PHPCB_TEST_OUTPUT . '/foo/bar');
+        $this->assertFileExists(PHPCB_TEST_OUTPUT . '/foo/bar/phpcb.php');
     }
     
     /**

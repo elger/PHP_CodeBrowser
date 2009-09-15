@@ -46,24 +46,21 @@ REM @link       http://www.phpunit.de/
 REM @since      File available since 1.0
 
 
-@echo ^<?xml version="1.0" encoding="UTF-8" ?^> > tmp.xml
-@echo ^<codebrowser^> >> tmp.xml
+@echo ^<?xml version="1.0" encoding="UTF-8" ?^> > %tmp%\tmp.xml
+@echo ^<codebrowser^> >> %tmp%\tmp.xml
 
-for /f "skip=1 tokens=*" %%A in (%1/checkstyle.xml) do ( @echo. %%A  >> tmp.xml )
-for /f "skip=1 tokens=*" %%A in (%1/phpunit.pmd.xml) do ( @echo. %%A  >> tmp.xml )
-for /f "skip=1 tokens=*" %%A in (%1/phpunit.pmd-cpd.xml) do ( @echo. %%A  >> tmp.xml )
-for /f "skip=1 tokens=*" %%A in (%1/phpunit.coverage.xml) do ( @echo %%A  >> tmp.xml )
+FOR /R %1 %%I IN (*) DO ( FOR /F "skip=1 tokens=*" %%A in (%%I) do ( @echo. %%A  >> %tmp%\tmp.xml ) ) 
 
-@echo ^</codebrowser^> >> tmp.xml
+@echo ^</codebrowser^> >> %tmp%\tmp.xml
 
 REM format and validate generated xml file
-xmllint --format --recover tmp.xml > codebrowser.xml
+xmllint --format --recover %tmp%\tmp.xml > %tmp%\codebrowser.xml
 
 REM remove temp xml file
-del tmp.xml
+del %tmp%\tmp.xml
 
 REM call code browser
-php -f @install@CodeBrowser.php -- --xml codebrowser.xml --source %2 --output %3/
+php -f @install@bin/phpcb.php -- --xml %tmp%\codebrowser.xml --source %2 --output %3/
 
 REM remove generated xml file
-del codebrowser.xml
+del %tmp%\codebrowser.xml
