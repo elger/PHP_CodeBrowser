@@ -2,6 +2,8 @@
 <?php
 /**
  * Installation
+ * 
+ * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -35,12 +37,12 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id: Install.php 5181 2009-09-03 11:23:46Z elger $
- * @link       http://www.phpunit.de/
- * @since      File available since 1.0
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   SVN: $Id: Install.php 5181 2009-09-03 11:23:46Z elger $
+ * @link      http://www.phpunit.de/
+ * @since     File available since 1.0
  */
 
 require_once dirname(__FILE__) . '/../src/Util/Install.php';
@@ -50,21 +52,21 @@ $cbInstall   = new cbInstall();
 $scriptError = array();
 
 if (!isset($_SERVER['argv'][1])) {
-	$scriptError[] = sprintf("Please specify the system you are trying to install phpcb!\n");
+    $scriptError[] = sprintf("Please specify the system you are trying to install phpcb!\n");
 }
 
 if (isset($_SERVER['argv'][2])) {
     if (!is_dir($_SERVER['argv'][2])) {
         $scriptError[] = sprintf("You are trying to install phpcb to an invalid directory: [%s]!\n", $_SERVER['argv'][2]);
     } else {
-    	$cbInstall->setInstallPath($_SERVER['argv'][2]);
-	}
+        $cbInstall->setInstallPath($_SERVER['argv'][2]);
+    }
 }
 
 if (!empty($scriptError)) {
-	echo implode('', $scriptError);
-	printf("Example: php install.php linux [/usr/share/php5]\n");
-	exit;
+    echo implode('', $scriptError);
+    printf("Example: php install.php linux [/usr/share/php5]\n");
+    exit;
 }
 
 $cbInstall->install($_SERVER['argv'][1]);
