@@ -85,12 +85,20 @@ body.codebrowser {
 	background-color: #D5BFFF;
 }
 
+.codebrowser .EfferentCoupling {
+    background-color: #CCFF99;
+}
+
 .codebrowser .CyclomaticComplexity {
 	background-color: #FFCC80;
 }
 
 .codebrowser .ExcessiveMethodLength {
 	background-color: #F2FFBF;
+}
+
+.codebrowser .ExcessiveClassLength {
+    background-color: #FF6666;
 }
 
 .codebrowser .Checkstyle {
