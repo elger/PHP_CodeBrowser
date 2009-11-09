@@ -103,6 +103,8 @@ class cbXMLHandlerTest extends cbAbstractTests
      * Test if needed objects (mock in this case) are initialized properly
      * 
      * @return void
+     * 
+     * @group XMLHandler
      */
     public function test__construct ()
     {
@@ -113,11 +115,18 @@ class cbXMLHandlerTest extends cbAbstractTests
     
     /**
      * Tests cbXMLHandler->countItems()
+     * 
+     * @return void
+     * 
+     * @group XMLHandler
      */
     public function testCountItems ()
     {
-        $errors = $this->_cbXMLHandler->countItems(simplexml_load_file(self::$_cbXMLFile)->file->children(), 
-                                                   'severity', 'error');
+        $errors = $this->_cbXMLHandler->countItems(
+            simplexml_load_file(self::$_cbXMLFile)->file->children(),
+            'severity', 
+            'error'
+        );
         $this->assertEquals($errors, 55);
     }
     
@@ -125,6 +134,8 @@ class cbXMLHandlerTest extends cbAbstractTests
      * Test xml loader
      * 
      * @return void
+     * 
+     * @group XMLHandler
      */
     public function testLoadXML ()
     {
@@ -136,10 +147,14 @@ class cbXMLHandlerTest extends cbAbstractTests
      * Test load xml from string
      * 
      * @return void
+     * 
+     * @group XMLHandler
      */
     public function testLoadXMLFromString ()
     {
-        $xml = $this->_cbXMLHandler->loadXMLFromString('<?xml version="1.0" encoding="utf-8"?><codebrowser></codebrowser>');
+        $xml = $this->_cbXMLHandler->loadXMLFromString(
+            '<?xml version="1.0" encoding="utf-8"?><codebrowser></codebrowser>'
+        );
         $this->assertEquals($xml, simplexml_load_file(PHPCB_TEST_DIR . '/basic.xml'));
     }
     
@@ -148,6 +163,8 @@ class cbXMLHandlerTest extends cbAbstractTests
      * Checks are done for content and file exists.
      * 
      * @return void
+     * 
+     * @group XMLHandler
      */
     public function testSaveXML ()
     {
@@ -158,12 +175,92 @@ class cbXMLHandlerTest extends cbAbstractTests
         $this->_mockFDHandler
             ->expects($this->once())
             ->method('createFile')
-            ->with($this->equalTo(self::$_cbTestXML, $tmpXML))
+            ->with($this->equalTo(self::$_cbTestXML))
             ->will($this->returnValue(file_put_contents(self::$_cbTestXML, $tmpXML->asXML())));
         
         $this->_cbXMLHandler->saveXML(self::$_cbTestXML, $tmpXML);
         $this->assertFileExists(self::$_cbTestXML);
         $this->assertXmlFileEqualsXmlFile(self::$_cbTestXML, PHPCB_TEST_DIR . '/basic.xml');
+    }
+    
+    /**
+     * Test if non DOMDocument will throw an Exception
+     * 
+     * @return void
+     * 
+     * @group XMLHandler
+     * @group xmlmerge
+     * @expectedException Exception
+     */
+    public function testAddXMLFile()
+    {
+        $this->_cbXMLHandler->addXMLFile(new stdClass());
+    }
+    
+    /**
+     * Test if all xml files in testData directory are read in and initialised as DOMDocuments 
+     * 
+     * @return void
+     * 
+     * @group XMLHandler
+     * @group xmlmerge
+     */
+    public function testAddDirectory()
+    {
+        $files = $this->_cbXMLHandler->addDirectory(PHPCB_TEST_DIR);    
+        
+        $this->assertEquals(5, count($files));
+        $this->assertTrue($files[1] instanceof DOMDocument);
+        $this->assertTrue($files[4] instanceof DOMDocument);
+    }
+
+    /**
+     * Test if several xml files are merge in the proper way and the result is a single 
+     * DOMDocument with all nodes.
+     * 
+     * @return void
+     * 
+     * @group XMLHandler
+     * @group xmlmerge
+     */
+    public function testMergeFiles()
+    {
+        $this->_prepareXML();
+        $xml = $this->_cbXMLHandler->mergeFiles();
+
+        $this->assertEquals(3, $xml->firstChild->childNodes->length);
+        $this->assertEquals(
+            'That is a small description', 
+            $xml->firstChild->childNodes->item(1)->nodeValue
+        );
+    }
+    
+    /**
+     * Prepare some test data for mergin
+     * 
+     * @return void
+     */
+    protected function _prepareXML()
+    {
+        $files = array();
+        $nodes = array('cpd', 'checkstyle', 'coverage');
+        
+        
+        foreach ($nodes as $node) {
+            $xml = new DOMDocument('1.0', 'UTF-8');
+            $xml_parent = $xml->createElement($node);
+            $xml_parent->setAttribute('generated', '3.222');
+            $xml_parent->setAttribute('phpunit', '3.4.0');
+            $xml_child  = $xml->createElement('childNode', 'That is a small description');
+            $xml_child->setAttribute('name', 'foobar');
+            $xml_parent->appendChild($xml_child);
+            $xml->appendChild($xml_parent);
+            
+            $xml->preserveWhiteSpace = false;
+            $xml->formatOutput       = true;
+            
+            $this->_cbXMLHandler->addXMLFile($xml);
+        }
     }
 }
 

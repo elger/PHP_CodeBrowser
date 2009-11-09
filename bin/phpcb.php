@@ -47,100 +47,10 @@
  * @since      File available since 1.0
  */
 
-define('PHPCB_INSTALL_DIR', dirname(__FILE__) . '/../');
-
-require_once PHPCB_INSTALL_DIR . "/src/Util/Autoloader.php";
-
-/**
- * Start File
- * PHP file called from the command line with arguments
- * 
- * Arguments:
- * --source Projekts PHP Source folder
- * --output HTML Output folder 
- * --xml    Cruise Control XML Source File
- *
- * @category  Testing
- * @package   PHPUnit
- * @author    Elger Thiele <elger.thiele@mayflower.de>
- * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright 2007-2009 Mayflower GmbH
- * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version   Release: @package_version@
- * @link      http://www.phpunit.de/
- * @since     Class available since 1.0
- */
-
-// register autoloader
-spl_autoload_register(array(new cbAutoloader(), 'autoload'));
-
-$timeStart = microtime(true);
-ini_set("memory_limit", "1024M");
-
-// XML file merged by xmlint, inherit all cruise control XML log files 
-$ccXMLFile = null;
-
-// Path to the code source folder
-$sourceFolder = null;
-
-// Path to the code browser html output folder
-$htmlOutput = null;
-
-// Path to the new generated code browser xml file
-$xmlFileName = 'ccCodeBrowser.xml';
-
-// Plugins that are used by PHP_CodeBrowser
-$plugins = array( 'cbErrorCheckstyle' , 'cbErrorPMD' , 'cbErrorCPD');
-
-// Check (command line) arguments
-$argv = $_SERVER['argv'];
-foreach ($argv as $key => $argument) {
-    switch ($argument) {
-        case '--xml':
-            $ccXMLFile = $argv[$key + 1];
-            break;
-        case '--source':
-            $sourceFolder = $argv[$key + 1];
-            break;
-        case '--output':
-            $htmlOutput = $argv[$key + 1];
-            break;
-    }
-}
-
-// CLIController
-if (file_exists($ccXMLFile) && is_dir($sourceFolder) && is_dir($htmlOutput)) {
-    
-    printf("Generating PHP_CodeBrowser files\n");
-    
-    // init new CLIController
-    $controller = new cbCLIController($ccXMLFile, 
-        $sourceFolder, 
-        $htmlOutput, 
-        $htmlOutput . '/' . $xmlFileName);
-    $controller->addErrorPlugins($plugins);
-    try {
-        $controller->run();
-    } catch (Exception $e) {
-        printf("PHP-CodeBrowser Error: \n\n", $e->getMessage());
-    }
+if (strpos( '@php_dir@', '@php_dir' ) === 0) {
+    require_once dirname( __FILE__ ) . '/../src/CLIController.php';
 } else {
-    if (!file_exists($ccXMLFile)) print("XML file could not be found\n");
-    if (!is_dir($sourceFolder))   print("Source folder not found!\n");
-    if (!is_dir($htmlOutput))     print("Ouput folder not found!\n");
-    
-    printf("\nError: please check arguments\n\n 
-        --xml \t\t[/path/to/xml/]\t%s \n 
-        --source \t[/path/to/source/]\t%s \n 
-        --output \t\t[/path/to/html/output]\t%s",
-        $ccXMLFile,
-        $sourceFolder,
-        $htmlOutput);
-    
-    exit();
+    require_once '@php_dir@/PHP_CodeBrowser/src/CLIController.php';
 }
 
-$timeEnd = microtime(true);
-$time    = $timeEnd - $timeStart;
-
-printf("\nScript took %s seconds to execute\n\n", $time);
+cbCLIController::main();

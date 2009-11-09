@@ -45,22 +45,5 @@ REM @version    SVN: $Id: phpcb 5182 2009-09-03 12:34:35Z elger $
 REM @link       http://www.phpunit.de/
 REM @since      File available since 1.0
 
-
-@echo ^<?xml version="1.0" encoding="UTF-8" ?^> > %tmp%\tmp.xml
-@echo ^<codebrowser^> >> %tmp%\tmp.xml
-
-FOR /R %1 %%I IN (*) DO ( FOR /F "skip=1 tokens=*" %%A in (%%I) do ( @echo. %%A  >> %tmp%\tmp.xml ) ) 
-
-@echo ^</codebrowser^> >> %tmp%\tmp.xml
-
-REM format and validate generated xml file
-xmllint --format --recover %tmp%\tmp.xml > %tmp%\codebrowser.xml
-
-REM remove temp xml file
-del %tmp%\tmp.xml
-
-REM call code browser
-php -f @install@bin/phpcb.php -- --xml %tmp%\codebrowser.xml --source %2 --output %3/
-
-REM remove generated xml file
-del %tmp%\codebrowser.xml
+set PHPBIN="@php_bin@"
+"@php_bin@" "@bin_dir@\phpcb" %*

@@ -80,7 +80,7 @@ abstract class cbPluginError
      * 
      * @var SimpleXMLElement
      */
-    private $_ccXMLFile;
+    private $_xmlElement;
     
     /**
      * The cbXMLHandler object
@@ -105,13 +105,13 @@ abstract class cbPluginError
     /**
      * Setter method for cruisecontrol XML File
      *
-     * @param string $ccXMLFile The cruisecontrol XML File
+     * @param DOMDocument $domDocument The cruisecontrol XML File
      * 
      * @return void
      */
-    public function setXML($ccXMLFile)
+    public function setXML(DOMDocument $domDocument)
     {
-        $this->_ccXMLFile = $this->_cbXMLHandler->loadXML($ccXMLFile);
+        $this->_xmlElement = simplexml_import_dom($domDocument);
     }
     
     /**
@@ -134,13 +134,19 @@ abstract class cbPluginError
      */
     public function parseXMLError()
     {
-        if (!isset($this->_ccXMLFile)) throw new Exception('XML file not loaded!');
+        if (!isset($this->_xmlElement)) {
+            throw new Exception('XML file not loaded!');    
+        }
         
-        if (!isset($this->_ccXMLFile->{$this->pluginName}) 
-        || !is_object($children = $this->_ccXMLFile->{$this->pluginName}->children())) return array();
+        if (!isset($this->_xmlElement->{$this->pluginName}) 
+        || !is_object($children = $this->_xmlElement->{$this->pluginName}->children())) {
+            return array();    
+        }
         
         $errors = array();
-        foreach ($children as $child) $errors[] = $this->mapError($child);
+        foreach ($children as $child) {
+            $errors[] = $this->mapError($child);
+        }
         
         $errorList = array();
         foreach ($errors as $list) foreach ($list as $error)  {

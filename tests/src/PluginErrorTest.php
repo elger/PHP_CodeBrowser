@@ -132,12 +132,10 @@ class cbPluginErrorTest extends cbAbstractTests
      */
     public function testParseXMLError() 
     {
-        $this->_mockXMLHandler->expects($this->once())
-                              ->method('loadXML')
-                              ->with($this->equalTo(self::$_ccXMLFile))
-                              ->will($this->returnValue(simplexml_load_file(self::$_ccXMLFile)));
-                              
-        $this->_cbPluginError->setXML(self::$_ccXMLFile);
+        $domDoc = new DOMDocument('1.0', 'UTF-8');
+        $domDoc->load(self::$_ccXMLFile);      
+                        
+        $this->_cbPluginError->setXML($domDoc);
         
         $result = $this->_cbPluginError->parseXMLError();
         

@@ -44,6 +44,8 @@
  * @since      File available since 1.0
  */
 
+require_once dirname(__FILE__) . "/../src/Util/Autoloader.php";
+
 /**
  * cbCLIController
  *
@@ -64,14 +66,14 @@ class cbCLIController
      *
      * @var string
      */
-    private $_ccXMLFile;
+    private $_logDir;
     
     /**
      * Path to the generated code browser xml file
      *
      * @var string
      */
-    private $_cbXMLFile;
+    private $_xmlFile;
     
     /**
      * Path to the code browser html output folder
@@ -99,31 +101,41 @@ class cbCLIController
      * 
      * Standard setters are initialized
      *
-     * @param string $ccXMLFile        The (path-to) cruisecontrol XML file
+     * @param string $logPath          The (path-to) xml log files
      * @param string $projectSourceDir The project source directory
      * @param string $htmlOutputDir    The html output dir, where new files will be created
      * @param string $cbXMLFile        The (path-to) PHP_CodeBrowser XML file
      */
-    public function __construct($ccXMLFile, $projectSourceDir, $htmlOutputDir, $cbXMLFile)
+    public function __construct($logPath, $projectSourceDir, $htmlOutputDir, $cbXMLFile)
     {
-        $this->setXMLFile($ccXMLFile, 'cc');
-        $this->setXMLFile($cbXMLFile, 'cb');
+        $this->setXMLLogDir($logPath);
+        $this->setXMLFile($cbXMLFile);
         $this->setProjectSourceDir($projectSourceDir);
         $this->setHtmlOutputDir($htmlOutputDir);
+    }
+    
+    /**
+     * Setter method for the (path-to) XML log files
+     *
+     * @param string $directory The (path-to) XML file log directory
+     * 
+     * @return void
+     */
+    public function setXMLLogDir($directory)
+    {
+        $this->_logDir = $directory;
     }
     
     /**
      * Setter method for the (path-to) XML files
      *
      * @param string $fileName The (path-to) XML file
-     * @param string $type     The type definition for the XML file (cc=CruiseControl, cb=PHP_CodeBrowser)
      * 
      * @return void
      */
-    public function setXMLFile($fileName, $type)
+    public function setXMLFile($fileName)
     {
-        if ('cc' == $type) $this->_ccXMLFile = $fileName;
-        if ('cb' == $type) $this->_cbXMLFile = $fileName;
+        $this->_xmlFile = $fileName;
     }
     
     /**
@@ -170,10 +182,11 @@ class cbCLIController
      * 
      * Following steps are resolved:
      * 1. Clean-up output directory
-     * 2. Generate cbXML file via errorlist from plugins
-     * 3. Save the cbErrorList as XML file
-     * 4. Generate HTML output from cbXML
-     * 5. Copy ressources (css, js, images) from template directory to output 
+     * 2. Merge xml log files 
+     * 3. Generate cbXML file via errorlist from plugins
+     * 4. Save the cbErrorList as XML file
+     * 5. Generate HTML output from cbXML
+     * 6. Copy ressources (css, js, images) from template directory to output 
      * 
      * @return void
      */
@@ -184,26 +197,30 @@ class cbCLIController
         $cbXMLHandler   = new cbXMLHandler($cbFDHandler);
         $cbErrorHandler = new cbErrorHandler($cbXMLHandler);
         $cbJSGenerator  = new cbJSGenerator($cbFDHandler);
-        
+
         // clear and create output directory
         $cbFDHandler->deleteDirectory($this->_htmlOutputDir);
         $cbFDHandler->createDirectory($this->_htmlOutputDir);
+        
+        // merge xml files
+        $cbXMLHandler->addDirectory($this->_logDir);
+        $mergedDOMDoc = $cbXMLHandler->mergeFiles();
         
         // conversion of XML file cc to cb format
         $list = array();
         foreach ($this->_registeredErrorPlugins as $className) {
             $plugin = new $className($this->_projectSourceDir, $cbXMLHandler);
-            $plugin->setXML($this->_ccXMLFile);
+            $plugin->setXML($mergedDOMDoc);
             $list = array_merge_recursive($list, $plugin->parseXMLError());
         }
         
         // construct the error list
         $cbXMLGenerator = new cbXMLGenerator($cbFDHandler);
-        $cbXMLGenerator->setXMLName($this->_cbXMLFile);
+        $cbXMLGenerator->setXMLName($this->_xmlFile);
         $cbXMLGenerator->saveCbXML($cbXMLGenerator->generateXMLFromErrors($list));
         
         // get cb error list
-        $errors = $cbErrorHandler->getFilesWithErrors($this->_cbXMLFile);
+        $errors = $cbErrorHandler->getFilesWithErrors($this->_xmlFile);
         
         // create html views
         $templateDir = realpath(dirname(__FILE__) . "/./../") . '/templates';
@@ -212,9 +229,79 @@ class cbCLIController
         $html->setOutputDir($this->_htmlOutputDir);
         $html->generateViewFlat($errors);
         $html->generateViewTree($errors);
-        $html->generateViewReview($errors, $this->_cbXMLFile, $this->_projectSourceDir);
+        $html->generateViewReview($errors, $this->_xmlFile, $this->_projectSourceDir);
         
         // copy needed resources like css, js, images
         $html->copyRessourceFolders();
+    }
+    
+    public static function main()
+    {
+        $timeStart = microtime(true);
+        ini_set("memory_limit", "1024M");
+        
+        $xmlLogDir    = '';
+        $sourceFolder = '';
+        $htmlOutput   = '';
+        $xmlFileName  = 'cbCodeBrowser.xml';
+        // register autoloader
+        spl_autoload_register(array(new cbAutoloader(), 'autoload'));
+        
+        
+        $argv = $_SERVER['argv'];
+        foreach ($argv as $key => $argument) {
+            switch ($argument) {
+                case '--log':
+                    $xmlLogDir = $argv[$key + 1];
+                    break;
+                case '--source':
+                    $sourceFolder = $argv[$key + 1];
+                    break;
+                case '--output':
+                    $htmlOutput = $argv[$key + 1];
+                    break;
+            }
+        }
+        
+        // CLIController
+        if (is_dir($xmlLogDir) && is_dir($sourceFolder) && is_dir($htmlOutput)) {
+            
+            printf("Generating PHP_CodeBrowser files\n");
+            
+            // init new CLIController
+            $controller = new cbCLIController(
+                $xmlLogDir, 
+                $sourceFolder, 
+                $htmlOutput, 
+                $htmlOutput . '/' . $xmlFileName
+            );
+            $controller->addErrorPlugins(array('cbErrorCheckstyle', 'cbErrorPMD', 'cbErrorCPD'));
+            
+            try {
+                $controller->run();
+            } catch (Exception $e) {
+                printf("PHP-CodeBrowser Error: \n\n", $e->getMessage());
+            }
+        } else {
+            if (!is_dir($xmlLogDir))    print("XML log files could not be found\n");
+            if (!is_dir($sourceFolder)) print("Source folder not found!\n");
+            if (!is_dir($htmlOutput))   print("Output folder not found!\n");
+            
+            printf(
+                "\nError: please check arguments\n 
+                --log    [/path/to/xml/log/dir]\t%s \n 
+                --source [/path/to/source/]\t%s \n 
+                --output [/path/to/html/output]\t%s\n\n",
+                $xmlLogDir,
+                $sourceFolder,
+                $htmlOutput
+            );
+            exit();
+        }
+        
+        $timeEnd = microtime(true);
+        $time    = $timeEnd - $timeStart;
+        
+        printf("\nScript took %s seconds to execute\n\n", $time);
     }
 }

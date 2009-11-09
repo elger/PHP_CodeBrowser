@@ -118,19 +118,16 @@ class cbHTMLGeneratorTest extends cbAbstractTests
     }
     
     /**
-     * Test if needed folder/file creation functions are called properly.
-     * Used parameters are defined by setters.
-     * The creation function itself are tested in FBHandler test case.
+     * Test if copy directory function is called.
+     * 
+     * The copy directory function itself is tested somewhere else.
      * 
      * @return void
+     * 
+     * @group copyResource
      */
     public function testCopyRessourceFolders ()
-    {
-        $this->_mockFDHandler
-            ->expects($this->once())
-            ->method('copyFile')
-            ->with($this->equalTo('foo/treeView.html'), $this->equalTo('output'));
-            
+    {    
         $this->_mockFDHandler
             ->expects($this->exactly(3))
             ->method('copyDirectory');
@@ -147,7 +144,8 @@ class cbHTMLGeneratorTest extends cbAbstractTests
      * Errors are read in by data provider
      * 
      * @return void
-     * 
+     *
+     * @group flatView
      * @dataProvider providedErrors
      */
     public function testGenerateViewFlat ($errors)
@@ -160,7 +158,7 @@ class cbHTMLGeneratorTest extends cbAbstractTests
         $this->_cbHTMLGenerator->setOutputDir(PHPCB_TEST_OUTPUT);
         $this->_cbHTMLGenerator->setTemplateDir(PHPCB_ROOT_DIR . 'templates');
         $this->_cbHTMLGenerator->generateViewFlat($errors);
-
+        
         $this->assertFileExists(PHPCB_TEST_OUTPUT . '/flatView.html');
         
         $content = file_get_contents(PHPCB_TEST_OUTPUT . '/flatView.html');

@@ -91,6 +91,6 @@ class cbAutoloader
      */
     public function autoload ($className)
     {
-        include $this->_classes[$className];
+        include_once $this->_classes[$className];
     }
 }

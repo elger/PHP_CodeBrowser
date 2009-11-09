@@ -230,12 +230,15 @@ class cbHTMLGenerator
      */
     public function copyRessourceFolders()
     {
-        if (!isset($this->_outputDir)) throw new Exception('Output directory is not set!');
-        
+        if (!isset($this->_outputDir)) {
+            throw new Exception('Output directory is not set!');    
+        }
+
         foreach ($this->_ressourceFolders as $folder) {
             $this->_cbFDHandler->copyDirectory($this->_templateDir . '/' . $folder, $this->_outputDir . '/' . $folder);
         }
-        $this->_cbFDHandler->copyFile($this->_templateDir . '/treeView.html', $this->_outputDir);
+        $content = $this->_cbFDHandler->loadFile($this->_templateDir . '/treeView.html');
+        $this->_cbFDHandler->createFile($this->_outputDir . '/index.html', $content);
     }
     
     /**

@@ -178,7 +178,7 @@ class cbFDHandler
     /**
      * Copy a directory within all its items.
      *
-     * @param string $source  The source directoryö
+     * @param string $source  The source directory
      * @param string $target  The target to create
      * @param array  $exclude List of files / folders that should not be copyed
      * 

@@ -34,28 +34,31 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id$
- * @link       http://www.phpunit.de/
- * @since      File available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   SVN: $Id$
+ * @link      http://www.phpunit.de/
+ * @since     File available since 1.0
  */
 
 /**
  * cbXMLHandler
+ * 
+ * This class provides basic functionality according xml handling, like saving
+ * xml structs to storage, reading, parsing or mergin xml structs.
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: @package_version@
- * @link       http://www.phpunit.de/
- * @since      Class available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: @package_version@
+ * @link      http://www.phpunit.de/
+ * @since     Class available since 1.0
  */
 class cbXMLHandler
 {
@@ -65,6 +68,13 @@ class cbXMLHandler
      * @var cbFDHandler
      */
     public $cbFDHandler;
+    
+    /**
+     * A list of xml files to merge
+     * 
+     * @var array
+     */
+    protected $xmlFiles;
     
     /**
      * Constructor
@@ -83,7 +93,7 @@ class cbXMLHandler
      * 
      * @return SimpleXMLElement
      */
-    public function loadXML ($filename)
+    public function loadXML($filename)
     {
         if (! file_exists($filename)) throw new Exception('Error: Cannot open ' . $filename);
         
@@ -97,7 +107,7 @@ class cbXMLHandler
      * 
      * @return SimpleXMLElement
      */
-    public function loadXMLFromString ($xmlString)
+    public function loadXMLFromString($xmlString)
     {
         return simplexml_load_string($xmlString);
     }
@@ -110,7 +120,7 @@ class cbXMLHandler
      * 
      * @return void 
      */
-    public function saveXML ($fileName, SimpleXMLElement $resource)
+    public function saveXML($fileName, SimpleXMLElement $resource)
     {
         $domSXE = dom_import_simplexml($resource);
         $dom    = new DOMDocument('1.0');
@@ -138,5 +148,66 @@ class cbXMLHandler
             if ($attributes[$itemName] == $type) $amount ++;
         }
         return $amount;
+    }
+    
+    /**
+     * Set a directory with xml files to merge
+     * 
+     * @param string $directory The path to directory where xml files are stored
+     * 
+     * @return array Array object of DOMDocument elements
+     */
+    public function addDirectory($directory)
+    {
+        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
+        
+        while ($iterator->valid()) {
+            
+            $current = $iterator->current();
+            if ($current->isFile() && ($current->getFilename() !== $current->getBasename('.xml'))) {
+                $xml = new DOMDocument('1.0', 'UTF-8');
+                if ($xml->load(realpath($current))) {
+                    $this->addXMLFile($xml);
+                }
+            }
+            $iterator->next();
+        }
+        return $this->xmlFiles;
+    }
+    
+    /**
+     * Add xml files to merge 
+     * 
+     * @param DOMDocument $domDocument The files to merge, eather as string (single) or array (multiple)
+     *  
+     * @return void
+     */
+    public function addXMLFile(DOMDocument $domDocument)
+    {
+        $this->xmlFiles[] = $domDocument;
+    }
+    
+    /**
+     * Merges present files to a single DOMDocument
+     * 
+     * @return DOMDocument
+     */
+    public function mergeFiles()
+    {
+        $xml    = new DOMDocument('1.0', 'UTF-8');
+        $cruise = $xml->createElement('cruisecontrol');
+        
+        $xml->preserveWhiteSpace = false;
+        $xml->formatOutput       = true;
+        
+        if (!isset($this->xmlFiles)) {
+            return $xml;
+        }
+        
+        foreach($this->xmlFiles as $xmlFile) foreach($xmlFile->childNodes as $node) {
+            $cruise->appendChild($xml->importNode($node, true));
+        }
+        $xml->appendChild($cruise);
+        return $xml;
     }
 }
