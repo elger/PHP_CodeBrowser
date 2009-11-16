@@ -129,8 +129,7 @@ class cbJSGenerator
             substr($code, 33, - 15)
         );
         $code     = trim($code);
-        $code     = str_replace("\r", "\n", $code);
-        $code     = preg_replace("!\n\n\n+!", "\n\n", $code);
+        $code     = str_replace("\r", "", $code);
         $lines    = explode("\n", $code);
         $previous = false;
         $openTag  = 0;
