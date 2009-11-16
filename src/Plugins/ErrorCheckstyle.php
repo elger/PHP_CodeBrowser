@@ -1,6 +1,8 @@
 <?php
 /**
  * Checkstyle
+ * 
+ * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -82,7 +84,10 @@ class cbErrorCheckstyle extends cbPluginError
     {
         $errorList     = array();
         $attributes    = $element->attributes();
-        $error['name'] = $this->getRelativeFilePath($attributes['name'], $this->projectSourceDir);
+        $error['name'] = $this->getRelativeFilePath(
+            $attributes['name'], 
+            $this->projectSourceDir
+        );
         
         foreach ($element->error as $child) {
             $attributes           = $child->attributes();

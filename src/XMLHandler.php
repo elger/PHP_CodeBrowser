@@ -1,6 +1,8 @@
 <?php
 /**
  * XML Handler
+ * 
+ * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -95,7 +97,9 @@ class cbXMLHandler
      */
     public function loadXML($filename)
     {
-        if (! file_exists($filename)) throw new Exception('Error: Cannot open ' . $filename);
+        if (! file_exists($filename)) {
+            throw new Exception('Error: Cannot open ' . $filename);
+        }
         
         return simplexml_load_file($filename);
     }
@@ -145,7 +149,9 @@ class cbXMLHandler
         $amount = 0;
         foreach ($element as $item) {
             $attributes = $item->attributes();
-            if ($attributes[$itemName] == $type) $amount ++;
+            if ($attributes[$itemName] == $type) {
+                $amount ++;
+            }
         }
         return $amount;
     }
@@ -159,12 +165,16 @@ class cbXMLHandler
      */
     public function addDirectory($directory)
     {
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory));
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($directory)
+        );
         
         while ($iterator->valid()) {
             
             $current = $iterator->current();
-            if ($current->isFile() && ($current->getFilename() !== $current->getBasename('.xml'))) {
+            if ($current->isFile() 
+                && ($current->getFilename() !== $current->getBasename('.xml'))
+            ) {
                 $xml = new DOMDocument('1.0', 'UTF-8');
                 if ($xml->load(realpath($current))) {
                     $this->addXMLFile($xml);
@@ -178,7 +188,8 @@ class cbXMLHandler
     /**
      * Add xml files to merge 
      * 
-     * @param DOMDocument $domDocument The files to merge, eather as string (single) or array (multiple)
+     * @param DOMDocument $domDocument The files to merge, eather as string 
+     *                                 (single) or array (multiple)
      *  
      * @return void
      */

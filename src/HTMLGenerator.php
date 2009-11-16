@@ -1,6 +1,8 @@
 <?php
 /**
  * HTML Generator
+ * 
+ * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -34,28 +36,28 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id$
- * @link       http://www.phpunit.de/
- * @since      File available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   SVN: $Id$
+ * @link      http://www.phpunit.de/
+ * @since     File available since 1.0
  */
 
 /**
  * cbHTMLGenerator
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: @package_version@
- * @link       http://www.phpunit.de/
- * @since      Class available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: @package_version@
+ * @link      http://www.phpunit.de/
+ * @since     Class available since 1.0
  */
 class cbHTMLGenerator
 {
@@ -150,7 +152,9 @@ class cbHTMLGenerator
      */
     public function generateViewFlat($errors)
     {
-        if (!is_array($errors)) throw new Exception('Wrong data format for errorlist!');
+        if (!is_array($errors)) {
+            throw new Exception('Wrong data format for errorlist!');
+        }
         
         $data['title']   = 'Code Browser - Overview (flat view mode)';
         $data['files']   = $errors;
@@ -173,7 +177,9 @@ class cbHTMLGenerator
      */
     public function generateViewTree($errors)
     {
-        if (!is_array($errors)) throw new Exception('Wrong data format for errorlist!');
+        if (!is_array($errors)) {
+            throw new Exception('Wrong data format for errorlist!');
+        }
         
         $data['title']   = 'Code Browser - Tree View';
         $data['files']   = $errors;
@@ -201,12 +207,21 @@ class cbHTMLGenerator
      */
     public function generateViewReview($errors, $cbXMLFile, $projectSource)
     {
-        if (!is_array($errors)) throw new Exception('Wrong data format for errorlist!');
+        if (!is_array($errors)) {
+            throw new Exception('Wrong data format for errorlist!');
+        }
         
         $data['title'] = 'Code Browser - Review View';
         foreach ($errors as $file) {
-            $data['errors']   = $this->_cbErrorHandler->getErrorsByFile($cbXMLFile, $file['complete']);
-            $data['source']   = $this->_cbJSGenerator->getHighlightedSource($file['complete'], $data['errors'], $projectSource);
+            $data['errors']   = $this->_cbErrorHandler->getErrorsByFile(
+                $cbXMLFile, 
+                $file['complete']
+            );
+            $data['source']   = $this->_cbJSGenerator->getHighlightedSource(
+                $file['complete'], 
+                $data['errors'], 
+                $projectSource
+            );
             $data['filepath'] = $file['complete'];
             $data['csspath']  = '';
             for ($i = 1; $i <= substr_count($file['complete'], '/'); $i ++) {
@@ -235,9 +250,12 @@ class cbHTMLGenerator
         }
 
         foreach ($this->_ressourceFolders as $folder) {
-            $this->_cbFDHandler->copyDirectory($this->_templateDir . '/' . $folder, $this->_outputDir . '/' . $folder);
+            $this->_cbFDHandler->copyDirectory(
+                $this->_templateDir . '/' . $folder, 
+                $this->_outputDir . '/' . $folder
+            );
         }
-        $content = $this->_cbFDHandler->loadFile($this->_templateDir . '/treeView.html');
+        $content = $this->_cbFDHandler->loadFile($this->_templateDir . '/index.tpl');
         $this->_cbFDHandler->createFile($this->_outputDir . '/index.html', $content);
     }
     
@@ -252,10 +270,14 @@ class cbHTMLGenerator
     private function _render($templateName, $data)
     {
         if (!file_exists(realpath($this->_templateDir) . '/' . $templateName . '.tpl')) {
-            throw new Exception('Template ' . $templateName . '.tpl could not be found!');
+            throw new Exception(
+                'Template ' . $templateName . '.tpl could not be found!'
+            );
         }
         
-        if (!count($data)) return '';
+        if (!count($data)) {
+            return '';
+        }
         
         extract($data, EXTR_SKIP);
         ob_start();
@@ -276,6 +298,8 @@ class cbHTMLGenerator
      */
     private function _generateView($data, $fileName)
     {
-        $this->_cbFDHandler->createFile($this->_outputDir . '/' . $fileName, $this->_render('page', $data));
+        $this->_cbFDHandler->createFile(
+            $this->_outputDir . '/' . $fileName, $this->_render('page', $data)
+        );
     }
 }

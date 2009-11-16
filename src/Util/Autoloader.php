@@ -2,6 +2,8 @@
 /**
  * Autoloader
  *
+ * PHP Version 5.2.6
+ *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
  *
@@ -48,15 +50,15 @@
 /**
  * cbAutoloader
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: @package_version@
- * @link       http://www.phpunit.de/
- * @since      Class available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: @package_version@
+ * @link      http://www.phpunit.de/
+ * @since     Class available since 1.0
  */
 class cbAutoloader
 {
@@ -74,10 +76,13 @@ class cbAutoloader
      */
     public function __construct ()
     {
-        $files = new RecursiveIteratorIterator(new RecursiveDirectoryIterator(dirname(__FILE__) . '/../../'));
+        $files = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(dirname(__FILE__) . '/../../')
+        );
         
         foreach ($files as $file) {
-            $this->_classes['cb' . substr($file->getFilename(), 0, -4)] = realpath($file->getPath() . '/' . $file->getFilename());
+            $this->_classes['cb' . substr($file->getFilename(), 0, -4)] 
+                = realpath($file->getPath() . '/' . $file->getFilename());
         }
     }
     
@@ -85,7 +90,7 @@ class cbAutoloader
      * Autoloader function
      * Includes the file matching by the given classname
      * 
-     * @param string $classname The classname that file should be included
+     * @param string $className The classname that file should be included
      * 
      * @return void
      */

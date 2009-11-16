@@ -1,6 +1,8 @@
 <?php
 /**
  * JS and HTML Generator
+ * 
+ * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -34,28 +36,28 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id$
- * @link       http://www.phpunit.de/
- * @since      File available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   SVN: $Id$
+ * @link      http://www.phpunit.de/
+ * @since     File available since 1.0
  */
 
 /**
  * cbJSGenerator
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: @package_version@
- * @link       http://www.phpunit.de/
- * @since      Class available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: @package_version@
+ * @link      http://www.phpunit.de/
+ * @since     Class available since 1.0
  */
 class cbJSGenerator
 {
@@ -103,8 +105,9 @@ class cbJSGenerator
     /**
      * Generate javascript highlighted source for HTML files. 
      *
-     * @param string $fileName The filename where source should be highlighted
-     * @param arry   $errors   The error list for this files as highlight base
+     * @param string $fileName      The filename where source should be highlighted
+     * @param arry   $errors        The error list for this files as highlight base
+     * @param string $projectSource Path to project source directory
      * 
      * @return string
      * @see cbFDHandler::loadFile
@@ -120,9 +123,11 @@ class cbJSGenerator
         ini_set('highlight.html', 'html');
         
         $code     = highlight_string($code, true);
-        $code     = str_replace(array('&nbsp;' , '&amp;' , '<br />' , '<span style="color: '), 
-                                array(' ' , '&#38;' , "\n" , '<span class="'), 
-                                substr($code, 33, - 15));
+        $code     = str_replace(
+            array('&nbsp;' , '&amp;' , '<br />' , '<span style="color: '), 
+            array(' ' , '&#38;' , "\n" , '<span class="'), 
+            substr($code, 33, - 15)
+        );
         $code     = trim($code);
         $code     = str_replace("\r", "\n", $code);
         $code     = preg_replace("!\n\n\n+!", "\n\n", $code);
@@ -138,20 +143,24 @@ class cbJSGenerator
                 $line     = substr($line, 7);
             }
             
-            if (empty($line))  $line = '&#160;';   
-            if ($previous)     $line = "<span class=\"$previous\">" . $line;
+            if (empty($line)) {
+                $line = '&#160;';
+            }   
+            if ($previous) {
+                $line = "<span class=\"$previous\">" . $line;
+            }
             
             // Set Previous Style
             if (strpos($line, '<span') !== false) {
                 switch (substr($line, strrpos($line, '<span') + 13, 1)) {
-                    case 'c': $previous = 'comment';
-                        break;
-                    case 'd': $previous = 'default';
-                        break;
-                    case 'k': $previous = 'keyword';
-                        break;
-                    case 's': $previous = 'string';
-                        break;
+                case 'c': $previous = 'comment';
+                    break;
+                case 'd': $previous = 'default';
+                    break;
+                case 'k': $previous = 'keyword';
+                    break;
+                case 's': $previous = 'string';
+                    break;
                 }
             }
             
@@ -175,21 +184,31 @@ class cbJSGenerator
                 
                 if (($error['line'] <= $num) && ($error['to-line'] >= $num)) {
                     
-                    if ($max <= (int)$error['to-line'])  $max = (int)$error['to-line'];    
-                    if ($min >= (int)$error['line'])     $min = (int)$error['line'];   
+                    if ($max <= (int)$error['to-line']) {
+                        $max = (int)$error['to-line'];
+                    }    
+                    if ($min >= (int)$error['line']) {
+                        $min = (int)$error['line'];
+                    }   
                     
                     $classnameEven = 'transparent';
                     $classname     = 'transparent';
                     
                     if ((int)$error['line'] == (int)$num) { 
-                        $prefix = sprintf('<li id="line-%s-%s" class="%s" ><ul>', 
-                                          $error['line'], 
-                                          $error['to-line'], 
-                                          ($openTag > 0 ) ? 'transparent' : (($prefix != '') ? 'moreErrors' : $error['source']));
+                        $prefix = sprintf(
+                            '<li id="line-%s-%s" class="%s" ><ul>', 
+                            $error['line'], 
+                            $error['to-line'], 
+                            ($openTag > 0 ) 
+                            ? 'transparent' 
+                            : (($prefix != '') ? 'moreErrors' : $error['source'])
+                        );
                     }
                     
                     if ((int)$error['to-line'] == (int)$num) {
-                        if ($min != $max && $suffix != '') $amountOfErr++;
+                        if ($min != $max && $suffix != '') {
+                            $amountOfErr++;
+                        }
                         $suffix = "</ul></li>";
                     }
                 }
@@ -208,8 +227,15 @@ class cbJSGenerator
                     $openTag--;
                     $suffix .= '</ul></li>';    
             }
-            echo sprintf('%s<li id="line-%d" class="%s"><a name="line-%d"></a><code>%s</code></li>%s' . "\n", 
-                         $prefix, $num, (($key % 2) ? $classnameEven : $classname), $num, $line, $suffix);
+            echo sprintf(
+                '%s<li id="line-%d" class="%s"><a name="line-%d"></a><code>%s</code></li>%s' . "\n", 
+                $prefix, 
+                $num, 
+                (($key % 2) ? $classnameEven : $classname), 
+                $num, 
+                $line, 
+                $suffix
+            );
         }
         echo "</ol>\n";
         $contents = ob_get_contents();
@@ -223,6 +249,7 @@ class cbJSGenerator
      *
      * @param array   $tree     Tree array of folders/files
      * @param integer $parentId Id of the parent object
+     * @param array   $errors   List of errors
      * 
      * @return void
      */
@@ -235,10 +262,19 @@ class cbJSGenerator
                 echo sprintf("a.add(%d,%d,'%s', '');", $id, $parentId, $key);
                 $this->_echoJSTreeNodes($value, $id, $errors);
             } else {
-                $key = sprintf('%s ( <span class="errors">%sE</span> | <span class="notices">%sN</span> )', 
-                               $key, $errors[$value]['count_errors'], $errors[$value]['count_notices']);
-                echo sprintf("a.add(%d,%d,'%s','./%s.html','','reviewView');", 
-                             $id, $parentId, $key, $errors[$value]['complete']);
+                $key = sprintf(
+                    '%s ( <span class="errors">%sE</span> | <span class="notices">%sN</span> )', 
+                    $key, 
+                    $errors[$value]['count_errors'], 
+                    $errors[$value]['count_notices']
+                );
+                echo sprintf(
+                    "a.add(%d,%d,'%s','./%s.html','','reviewView');", 
+                    $id, 
+                    $parentId, 
+                    $key, 
+                    $errors[$value]['complete']
+                );
             }
         }
     }
@@ -263,8 +299,11 @@ class cbJSGenerator
                 $tree = null;
                 
                 foreach ($folders as $folder) {
-                    if (is_numeric($folder)) $tree = $folder;
-                    elseif ($folder != '')   $tree = array($folder => $tree);
+                    if (is_numeric($folder)) {
+                        $tree = $folder;
+                    } elseif ($folder != '') {
+                        $tree = array($folder => $tree);
+                    }
                 }
                 $result = array_merge_recursive($tree, $result);
             }

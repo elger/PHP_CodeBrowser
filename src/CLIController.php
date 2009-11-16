@@ -1,6 +1,8 @@
 <?php
 /**
  * Cli controller
+ * 
+ * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -34,14 +36,14 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id$
- * @link       http://www.phpunit.de/
- * @since      File available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   SVN: $Id$
+ * @link      http://www.phpunit.de/
+ * @since     File available since 1.0
  */
 
 require_once dirname(__FILE__) . "/../src/Util/Autoloader.php";
@@ -49,15 +51,15 @@ require_once dirname(__FILE__) . "/../src/Util/Autoloader.php";
 /**
  * cbCLIController
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: @package_version@
- * @link       http://www.phpunit.de/
- * @since      Class available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: @package_version@
+ * @link      http://www.phpunit.de/
+ * @since     Class available since 1.0
  */
 class cbCLIController
 {
@@ -103,7 +105,8 @@ class cbCLIController
      *
      * @param string $logPath          The (path-to) xml log files
      * @param string $projectSourceDir The project source directory
-     * @param string $htmlOutputDir    The html output dir, where new files will be created
+     * @param string $htmlOutputDir    The html output dir, where new files will 
+     *                                 be created
      * @param string $cbXMLFile        The (path-to) PHP_CodeBrowser XML file
      */
     public function __construct($logPath, $projectSourceDir, $htmlOutputDir, $cbXMLFile)
@@ -224,26 +227,36 @@ class cbCLIController
         
         // create html views
         $templateDir = realpath(dirname(__FILE__) . "/./../") . '/templates';
-        $html        = new cbHTMLGenerator($cbFDHandler, $cbErrorHandler, $cbJSGenerator);
+        $html        = new cbHTMLGenerator(
+            $cbFDHandler, $cbErrorHandler, $cbJSGenerator
+        );
         $html->setTemplateDir($templateDir);
         $html->setOutputDir($this->_htmlOutputDir);
         $html->generateViewFlat($errors);
         $html->generateViewTree($errors);
-        $html->generateViewReview($errors, $this->_xmlFile, $this->_projectSourceDir);
+        $html->generateViewReview(
+            $errors, $this->_xmlFile, $this->_projectSourceDir
+        );
         
         // copy needed resources like css, js, images
         $html->copyRessourceFolders();
     }
     
+    
+    /**
+     * Main method called by script
+     * 
+     * @return void
+     */
     public static function main()
     {
         $timeStart = microtime(true);
-        ini_set("memory_limit", "1024M");
         
         $xmlLogDir    = '';
         $sourceFolder = '';
         $htmlOutput   = '';
         $xmlFileName  = 'cbCodeBrowser.xml';
+        
         // register autoloader
         spl_autoload_register(array(new cbAutoloader(), 'autoload'));
         
@@ -251,57 +264,83 @@ class cbCLIController
         $argv = $_SERVER['argv'];
         foreach ($argv as $key => $argument) {
             switch ($argument) {
-                case '--log':
-                    $xmlLogDir = $argv[$key + 1];
-                    break;
-                case '--source':
-                    $sourceFolder = $argv[$key + 1];
-                    break;
-                case '--output':
-                    $htmlOutput = $argv[$key + 1];
-                    break;
+            case '--log':
+                $xmlLogDir = $argv[$key + 1];
+                break;
+            case '--source':
+                $sourceFolder = $argv[$key + 1];
+                break;
+            case '--output':
+                $htmlOutput = $argv[$key + 1];
+                break;
+            case '--help':
+            case '-h':
+                self::printHelp();
+                break;
             }
         }
         
-        // CLIController
-        if (is_dir($xmlLogDir) && is_dir($sourceFolder) && is_dir($htmlOutput)) {
-            
-            printf("Generating PHP_CodeBrowser files\n");
-            
-            // init new CLIController
-            $controller = new cbCLIController(
-                $xmlLogDir, 
-                $sourceFolder, 
-                $htmlOutput, 
-                $htmlOutput . '/' . $xmlFileName
-            );
-            $controller->addErrorPlugins(array('cbErrorCheckstyle', 'cbErrorPMD', 'cbErrorCPD'));
-            
-            try {
-                $controller->run();
-            } catch (Exception $e) {
-                printf("PHP-CodeBrowser Error: \n\n", $e->getMessage());
-            }
-        } else {
-            if (!is_dir($xmlLogDir))    print("XML log files could not be found\n");
-            if (!is_dir($sourceFolder)) print("Source folder not found!\n");
-            if (!is_dir($htmlOutput))   print("Output folder not found!\n");
-            
+        // Check for directories
+        if (!is_dir($xmlLogDir) || !is_dir($sourceFolder) || !is_dir($htmlOutput)) {
             printf(
-                "\nError: please check arguments\n 
-                --log    [/path/to/xml/log/dir]\t%s \n 
-                --source [/path/to/source/]\t%s \n 
-                --output [/path/to/html/output]\t%s\n\n",
-                $xmlLogDir,
-                $sourceFolder,
-                $htmlOutput
+                "Error: \n%s%s%s\n",
+                !is_dir($xmlLogDir) 
+                ? "- xml log directory not found\n" 
+                : '',
+                !is_dir($sourceFolder) 
+                ? "- project source directory not found\n" 
+                : '',
+                !is_dir($htmlOutput) 
+                ? "- output directory not found\n" 
+                : '' 
             );
-            exit();
+            self::printHelp();
         }
-        
+
+        printf("Generating PHP_CodeBrowser files\n");
+
+        // init new CLIController
+        $controller = new cbCLIController(
+            $xmlLogDir, 
+            $sourceFolder, 
+            $htmlOutput, 
+            $htmlOutput . '/' . $xmlFileName
+        );
+        $controller->addErrorPlugins(
+            array('cbErrorCheckstyle', 'cbErrorPMD', 'cbErrorCPD')
+        );
+            
+        try {
+            $controller->run();
+        } catch (Exception $e) {
+            printf("PHP-CodeBrowser Error: \n\n", $e->getMessage());
+        }
+                
         $timeEnd = microtime(true);
         $time    = $timeEnd - $timeStart;
         
         printf("\nScript took %s seconds to execute\n\n", $time);
+    }
+    
+    /**
+     * Print help menu for shell
+     * 
+     * @return void
+     */
+    public static function printHelp()
+    {
+        $help = sprintf(
+            "Usage: phpcb --log <dir> --source <dir> --output <dir>
+             
+            PHP_CodeBrowser arguments:
+            \t--log <dir>      \tThe path to the xml log files, e.g. generated from phpunit.
+            \t--source <dir>   \tPath to the project source code.
+            \t--output <dir>   \tPath to the output folder where generated files should be stored.
+
+            General arguments:
+            \t--help           \t\tPrint this help.\n\n"
+        );
+        echo str_replace("  ", "", $help);
+        exit();
     }
 }

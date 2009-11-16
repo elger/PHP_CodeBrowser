@@ -1,6 +1,8 @@
 <?php
 /**
  * PMD
+ * 
+ * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -82,7 +84,10 @@ class cbErrorPMD extends cbPluginError
     {
         $errorList     = array();
         $attr          = $element->attributes();
-        $error['name'] = $this->getRelativeFilePath($attr['name'], $this->projectSourceDir);
+        $error['name'] = $this->getRelativeFilePath(
+            $attr['name'], 
+            $this->projectSourceDir
+        );
         
         foreach ($element->violation as $child) {
             $attributes           = $child->attributes();
@@ -90,7 +95,11 @@ class cbErrorPMD extends cbPluginError
             $error['to-line']     = (int) $attributes['to-line'];
             $error['source']      = (string) $attributes['rule'];
             $error['severity']    = 'error';
-            $error['description'] = str_replace('&#10;', '', htmlentities((string) $child));
+            $error['description'] = str_replace(
+                '&#10;', 
+                '', 
+                htmlentities((string) $child)
+            );
             $errorList[]          = $error;
         }
         return $errorList;

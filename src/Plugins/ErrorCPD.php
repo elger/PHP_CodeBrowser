@@ -1,6 +1,8 @@
 <?php
 /**
  * Copy paste detection
+ * 
+ * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -74,28 +76,45 @@ class cbErrorCPD extends cbPluginError
     /**
      * Mapper method for this plugin.
      * 
-     * @param SingleXMLElement $element The XML plugin node with its errors
+     * @param SingleXMLElement $xmlElement The XML plugin node with its errors
      * 
      * @return array
      */
     public function mapError (SimpleXMLElement $xmlElement)
     {
-        $attributes            = $xmlElement->attributes();
+        $attributes = $xmlElement->attributes();
+        
+        if (is_null($xmlElement->file[0])) {
+            return array();
+        }
+        
         $attributesF           = $xmlElement->file[0]->attributes();
         $attributesS           = $xmlElement->file[1]->attributes();
         $errorF['line']        = (int) $attributesF['line'];
-        $errorF['to-line']     = (int) $attributesF['line'] + (int) $attributes['lines'];
+        $errorF['to-line']     
+            = (int) $attributesF['line'] + (int) $attributes['lines'];
         $errorF['source']      = 'Duplication';
         $errorF['severity']    = 'notice';
-        $errorF['description'] = htmlentities('... ' . substr($attributesS['path'], strlen($attributesS['path']) - 30));
+        $errorF['description'] = htmlentities(
+            '... ' . substr($attributesS['path'], strlen($attributesS['path']) - 30)
+        );
         
         $errorS['line']        = (int) $attributesS['line'];
-        $errorS['to-line']     = (int) $attributesS['line'] + (int) $attributes['lines'];
+        $errorS['to-line']     
+            = (int) $attributesS['line'] + (int) $attributes['lines'];
         $errorS['source']      = 'Duplication';
         $errorS['severity']    = 'notice';
-        $errorS['description'] = htmlentities('... ' . substr($attributesF['path'], strlen($attributesF['path']) - 30));
-        $errorF['name']        = $this->getRelativeFilePath($attributesF['path'], $this->projectSourceDir);
-        $errorS['name']        = $this->getRelativeFilePath($attributesS['path'], $this->projectSourceDir);
+        $errorS['description'] = htmlentities(
+            '... ' . substr($attributesF['path'], strlen($attributesF['path']) - 30)
+        );
+        $errorF['name']        = $this->getRelativeFilePath(
+            $attributesF['path'], 
+            $this->projectSourceDir
+        );
+        $errorS['name']        = $this->getRelativeFilePath(
+            $attributesS['path'], 
+            $this->projectSourceDir
+        );
         
         return array($errorF , $errorS);
     }

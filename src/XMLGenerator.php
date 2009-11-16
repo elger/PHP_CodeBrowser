@@ -1,6 +1,8 @@
 <?php
 /**
  * XML Generator
+ * 
+ * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -34,28 +36,28 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id$
- * @link       http://www.phpunit.de/
- * @since      File available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   SVN: $Id$
+ * @link      http://www.phpunit.de/
+ * @since     File available since 1.0
  */
 
 /**
  * cbXMLGenerator
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: @package_version@
- * @link       http://www.phpunit.de/
- * @since      Class available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: @package_version@
+ * @link      http://www.phpunit.de/
+ * @since     Class available since 1.0
  */
 class cbXMLGenerator extends cbXMLHandler
 {
@@ -72,9 +74,10 @@ class cbXMLGenerator extends cbXMLHandler
      *
      * @var string
      */
-    public $cbXMLBasic = '<?xml version="1.0" encoding="utf-8"?><codebrowser></codebrowser>';
+    public $cbXMLBasic 
+        = '<?xml version="1.0" encoding="utf-8"?><codebrowser></codebrowser>';
     
-	/**
+    /**
      * Setter method for PHP_CodeBrowser XML filename
      *
      * @param string $name The XML filename
@@ -86,7 +89,7 @@ class cbXMLGenerator extends cbXMLHandler
         $this->cbXMLName = $name;
     }
     
-	/**
+    /**
      * Generates a PHP_CodeBrowser XML base on given error list.
      * The generated XML file is saved.
      *
@@ -134,7 +137,7 @@ class cbXMLGenerator extends cbXMLHandler
         $this->saveXML($this->cbXMLName, $cbXMLElement);
     }
     
-	/**
+    /**
      * Sort an error list by its key and name, filtering all duplicates.
      *
      * @param array $errorList The error list 

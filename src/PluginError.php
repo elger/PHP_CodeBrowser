@@ -1,6 +1,8 @@
 <?php
 /**
  * Plugin Error
+ * 
+ * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -34,28 +36,28 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id$
- * @link       http://www.phpunit.de/
- * @since      File available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   SVN: $Id$
+ * @link      http://www.phpunit.de/
+ * @since     File available since 1.0
  */
 
 /**
  * cbPluginError
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: @package_version@
- * @link       http://www.phpunit.de/
- * @since      Class available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: @package_version@
+ * @link      http://www.phpunit.de/
+ * @since     Class available since 1.0
  */
 abstract class cbPluginError
 {
@@ -92,8 +94,8 @@ abstract class cbPluginError
     /**
      * Constructor
      *
-     * @param string       $sourcePath   The project source path
-     * @param cbXMLHandler $cbXMLHandler xbXMLHandler object
+     * @param string       $projectSourceDir The project source path
+     * @param cbXMLHandler $cbXMLHandler     cbXMLHandler object
      */
     public function __construct($projectSourceDir, cbXMLHandler $cbXMLHandler)
     {
@@ -139,7 +141,8 @@ abstract class cbPluginError
         }
         
         if (!isset($this->_xmlElement->{$this->pluginName}) 
-        || !is_object($children = $this->_xmlElement->{$this->pluginName}->children())) {
+            || !is_object($children = $this->_xmlElement->{$this->pluginName}->children())
+        ) {
             return array();    
         }
         
@@ -156,7 +159,7 @@ abstract class cbPluginError
         return $errorList;
     }
     
-	/**
+    /**
      * Cut off the difference between absolute/relative path.
      * e.g.
      * /home/www/htdocs/myProject/source/index.php
@@ -170,9 +173,15 @@ abstract class cbPluginError
      */
     public function getRelativeFilePath ($absolutePath, $relativePath)
     {
-        if (empty($relativePath)) return $absolutePath;
+        if (empty($relativePath)) {
+            return $absolutePath;
+        }
         
-        return preg_replace(array(sprintf('(.*%s/)', basename($relativePath))), '', $absolutePath);
+        return preg_replace(
+            array(sprintf('(.*%s/)', basename($relativePath))), 
+            '', 
+            $absolutePath
+        );
     }
     
     /**

@@ -1,6 +1,8 @@
 <?php
 /**
  * File and directory handler
+ * 
+ * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -34,28 +36,28 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id$
- * @link       http://www.phpunit.de/
- * @since      File available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   SVN: $Id$
+ * @link      http://www.phpunit.de/
+ * @since     File available since 1.0
  */
 
 /**
  * cbFDHandler
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: @package_version@
- * @link       http://www.phpunit.de/
- * @since      Class available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: @package_version@
+ * @link      http://www.phpunit.de/
+ * @since     Class available since 1.0
  */
 class cbFDHandler
 {
@@ -74,7 +76,9 @@ class cbFDHandler
         $realName = basename($fileName);
         $path     = substr($fileName, 0, - 1 * (strlen($realName)));
         
-        if (!empty($path)) $this->createDirectory($path);
+        if (!empty($path)) {
+            $this->createDirectory($path);
+        }
         file_put_contents(realpath($path) . '/' . $realName, $fileContent);
     }
     
@@ -89,25 +93,31 @@ class cbFDHandler
      */
     public function deleteFile ($fileName)
     {
-        if (file_exists($fileName)) unlink($fileName);
+        if (file_exists($fileName)) {
+            unlink($fileName);
+        }
     }
     
     /**
      * Copy a file from a source to target dir. The source could inherit an 
      * absolute or relative path-to-file.
      *
-     * @param string $fileSource
-     * @param string $sourceFolder
+     * @param string $fileSource   The source file
+     * @param string $sourceFolder The target folder
      * 
      * @return return void
      * @throws Exception 
      */
     public function copyFile ($fileSource, $sourceFolder)
     {
-        if (!file_exists($fileSource)) throw new Exception('File ' . $fileSource . ' does not exists!');
+        if (!file_exists($fileSource)) {
+            throw new Exception('File ' . $fileSource . ' does not exists!');
+        }
         
         $fileName = basename($fileSource);
-        $this->createFile($sourceFolder . '/' . $fileName, self::loadFile($fileSource));
+        $this->createFile(
+            $sourceFolder . '/' . $fileName, self::loadFile($fileSource)
+        );
     }
     
     /**
@@ -120,11 +130,13 @@ class cbFDHandler
      */
     public function loadFile ($fileName)
     {
-        if (!file_exists($fileName)) throw new Exception('File ' . $fileName . ' does not exist!');
+        if (!file_exists($fileName)) {
+            throw new Exception('File ' . $fileName . ' does not exist!');
+        }
         return trim(file_get_contents($fileName));
     }
     
-	/**
+    /**
      * Create a directory and its inherit path to directory if not present,
      * e.g. path/that/does/not/exist/myfolder/ 
      *
@@ -134,7 +146,9 @@ class cbFDHandler
      */
     public function createDirectory ($target)
     {
-        if ('\/' == substr($target, - 1, 1)) $target = substr($target, - 1, 1);
+        if ('\/' == substr($target, - 1, 1)) {
+            $target = substr($target, - 1, 1);
+        }
         
         $dirs = explode('/', $target);
         $path = '';
@@ -162,17 +176,23 @@ class cbFDHandler
             $src = realpath($source . '/' . $iterator->current());
             
             // delete file
-            if ($iterator->isFile()) $this->deleteFile($src);
+            if ($iterator->isFile()) {
+                $this->deleteFile($src);
+            }
             
             // delete folder recursive
-            if (! $iterator->isDot() && $iterator->isDir()) $this->deleteDirectory($src);
+            if (! $iterator->isDot() && $iterator->isDir()) {
+                $this->deleteDirectory($src);
+            }
             
             $iterator->next();
         }
         unset($iterator);
 
         // delete the source root folder as well
-        if (! rmdir($source)) throw new Exception('Could not delete directory ' . $source); 
+        if (! rmdir($source)) {
+            throw new Exception('Could not delete directory ' . $source); 
+        }
     }
     
     /**
@@ -194,10 +214,15 @@ class cbFDHandler
             $item = $iterator->current();
             
             // create new file
-            if ($iterator->isFile()) $this->copyFile($source . '/' . $item, $target);
+            if ($iterator->isFile()) {
+                $this->copyFile($source . '/' . $item, $target);
+            }
 
             // create folder recursive
-            if (! $iterator->isDot() && $iterator->isDir() && !in_array($item, $exclude)) {
+            if (!$iterator->isDot() 
+                && $iterator->isDir() 
+                && !in_array($item, $exclude)
+            ) {                
                 $this->copyDirectory($source . '/' . $item, $target . '/' . $item);
             }
             $iterator->next();

@@ -1,6 +1,8 @@
 <?php
 /**
  * Error handler
+ * 
+ * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -34,28 +36,28 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id$
- * @link       http://www.phpunit.de/
- * @since      File available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   SVN: $Id$
+ * @link      http://www.phpunit.de/
+ * @since     File available since 1.0
  */
 
 /**
  * cbErrorHandler
  *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: @package_version@
- * @link       http://www.phpunit.de/
- * @since      Class available since 1.0
+ * @category  PHP_CodeBrowser
+ * @package   PHP_CodeBrowser
+ * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
+ * @copyright 2007-2009 Mayflower GmbH
+ * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version   Release: @package_version@
+ * @link      http://www.phpunit.de/
+ * @since     Class available since 1.0
  */
 class cbErrorHandler
 {
@@ -88,7 +90,9 @@ class cbErrorHandler
     {
         $element = $this->cbXMLHandler->loadXML($cbXMLFile);
         foreach ($element as $file) {
-            if ($file['name'] == $fileName) return $file->children();
+            if ($file['name'] == $fileName) {
+                return $file->children();
+            }
         }
     }
     
@@ -108,8 +112,16 @@ class cbErrorHandler
             $tmp['complete']      = (string)$file['name'];
             $tmp['file']          = basename($file['name']);
             $tmp['path']          = dirname($file['name']);
-            $tmp['count_errors']  = $this->cbXMLHandler->countItems($file->children(), 'severity', 'error');
-            $tmp['count_notices'] = $this->cbXMLHandler->countItems($file->children(), 'severity', 'notice');
+            $tmp['count_errors']  = $this->cbXMLHandler->countItems(
+                $file->children(), 
+                'severity', 
+                'error'
+            );
+            $tmp['count_notices'] = $this->cbXMLHandler->countItems(
+                $file->children(), 
+                'severity', 
+                'notice'
+            );
             $files[]              = $tmp;
         }
         return $files;
