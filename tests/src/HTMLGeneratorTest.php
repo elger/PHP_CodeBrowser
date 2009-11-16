@@ -244,6 +244,54 @@ class cbHTMLGeneratorTest extends cbAbstractTests
     }
     
     /**
+     * Test exception handling
+     * 
+     * @return void
+     * 
+     * @expectedException Exception
+     */
+    public function testExceptionGenerateViewReviews()
+    {
+        $this->_cbHTMLGenerator->generateViewReview('string', '', '');
+    }
+    
+    /**
+     * Test exception handling
+     * 
+     * @return void
+     * 
+     * @expectedException Exception
+     */
+    public function testExceptionCopyRessourceFolders()
+    {
+        $this->_cbHTMLGenerator->copyRessourceFolders();
+    }
+    
+    /**
+     * Test exception handling
+     * 
+     * @return void
+     * 
+     * @expectedException Exception
+     */
+    public function testExceptionGenerateViewFlat()
+    {
+        $this->_cbHTMLGenerator->generateViewFlat('string');
+    }
+    
+    /**
+     * Test exception handling
+     * 
+     * @return void
+     * 
+     * @expectedException Exception
+     */
+    public function testExceptionGenerateViewTree()
+    {
+        $this->_cbHTMLGenerator->generateViewTree('string');
+    }
+    
+    /**
      * Dataprovider for PHP_CodeBrowser errors
      * 
      * @return array

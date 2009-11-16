@@ -65,6 +65,9 @@ require_once dirname( __FILE__ ) . '/src/FDHandlerTest.php';
 require_once dirname( __FILE__ ) . '/src/PluginErrorTest.php';
 
 require_once dirname( __FILE__ ) . '/src/Plugins/ErrorPMDTest.php';
+require_once dirname( __FILE__ ) . '/src/Plugins/ErrorCPDTest.php';
+require_once dirname( __FILE__ ) . '/src/Plugins/ErrorCheckstyleTest.php';
+require_once dirname( __FILE__ ) . '/src/Plugins/ErrorPadawanTest.php';
 
 PHPUnit_Util_Filter::addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
 
@@ -103,6 +106,9 @@ class cbAllTests extends PHPUnit_Framework_TestSuite
                 
         // plugins
         $this->addTestSuite('cbErrorPMDTest');
+        $this->addTestSuite('cbErrorCPDTest');
+        $this->addTestSuite('cbErrorCheckstyleTest');
+        $this->addTestSuite('cbErrorPadawanTest');
     }
     
     /**

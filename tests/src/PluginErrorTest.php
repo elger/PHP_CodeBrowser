@@ -118,9 +118,26 @@ class cbPluginErrorTest extends cbAbstractTests
      * @return void
      * @expectedException Exception
      */
-    public function testParsXMLErrorException() 
+    public function testParseXMLErrorException() 
     {
         $this->_cbPluginError->parseXMLError();
+    }
+    
+    /**
+     * Test empty node
+     * 
+     * @return void
+     */
+    public function testParseXMLErrorEmpty() 
+    {
+        $dom = new DOMDocument('1.0', 'UTF-8');
+        $dom->appendChild($dom->createElement('foo', 'bar'));
+        
+        $this->_cbPluginError->setXML($dom);
+        $list = $this->_cbPluginError->parseXMLError();
+        
+        $this->assertEquals(array(), $list);
+        $this->assertTrue(0 === count($list));
     }
     
     /**

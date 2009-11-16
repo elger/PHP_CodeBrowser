@@ -144,6 +144,20 @@ class cbXMLHandlerTest extends cbAbstractTests
     }
     
     /**
+     * Test xml loader exception
+     * 
+     * @return void
+     * 
+     * @group XMLHandler
+     * 
+     * @expectedException Exception
+     */
+    public function testExceptionLoadXML ()
+    {
+        $this->_cbXMLHandler->loadXML('foo.bar');
+    }
+    
+    /**
      * Test load xml from string
      * 
      * @return void
@@ -236,6 +250,20 @@ class cbXMLHandlerTest extends cbAbstractTests
     }
     
     /**
+     * If no xml files are defined an empty DOMDocument will be returned.
+     * 
+     * @return void
+     * 
+     * @group XMLHandler
+     * @group xmlmerge
+     */
+    public function testMergeEmptyFiles()
+    {
+        $xml = $this->_cbXMLHandler->mergeFiles();
+        $this->assertNull($xml->firstChild);
+    }
+    
+    /**
      * Prepare some test data for mergin
      * 
      * @return void
@@ -244,7 +272,6 @@ class cbXMLHandlerTest extends cbAbstractTests
     {
         $files = array();
         $nodes = array('cpd', 'checkstyle', 'coverage');
-        
         
         foreach ($nodes as $node) {
             $xml = new DOMDocument('1.0', 'UTF-8');

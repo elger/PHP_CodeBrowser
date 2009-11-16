@@ -137,6 +137,18 @@ class cbFDHandlerTest extends cbAbstractTests
     }
     
     /**
+     * Test exception
+     * 
+     * @return void
+     * 
+     * @expectedException Exception
+     */
+    public function testExceptionCopyFile()
+    {
+        $this->_cbFDHandler->copyFile('foo.bar', '');
+    }
+    
+    /**
      * Test if given directory is created
      *  
      * @return void

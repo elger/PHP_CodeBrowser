@@ -141,9 +141,14 @@ class cbErrorHandlerTest extends cbAbstractTests
         
         $this->assertType('SimpleXMLElement', $list);
         
+        $count = 0;
         foreach ($list as $item) foreach($item->attributes() as $key => $value) {
+            if (10 < $count) {
+                break 2;
+            }
             $this->assertTrue(in_array($key, $this->_neededKeys));
             $this->assertNotNull($value);
+            $count++;
         }
     }
     
