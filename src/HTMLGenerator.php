@@ -224,7 +224,8 @@ class cbHTMLGenerator
             );
             $data['filepath'] = $file['complete'];
             $data['csspath']  = '';
-            for ($i = 1; $i <= substr_count($file['complete'], '/'); $i ++) {
+            $depth            = substr_count($file['complete'], DIRECTORY_SEPARATOR);
+            for ($i = 1; $i <= $depth; $i ++) {
                 $data['csspath'] .= '../';
             }
             
@@ -251,12 +252,12 @@ class cbHTMLGenerator
 
         foreach ($this->_ressourceFolders as $folder) {
             $this->_cbFDHandler->copyDirectory(
-                $this->_templateDir . '/' . $folder, 
-                $this->_outputDir . '/' . $folder
+                $this->_templateDir . DIRECTORY_SEPARATOR . $folder, 
+                $this->_outputDir . DIRECTORY_SEPARATOR . $folder
             );
         }
-        $content = $this->_cbFDHandler->loadFile($this->_templateDir . '/index.tpl');
-        $this->_cbFDHandler->createFile($this->_outputDir . '/index.html', $content);
+        $content = $this->_cbFDHandler->loadFile($this->_templateDir . DIRECTORY_SEPARATOR . 'index.tpl');
+        $this->_cbFDHandler->createFile($this->_outputDir . DIRECTORY_SEPARATOR . 'index.html', $content);
     }
     
     /**
@@ -269,7 +270,7 @@ class cbHTMLGenerator
      */
     private function _render($templateName, $data)
     {
-        if (!file_exists(realpath($this->_templateDir) . '/' . $templateName . '.tpl')) {
+        if (!file_exists(realpath($this->_templateDir) . DIRECTORY_SEPARATOR . $templateName . '.tpl')) {
             throw new Exception(
                 'Template ' . $templateName . '.tpl could not be found!'
             );
@@ -281,7 +282,7 @@ class cbHTMLGenerator
         
         extract($data, EXTR_SKIP);
         ob_start();
-        include realpath($this->_templateDir) . '/' . $templateName . '.tpl';
+        include realpath($this->_templateDir) . DIRECTORY_SEPARATOR . $templateName . '.tpl';
         $contents = ob_get_contents();
         ob_end_clean();
         return $contents;
@@ -299,7 +300,7 @@ class cbHTMLGenerator
     private function _generateView($data, $fileName)
     {
         $this->_cbFDHandler->createFile(
-            $this->_outputDir . '/' . $fileName, $this->_render('page', $data)
+            $this->_outputDir . DIRECTORY_SEPARATOR . $fileName, $this->_render('page', $data)
         );
     }
 }

@@ -115,7 +115,10 @@ class cbJSGenerator
     public function getHighlightedSource($fileName, $errors, $projectSource)
     {
         ob_start();
-        $code = $this->_cbFDHandler->loadFile($projectSource . '/' . $fileName);
+        
+        $code = $this->_cbFDHandler->loadFile(
+            $projectSource . DIRECTORY_SEPARATOR . $fileName
+        );
         ini_set('highlight.comment', 'comment');
         ini_set('highlight.default', 'default');
         ini_set('highlight.keyword', 'keyword');
@@ -272,7 +275,7 @@ class cbJSGenerator
                     $id, 
                     $parentId, 
                     $key, 
-                    $errors[$value]['complete']
+                    str_replace(DIRECTORY_SEPARATOR, '/', $errors[$value]['complete'])
                 );
             }
         }
@@ -291,7 +294,7 @@ class cbJSGenerator
         if (is_array($files)) {
             krsort($files);
             foreach ($files as $fileId => $file) {
-                $folders = explode('/', $file['complete']);
+                $folders = explode(DIRECTORY_SEPARATOR, $file['complete']);
                 
                 $folders[count($folders)] = $fileId;
                 krsort($folders);
