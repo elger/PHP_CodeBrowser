@@ -176,12 +176,20 @@ class cbXMLHandler
                 && ($current->getFilename() !== $current->getBasename('.xml'))
             ) {
                 $xml = new DOMDocument('1.0', 'UTF-8');
-                if ($xml->load(realpath($current))) {
+                $xml->validateOnParse = true;
+                if (@$xml->load(realpath($current))) {
                     $this->addXMLFile($xml);
                 }
             }
             $iterator->next();
         }
+        
+        if (!isset($this->xmlFiles)) {
+            throw new Exception(
+                sprintf('Valid xml log files could not be found in "%s"', $directory)
+            );
+        }
+        
         return $this->xmlFiles;
     }
     

@@ -166,22 +166,37 @@ abstract class cbPluginError
      * /foo/bar/source/myProject
      * will leave source/index.php
      *
-     * @param string $absolutePath The absolute path to file
-     * @param string $relativePath The relative path
+     * @param string $absolutePath    The absolute path to file
+     * @param string $sourceDirectory The path defined by --source parameter
      * 
      * @return string|null
+     * 
+     * @throws Exception              In case of log file source differs from 
+     *                                defined source 
      */
-    public function getRelativeFilePath ($absolutePath, $relativePath)
+    public function getRelativeFilePath ($absolutePath, $sourceDirectory)
     {
-        if (empty($relativePath)) {
-            return $absolutePath;
-        }
-        
-        return preg_replace(
-            array(sprintf('(.*%s/)', basename($relativePath))), 
+        $relativePath = preg_replace(
+            array(
+                sprintf('(.*%s\%s)', basename($sourceDirectory), DIRECTORY_SEPARATOR)
+            ), 
             '', 
             $absolutePath
         );
+        
+        if ($relativePath == $absolutePath 
+            && !empty($sourceDirectory) 
+            && $sourceDirectory != $absolutePath) {
+            throw new Exception(
+                "The source defined by parameter --source, differs to the source extracted from log files!"
+            );
+        }
+        
+        if (empty($sourceDirectory)) {
+            return $absolutePath;
+        }
+        
+        return $relativePath;
     }
     
     /**
