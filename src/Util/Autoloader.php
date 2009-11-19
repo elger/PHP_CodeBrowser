@@ -77,10 +77,13 @@ class cbAutoloader
     public function __construct ()
     {
         $files = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator(dirname(__FILE__) . '/../../')
+            new RecursiveDirectoryIterator(PHPCB_ROOT_DIR)
         );
         
         foreach ($files as $file) {
+            if ('php' !== substr($file->getFilename(), -3)) {
+                continue;
+            }
             $this->_classes['cb' . substr($file->getFilename(), 0, -4)] 
                 = realpath($file->getPath() . '/' . $file->getFilename());
         }
