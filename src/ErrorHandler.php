@@ -122,6 +122,11 @@ class cbErrorHandler
                 'severity', 
                 'notice'
             );
+            $tmp['count_notices'] += $this->cbXMLHandler->countItems(
+                $file->children(), 
+                'severity', 
+                'warning'
+            );
             $files[]              = $tmp;
         }
         return $files;
