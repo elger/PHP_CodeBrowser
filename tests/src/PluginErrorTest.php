@@ -169,11 +169,26 @@ class cbPluginErrorTest extends cbAbstractTests
     {
         $absPath = '/my/path/to/source/code/myFile.php';
         $relPath = '../../source';
-        $dirPath = '/onother/path/to/path/source/source';
+        $dirPath = '/another/path/to/path/source/source';
         $noPath  = '';
 
         $this->assertEquals('code/myFile.php', $this->_cbPluginError->getRelativeFilePath($absPath, $relPath));
         $this->assertEquals('code/myFile.php', $this->_cbPluginError->getRelativeFilePath($absPath, $dirPath));
         $this->assertEquals($absPath, $this->_cbPluginError->getRelativeFilePath($absPath, $noPath));
     }
+    
+    /**
+     * Test exception in case of different source path as defined in log files
+     * 
+     * @return void
+     * 
+     * @expectedException Exception
+     */
+    public function testExceptionGetRelativePath()
+    {
+        $this->_cbPluginError->getRelativeFilePath(
+            '/path/to/src/in/log/files', 
+            'source/'
+        );
+    }  
 }

@@ -227,6 +227,21 @@ class cbXMLHandlerTest extends cbAbstractTests
         $this->assertTrue($files[1] instanceof DOMDocument);
         $this->assertTrue($files[4] instanceof DOMDocument);
     }
+    
+    /**
+     * Test exception in case of invalid xml files 
+     * 
+     * @return void
+     * 
+     * @group XMLHandler
+     * @group xmlmerge
+     * 
+     * @expectedException Exception
+     */
+    public function testExceptionAddDirectory()
+    {
+        $this->_cbXMLHandler->addDirectory(PHPCB_TEST_OUTPUT);    
+    }
 
     /**
      * Test if several xml files are merge in the proper way and the result is a single 
