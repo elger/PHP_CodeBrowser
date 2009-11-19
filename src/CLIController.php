@@ -46,7 +46,15 @@
  * @since     File available since 1.0
  */
 
-require_once dirname(__FILE__) . "/../src/Util/Autoloader.php";
+if (strpos('@php_dir@', '@php_dir') === false) {
+    define('PHPCB_ROOT_DIR', '@php_dir@/PHP_CodeBrowser');
+    define('PHPCB_TEMPLATE_DIR', '@data_dir@/PHP_CodeBrowser/templates');
+} else {
+    define('PHPCB_ROOT_DIR', dirname(__FILE__) . '/../');
+    define('PHPCB_TEMPLATE_DIR', dirname(__FILE__) . '/../templates');
+}
+
+require_once dirname(__FILE__) . '/Util/Autoloader.php';
 
 /**
  * cbCLIController
@@ -224,13 +232,10 @@ class cbCLIController
         
         // get cb error list
         $errors = $cbErrorHandler->getFilesWithErrors($this->_xmlFile);
-        
-        // create html views
-        $templateDir = realpath(dirname(__FILE__) . "/./../") . '/templates';
-        $html        = new cbHTMLGenerator(
+        $html   = new cbHTMLGenerator(
             $cbFDHandler, $cbErrorHandler, $cbJSGenerator
         );
-        $html->setTemplateDir($templateDir);
+        $html->setTemplateDir(PHPCB_TEMPLATE_DIR);
         $html->setOutputDir($this->_htmlOutputDir);
         $html->generateViewFlat($errors);
         $html->generateViewTree($errors);
@@ -277,6 +282,9 @@ class cbCLIController
             case '-h':
                 self::printHelp();
                 break;
+            case '--version':
+                self::printVersion();
+                break;
             }
         }
         
@@ -307,13 +315,13 @@ class cbCLIController
             $htmlOutput . '/' . $xmlFileName
         );
         $controller->addErrorPlugins(
-            array('cbErrorCheckstyle', 'cbErrorPMD', 'cbErrorCPD')
+            array('cbErrorCheckstyle', 'cbErrorPMD', 'cbErrorCPD', 'cbErrorPadawan')
         );
             
         try {
             $controller->run();
         } catch (Exception $e) {
-            printf("PHP-CodeBrowser Error: \n\n", $e->getMessage());
+            printf("PHP-CodeBrowser Error: \n%s\n", $e->getMessage());
         }
                 
         $timeEnd = microtime(true);
@@ -339,6 +347,20 @@ class cbCLIController
 
             General arguments:
             \t--help           \t\tPrint this help.\n\n"
+        );
+        echo str_replace("  ", "", $help);
+        exit();
+    }
+    
+    /**
+     * Print version information to shell
+     * 
+     * @return void
+     */
+    public static function printVersion()
+    {
+        $help = sprintf(
+            "PHP_CodeBrowser version 0.1.0 (alpha) by Elger Thiele (Mayflower GmbH)\n\n"
         );
         echo str_replace("  ", "", $help);
         exit();
