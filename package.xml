@@ -151,9 +151,6 @@
       <file name="README" role="doc" />
       <file name="CHANGELOG" role="doc" />
       <file name="LICENSE" role="doc" />
-      <file name="build.xml" role="doc">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
       <!--
       <file name="config.xml" role="doc">
         <tasks:replace from="@package_version@" to="version" type="package-info" />
