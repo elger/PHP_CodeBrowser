@@ -1,0 +1,281 @@
+<?xml version="1.0"?>
+<package version="2.0" xmlns="http://pear.php.net/dtd/package-2.0"
+  xmlns:tasks="http://pear.php.net/dtd/tasks-1.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+                      http://pear.php.net/dtd/tasks-1.0.xsd
+                      http://pear.php.net/dtd/package-2.0
+                      http://pear.php.net/dtd/package-2.0.xsd">
+  
+  <name>PHP_CodeBrowser</name>
+
+  <channel>pear.phpunit.de</channel>
+
+  <summary>PHP_CodeBrowser for integration in cruisecontrol</summary>
+  <description>PHP_CodeBrowser generates a html view for code browsing with
+  higlighted and colored errors, parsed from xml reports generated from codesniffer or
+  phpunit.
+  </description>
+
+  <lead>
+    <name>Elger Thiele</name>
+    <user>elger</user>
+    <email>elger.thiele@mayflower.de</email>
+    <active>yes</active>
+  </lead>
+  <date>2009-12-01</date>
+
+  <version>
+    <release>0.1.0</release>
+    <api>1.0.0</api>
+  </version>
+
+  <stability>
+    <release>alpha</release>
+    <api>alpha</api>
+  </stability>
+
+  <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
+  <notes>
+    Initial release of PHP_CodeBrowser
+  </notes>
+
+  <contents> 
+    <dir name="/">
+      <dir name="src">
+        <dir name="Plugins">
+          <file name="ErrorCheckstyle.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
+          <file name="ErrorCPD.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
+          <file name="ErrorPadawan.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
+          <file name="ErrorPMD.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
+        </dir> <!-- /Plugins -->
+        <dir name="Util">
+          <file name="Autoloader.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
+        </dir> <!-- /Util -->
+        
+        <file name="CLIController.php" role="php">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+          <tasks:replace from="@php_dir@" to="php_dir" type="pear-config" />
+          <tasks:replace from="@data_dir@" to="data_dir" type="pear-config" />
+        </file>
+        <file name="ErrorHandler.php" role="php">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="FDHandler.php" role="php">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="HTMLGenerator.php" role="php">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="JSGenerator.php" role="php">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="PluginError.php" role="php">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="XMLGenerator.php" role="php">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+        <file name="XMLHandler.php" role="php">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
+      </dir> <!-- /src -->
+      
+      <dir name="templates">
+        <dir name="css">
+          <file name="cruisecontrol.css" role="data" />
+        </dir> <!-- /css -->
+        <dir name="img">
+          <file name="background.gif" role="data" />
+          <file name="base.gif" role="data" />
+          <file name="cd.gif" role="data" />
+          <file name="empty.gif" role="data" />
+          <file name="folder.gif" role="data" />
+          <file name="folderopen.gif" role="data" />
+          <file name="globe.gif" role="data" />
+          <file name="imgfolder.gif" role="data" />
+          <file name="join.gif" role="data" />
+          <file name="joinbottom.gif" role="data" />
+          <file name="line.gif" role="data" />
+          <file name="minus.gif" role="data" />
+          <file name="minusbottom.gif" role="data" />
+          <file name="musicfolder.gif" role="data" />
+          <file name="nolines_minus.gif" role="data" />
+          <file name="nolines_plus.gif" role="data" />
+          <file name="page.gif" role="data" />
+          <file name="page.png" role="data" />
+          <file name="plus.gif" role="data" />
+          <file name="plusbottom.gif" role="data" />
+          <file name="question.gif" role="data" />
+          <file name="slider.gif" role="data" />
+          <file name="tab-active.png" role="data" />
+          <file name="trash.gif" role="data" />
+        </dir> <!-- /img -->
+        <dir name="js">
+          <file name="dtree.js" role="data" />
+          <file name="effects.js" role="data" />
+          <file name="prototip.js" role="data" />
+          <file name="prototype.js" role="data" />
+          <file name="side-bar.js" role="data" />
+        </dir> <!-- /js -->
+        <file name="flatView.tpl" role="data" />
+        <file name="index.tpl" role="data" />
+        <file name="page.tpl" role="data" />
+        <file name="reviewView.tpl" role="data" />
+        <file name="tree.tpl" role="data" />
+      </dir> <!-- /templates -->
+      
+      <dir name="bin">
+        <file name="phpcb.bat" role="script">
+          <tasks:replace from="@bin_dir@" to="bin_dir" type="pear-config" />
+          <tasks:replace from="@php_bin@" to="php_bin" type="pear-config" />
+          <tasks:windowseol/>
+        </file>
+        <file name="phpcb.php" role="script">
+          <tasks:replace from="/usr/bin/env php" to="php_bin" type="pear-config" />
+          <tasks:replace from="@php_bin@" to="php_bin" type="pear-config" />
+          <tasks:replace from="@php_dir@" to="php_dir" type="pear-config" />
+        </file>
+      </dir> <!-- /scripts -->
+      
+      <file name="README" role="doc" />
+      <file name="CHANGELOG" role="doc" />
+      <file name="LICENSE" role="doc" />
+      <file name="build.xml" role="doc">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      <!--
+      <file name="config.xml" role="doc">
+        <tasks:replace from="@package_version@" to="version" type="package-info" />
+      </file>
+      -->
+    </dir> <!-- / -->  
+    
+  </contents>
+
+  <dependencies>
+    <required>
+      <php>
+        <min>5.2.6</min>
+      </php>
+      <pearinstaller>
+        <min>1.9.0</min>
+      </pearinstaller>
+      <extension>
+        <name>dom</name>
+      </extension>
+      <extension>
+        <name>pcre</name>
+      </extension>
+      <extension>
+        <name>spl</name>
+      </extension>
+    </required>
+
+    <optional>
+      <package>
+        <name>PHPUnit</name>
+        <channel>pear.phpunit.de</channel>
+        <min>3.4.0</min>
+      </package>
+      <package>
+        <name>phpUnderControl</name>
+        <channel>pear.phpunit.de</channel>
+        <min>0.4.7</min>
+      </package>
+      <package>
+        <name>PHP_CodeSniffer</name>
+        <channel>pear.php.net</channel>
+        <min>1.2.0</min>
+      </package>
+      <package>
+        <name>PhpDocumentor</name>
+        <channel>pear.php.net</channel>
+        <min>1.4.3</min>
+      </package>
+      <extension>
+        <name>xdebug</name>
+        <min>2.0.5</min>
+      </extension>
+    </optional>
+  </dependencies>
+
+  <phprelease>
+    <installconditions>
+      <os>
+        <name>windows</name>
+      </os>
+    </installconditions>
+    <filelist>
+      <install as="PHP_CodeBrowser/Plugins/ErrorCheckstyle.php" name="src/Plugins/ErrorCheckstyle.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorCPD.php" name="src/Plugins/ErrorCPD.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorPadawan.php" name="src/Plugins/ErrorPadawan.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php" name="src/Plugins/ErrorPMD.php" />
+      
+      <install as="PHP_CodeBrowser/Util/Autoloader.php" name="src/Util/Autoloader.php" />
+      
+      <install as="PHP_CodeBrowser/CLIController.php" name="src/CLIController.php" />
+      <install as="PHP_CodeBrowser/ErrorHandler.php" name="src/ErrorHandler.php" />
+      <install as="PHP_CodeBrowser/FDHandler.php" name="src/FDHandler.php" />
+      <install as="PHP_CodeBrowser/HTMLGenerator.php" name="src/HTMLGenerator.php" />
+      <install as="PHP_CodeBrowser/JSGenerator.php" name="src/JSGenerator.php" />
+      <install as="PHP_CodeBrowser/PluginError.php" name="src/PluginError.php" />
+      <install as="PHP_CodeBrowser/XMLGenerator.php" name="src/XMLGenerator.php" />
+      <install as="PHP_CodeBrowser/XMLHandler.php" name="src/XMLHandler.php" />
+    
+      <install as="phpcb.bat" name="bin/phpcb.bat" />
+      <install as="phpcb" name="bin/phpcb.php" />
+    </filelist>
+  </phprelease>
+  <phprelease>
+    <filelist>
+      <install as="PHP_CodeBrowser/Plugins/ErrorCheckstyle.php" name="src/Plugins/ErrorCheckstyle.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorCPD.php" name="src/Plugins/ErrorCPD.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorPadawan.php" name="src/Plugins/ErrorPadawan.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php" name="src/Plugins/ErrorPMD.php" />
+      
+      <install as="PHP_CodeBrowser/Util/Autoloader.php" name="src/Util/Autoloader.php" />
+      
+      <install as="PHP_CodeBrowser/CLIController.php" name="src/CLIController.php" />
+      <install as="PHP_CodeBrowser/ErrorHandler.php" name="src/ErrorHandler.php" />
+      <install as="PHP_CodeBrowser/FDHandler.php" name="src/FDHandler.php" />
+      <install as="PHP_CodeBrowser/HTMLGenerator.php" name="src/HTMLGenerator.php" />
+      <install as="PHP_CodeBrowser/JSGenerator.php" name="src/JSGenerator.php" />
+      <install as="PHP_CodeBrowser/PluginError.php" name="src/PluginError.php" />
+      <install as="PHP_CodeBrowser/XMLGenerator.php" name="src/XMLGenerator.php" />
+      <install as="PHP_CodeBrowser/XMLHandler.php" name="src/XMLHandler.php" />
+        
+      <install as="phpcb" name="bin/phpcb.php" />
+      <ignore name="bin/phpcb.bat" />
+    </filelist>
+  </phprelease>
+
+  <changelog>
+    <release>
+      <version>
+        <release>0.1.0</release>
+        <api>1.0.0</api>
+      </version>
+      <stability>
+        <release>alpha</release>
+        <api>alpha</api>
+      </stability>
+      <date>2009-12-01</date>
+      <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
+      <notes>
+      Initial release of PHP_CodeBrowser
+      </notes>
+    </release>
+  </changelog>
+</package>
+
