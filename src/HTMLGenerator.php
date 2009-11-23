@@ -240,11 +240,13 @@ class cbHTMLGenerator
     /**
      * Copy needed resources to output directory
      * 
+     * @param boolean $hasErrors Flag to define which index.html will be generated.
+     * 
      * @return void
      * @throws Exception
      * @see cbFDHandler::copyFile
      */
-    public function copyRessourceFolders()
+    public function copyRessourceFolders($hasErrors = true)
     {
         if (!isset($this->_outputDir)) {
             throw new Exception('Output directory is not set!');    
@@ -256,8 +258,15 @@ class cbHTMLGenerator
                 $this->_outputDir . DIRECTORY_SEPARATOR . $folder
             );
         }
-        $content = $this->_cbFDHandler->loadFile($this->_templateDir . DIRECTORY_SEPARATOR . 'index.tpl');
-        $this->_cbFDHandler->createFile($this->_outputDir . DIRECTORY_SEPARATOR . 'index.html', $content);
+        
+        $template = ($hasErrors) ?  'index.tpl' : 'noErrors.tpl';
+        
+        $content = $this->_cbFDHandler->loadFile(
+            $this->_templateDir . DIRECTORY_SEPARATOR . $template
+        );
+        $this->_cbFDHandler->createFile(
+            $this->_outputDir . DIRECTORY_SEPARATOR . 'index.html', $content
+        );
     }
     
     /**

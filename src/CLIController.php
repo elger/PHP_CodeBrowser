@@ -237,14 +237,16 @@ class cbCLIController
         );
         $html->setTemplateDir(PHPCB_TEMPLATE_DIR);
         $html->setOutputDir($this->_htmlOutputDir);
-        $html->generateViewFlat($errors);
-        $html->generateViewTree($errors);
-        $html->generateViewReview(
-            $errors, $this->_xmlFile, $this->_projectSourceDir
-        );
         
+        if (!empty($errors)) {
+            $html->generateViewFlat($errors);
+            $html->generateViewTree($errors);
+            $html->generateViewReview(
+                $errors, $this->_xmlFile, $this->_projectSourceDir
+            );
+        }
         // copy needed resources like css, js, images
-        $html->copyRessourceFolders();
+        $html->copyRessourceFolders(!empty($errors));
     }
     
     

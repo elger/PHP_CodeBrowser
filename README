@@ -22,7 +22,6 @@
     |
     |--> tests/         PHPUnit test suite 
     |
-    |--> build.xml      Cruisecontrol project build file example for PHP_CodeBrowser
     |--> package.xml    PEAR package information file
     |
     |--> LICENCE        Licence information
@@ -60,8 +59,6 @@
 
     b) Integration in cruisecontrol
     ===============================
-    
-    (see build.xml example)
     
     ...
     <target name="build" depends="...,phpcb" /> (phpcb should be called after xml file generation) 
