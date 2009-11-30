@@ -23,10 +23,10 @@
     <email>elger.thiele@mayflower.de</email>
     <active>yes</active>
   </lead>
-  <date>2009-12-01</date>
+  <date>2009-11-30</date>
 
   <version>
-    <release>0.1.0</release>
+    <release>0.1.1</release>
     <api>1.0.0</api>
   </version>
 
@@ -37,7 +37,7 @@
 
   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
   <notes>
-    Initial release of PHP_CodeBrowser
+  - added additional view if source has no errors or valid xml files
   </notes>
 
   <contents> 
@@ -133,6 +133,7 @@
         <file name="page.tpl" role="data" />
         <file name="reviewView.tpl" role="data" />
         <file name="tree.tpl" role="data" />
+        <file name="noErrors.tpl" role="data" />
       </dir> <!-- /templates -->
       
       <dir name="bin">
@@ -166,7 +167,7 @@
         <min>5.2.6</min>
       </php>
       <pearinstaller>
-        <min>1.9.0</min>
+        <min>1.8.1</min>
       </pearinstaller>
       <extension>
         <name>dom</name>
@@ -267,10 +268,25 @@
         <release>alpha</release>
         <api>alpha</api>
       </stability>
-      <date>2009-12-01</date>
+      <date>2009-11-25</date>
       <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
       <notes>
       Initial release of PHP_CodeBrowser
+      </notes>
+    </release>
+    <release>
+      <version>
+        <release>0.1.1</release>
+        <api>1.0.0</api>
+      </version>
+      <stability>
+        <release>alpha</release>
+        <api>alpha</api>
+      </stability>
+      <date>2009-11-30</date>
+      <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
+      <notes>
+      - added additional view if source has no errors or valid xml files
       </notes>
     </release>
   </changelog>
