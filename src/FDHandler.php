@@ -47,7 +47,7 @@
  */
 
 /**
- * cbFDHandler
+ * CbFDHandler
  *
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
@@ -59,7 +59,7 @@
  * @link      http://www.phpunit.de/
  * @since     Class available since 1.0
  */
-class cbFDHandler
+class CbFDHandler
 {
     
     /**
@@ -71,7 +71,7 @@ class cbFDHandler
      * 
      * @return void
      */
-    public function createFile ($fileName, $fileContent)
+    public function createFile($fileName, $fileContent)
     {
         $realName = basename($fileName);
         $path     = substr($fileName, 0, - 1 * (strlen($realName)));
@@ -91,7 +91,7 @@ class cbFDHandler
      * 
      * @return void 
      */
-    public function deleteFile ($fileName)
+    public function deleteFile($fileName)
     {
         if (file_exists($fileName)) {
             unlink($fileName);
@@ -108,7 +108,7 @@ class cbFDHandler
      * @return return void
      * @throws Exception 
      */
-    public function copyFile ($fileSource, $sourceFolder)
+    public function copyFile($fileSource, $sourceFolder)
     {
         if (!file_exists($fileSource)) {
             throw new Exception('File ' . $fileSource . ' does not exists!');
@@ -128,7 +128,7 @@ class cbFDHandler
      * @return string
      * @throws Exception
      */
-    public function loadFile ($fileName)
+    public function loadFile($fileName)
     {
         if (!file_exists($fileName)) {
             throw new Exception('File ' . $fileName . ' does not exist!');
@@ -144,16 +144,15 @@ class cbFDHandler
      * 
      * @return void
      */
-    public function createDirectory ($target)
+    public function createDirectory($target)
     {
-        if ('\/' == substr($target, - 1, 1)) {
-            $target = substr($target, - 1, 1);
+        if (DIRECTORY_SEPARATOR == substr($target, - 1, 1)) {
+            $target = substr($target, 0, -1);
         }
-        
         $dirs = explode('/', $target);
         $path = '';
         foreach ($dirs as $folder) {
-            if (! is_dir($path = $path . $folder . '/')) {
+            if (!is_dir($path = $path . $folder . DIRECTORY_SEPARATOR)) {
                 mkdir($path);
             }
         }
@@ -168,7 +167,7 @@ class cbFDHandler
      * @return void
      * @throws Exception
      */
-    public function deleteDirectory ($source)
+    public function deleteDirectory($source)
     {
         $iterator = new DirectoryIterator($source);
         while ($iterator->valid()) {
@@ -190,7 +189,7 @@ class cbFDHandler
         unset($iterator);
 
         // delete the source root folder as well
-        if (! rmdir($source)) {
+        if (!rmdir($source)) {
             throw new Exception('Could not delete directory ' . $source); 
         }
     }
@@ -204,7 +203,7 @@ class cbFDHandler
      * 
      * @return void
      */
-    public function copyDirectory ($source, $target, $exclude = array())
+    public function copyDirectory($source, $target, $exclude = array())
     {
         // first check for target itself
         $this->createDirectory($target);

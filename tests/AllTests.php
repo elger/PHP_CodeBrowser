@@ -45,10 +45,10 @@
  * @since      File available since 1.0
  */
 
-define('PHPCB_ROOT_DIR',    dirname( __FILE__ ) . '/../');
-define('PHPCB_SOURCE',      realpath(PHPCB_ROOT_DIR) . '/src');
-define('PHPCB_TEST_DIR',    realpath(PHPCB_ROOT_DIR) . '/tests/testData');
-define('PHPCB_TEST_OUTPUT', PHPCB_TEST_DIR . '/output');
+if (!defined('PHPCB_ROOT_DIR')) define('PHPCB_ROOT_DIR',    dirname( __FILE__ ) . '/../');
+if (!defined('PHPCB_SOURCE')) define('PHPCB_SOURCE',      realpath(PHPCB_ROOT_DIR) . '/src');
+if (!defined('PHPCB_TEST_DIR')) define('PHPCB_TEST_DIR',    realpath(PHPCB_ROOT_DIR) . '/tests/testData');
+if (!defined('PHPCB_TEST_OUTPUT')) define('PHPCB_TEST_OUTPUT', PHPCB_TEST_DIR . '/output');
 
 require_once PHPCB_SOURCE . '/Util/Autoloader.php';
 
@@ -72,7 +72,7 @@ require_once dirname( __FILE__ ) . '/src/Plugins/ErrorPadawanTest.php';
 PHPUnit_Util_Filter::addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
 
 /**
- * cbAlltests
+ * CbAlltests
  *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -84,31 +84,31 @@ PHPUnit_Util_Filter::addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class cbAllTests extends PHPUnit_Framework_TestSuite
+class CbAllTests extends PHPUnit_Framework_TestSuite
 {
     /**
      * Construct
      */
     public function __construct ()
     {
-        spl_autoload_register( array( new cbAutoloader(), 'autoload' ) );
+        spl_autoload_register( array( new CbAutoloader(), 'autoload' ) );
 
         $this->setName('AllTests');
         
         // source
-        $this->addTestSuite('cbFDHandlerTest');
-        $this->addTestSuite('cbXMLHandlerTest');
-        $this->addTestSuite('cbXMLGeneratorTest');
-        $this->addTestSuite('cbErrorHandlerTest');
-        $this->addTestSuite('cbPluginErrorTest');
-        $this->addTestSuite('cbHTMLGeneratorTest');
-        $this->addTestSuite('cbJSGeneratorTest');
+        $this->addTestSuite('CbFDHandlerTest');
+        $this->addTestSuite('CbXMLHandlerTest');
+        $this->addTestSuite('CbXMLGeneratorTest');
+        $this->addTestSuite('CbErrorHandlerTest');
+        $this->addTestSuite('CbPluginErrorTest');
+        $this->addTestSuite('CbHTMLGeneratorTest');
+        $this->addTestSuite('CbJSGeneratorTest');
                 
         // plugins
-        $this->addTestSuite('cbErrorPMDTest');
-        $this->addTestSuite('cbErrorCPDTest');
-        $this->addTestSuite('cbErrorCheckstyleTest');
-        $this->addTestSuite('cbErrorPadawanTest');
+        $this->addTestSuite('CbErrorPMDTest');
+        $this->addTestSuite('CbErrorCPDTest');
+        $this->addTestSuite('CbErrorCheckstyleTest');
+        $this->addTestSuite('CbErrorPadawanTest');
     }
     
     /**

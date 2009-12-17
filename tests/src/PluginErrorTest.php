@@ -48,7 +48,7 @@
 require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
 
 /**
- * cbPluginErrorTests
+ * CbPluginErrorTests
  * 
  * As the cbPluginError is abstract an mock proxy is setup. 
  *
@@ -63,7 +63,7 @@ require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
  * @since      Class available since 1.0
  * @see        cbMockPluginError
  */
-class cbPluginErrorTest extends cbAbstractTests 
+class CbPluginErrorTest extends CbAbstractTests 
 {
     /**
      * MockPluginError object to test.
@@ -88,7 +88,7 @@ class cbPluginErrorTest extends cbAbstractTests
     {
         parent::setUp();        
         $this->_mockXMLHandler = $this->_getMockXMLHandler();
-        $this->_cbPluginError = new cbMockPluginError(PHPCB_SOURCE, $this->_mockXMLHandler);
+        $this->_cbPluginError = new CbMockPluginError(PHPCB_SOURCE, $this->_mockXMLHandler);
     }
     
     /**
@@ -159,36 +159,4 @@ class cbPluginErrorTest extends cbAbstractTests
         $this->assertArrayHasKey('eae7d2bf1565776108392eeba1e3dc44', $result);
         $this->assertTrue(count($result['eae7d2bf1565776108392eeba1e3dc44']) == 1);
     }
-    
-    /**
-     * Test function that should cut off relative matching path definitions.
-     * 
-     * @return void
-     */
-    public function testGetRelativePath()
-    {
-        $absPath = '/my/path/to/source/code/myFile.php';
-        $relPath = '../../source';
-        $dirPath = '/another/path/to/path/source/source';
-        $noPath  = '';
-
-        $this->assertEquals('code/myFile.php', $this->_cbPluginError->getRelativeFilePath($absPath, $relPath));
-        $this->assertEquals('code/myFile.php', $this->_cbPluginError->getRelativeFilePath($absPath, $dirPath));
-        $this->assertEquals($absPath, $this->_cbPluginError->getRelativeFilePath($absPath, $noPath));
-    }
-    
-    /**
-     * Test exception in case of different source path as defined in log files
-     * 
-     * @return void
-     * 
-     * @expectedException Exception
-     */
-    public function testExceptionGetRelativePath()
-    {
-        $this->_cbPluginError->getRelativeFilePath(
-            '/path/to/src/in/log/files', 
-            'source/'
-        );
-    }  
 }

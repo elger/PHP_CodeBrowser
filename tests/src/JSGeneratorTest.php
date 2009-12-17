@@ -48,7 +48,7 @@
 require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
 
 /**
- * cbJSGeneratorTest
+ * CbJSGeneratorTest
  *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -60,7 +60,7 @@ require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class cbJSGeneratorTest extends cbAbstractTests 
+class CbJSGeneratorTest extends CbAbstractTests 
 {
     /**
      * cbJSGenerator object to test
@@ -85,7 +85,7 @@ class cbJSGeneratorTest extends cbAbstractTests
         parent::setUp();
         
         $this->_mockFDHandler = $this->_getMockFDhandler();   
-        $this->_cbJSGenerator = new cbJSGenerator($this->_mockFDHandler);
+        $this->_cbJSGenerator = new CbJSGenerator($this->_mockFDHandler);
     }
     
     /**

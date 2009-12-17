@@ -48,7 +48,7 @@
 require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
 
 /**
- * cbXMLHandlerTests
+ * CbXMLHandlerTests
  *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -60,7 +60,7 @@ require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class cbXMLHandlerTest extends cbAbstractTests 
+class CbXMLHandlerTest extends CbAbstractTests 
 {
     /**
      * XMLHandler object to test
@@ -85,7 +85,7 @@ class cbXMLHandlerTest extends cbAbstractTests
         parent::setUp();
         
         $this->_mockFDHandler = $this->_getMockFDHandler();
-        $this->_cbXMLHandler = new cbXMLHandler($this->_mockFDHandler);
+        $this->_cbXMLHandler = new CbXMLHandler($this->_mockFDHandler);
     }
 
     /**

@@ -48,7 +48,7 @@
 require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
 
 /**
- * cbXMLGeneratorrTests
+ * CbXMLGeneratorrTests
  *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -60,7 +60,7 @@ require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class cbXMLGeneratorTest extends cbAbstractTests 
+class CbXMLGeneratorTest extends CbAbstractTests 
 {
     /**
      * XMLGenerator object to test
@@ -84,7 +84,7 @@ class cbXMLGeneratorTest extends cbAbstractTests
     {
         parent::setUp();
         $this->_mockFDHandler = $this->_getMockFDHandler();
-        $this->_cbXMLGenerator = new cbXMLGenerator($this->_mockFDHandler);
+        $this->_cbXMLGenerator = new CbXMLGenerator($this->_mockFDHandler);
     }
     
     /**
@@ -136,13 +136,14 @@ class cbXMLGeneratorTest extends cbAbstractTests
     /**
      * This method is just a wrapper on parent class.
      * Functionality is tested in parent class.
-     * 
+     *
      * @return void
      */
     public function testSaveCbXML() 
     {
-        $this->markTestSkipped("Wrapper method. Functionality is tested in parent.");
+        $tmpXML = simplexml_load_string('<?xml version="1.0" encoding="utf-8"?><codebrowser></codebrowser>');
+        $this->assertFileNotExists(self::$_cbTestXML);
+        $this->_cbXMLGenerator->saveCbXML($tmpXML);
     }
-    
 }
 

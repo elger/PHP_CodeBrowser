@@ -48,7 +48,7 @@
 require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
 
 /**
- * cbHTMLGeneratorTest
+ * CbHTMLGeneratorTest
  *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -60,7 +60,7 @@ require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class cbHTMLGeneratorTest extends cbAbstractTests 
+class CbHTMLGeneratorTest extends CbAbstractTests 
 {
     /**
      * cbHTMLGenerator object to test
@@ -101,7 +101,7 @@ class cbHTMLGeneratorTest extends cbAbstractTests
         $this->_mockFDHandler = $this->_getMockFDHandler();
         $this->_mockErrorHandler = $this->_getMockErrorHandler();
         $this->_mockJSGenerator = $this->_getMockJSGenerator();
-        $this->_cbHTMLGenerator = new cbHTMLGenerator(
+        $this->_cbHTMLGenerator = new CbHTMLGenerator(
             $this->_mockFDHandler, 
             $this->_mockErrorHandler, 
             $this->_mockJSGenerator);

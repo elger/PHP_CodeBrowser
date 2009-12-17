@@ -7,8 +7,9 @@
 <div class="sourcecode">
 <?php print $source; ?>
 </div>
+<?php if (!empty($errors)) : ?>
 <div id="sideBar">
-	<a href="javascript:void(0)" id="sideBarTab"> </a> 
+	<a href="javascript:void(0)" id="sideBarTab"> </a>
 	<div id="sideBarContents" style="display:none;">
 		<div id="sideBarContentsInner">
     	<table cellpadding="3">
@@ -88,4 +89,4 @@
     // Call SideBar Observer
     Event.observe(window, 'load', init, true);
 </script> 
-
+<?php endif; // div sidebar ?> 

@@ -47,7 +47,7 @@
  */
 
 /**
- * cbXMLHandler
+ * CbXMLHandler
  * 
  * This class provides basic functionality according xml handling, like saving
  * xml structs to storage, reading, parsing or mergin xml structs.
@@ -62,7 +62,7 @@
  * @link      http://www.phpunit.de/
  * @since     Class available since 1.0
  */
-class cbXMLHandler
+class CbXMLHandler
 {
     /**
      * File handler object
@@ -81,9 +81,9 @@ class cbXMLHandler
     /**
      * Constructor
      * 
-     * @param cbFDHandler $cbFDHandler File handler object
+     * @param CbFDHandler $cbFDHandler File handler object
      */
-    public function __construct(cbFDHandler $cbFDHandler) 
+    public function __construct(CbFDHandler $cbFDHandler) 
     {
         $this->cbFDHandler = $cbFDHandler;
     }
@@ -223,8 +223,10 @@ class cbXMLHandler
             return $xml;
         }
         
-        foreach($this->xmlFiles as $xmlFile) foreach($xmlFile->childNodes as $node) {
-            $cruise->appendChild($xml->importNode($node, true));
+        foreach ($this->xmlFiles as $xmlFile) {
+            foreach ($xmlFile->childNodes as $node) {
+                $cruise->appendChild($xml->importNode($node, true));
+            }
         }
         $xml->appendChild($cruise);
         return $xml;

@@ -48,7 +48,7 @@
 require_once realpath(dirname( __FILE__ ) . '/../../AbstractTests.php');
 
 /**
- * cbErrorPadawanTest
+ * CbErrorPadawanTest
  *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -60,7 +60,7 @@ require_once realpath(dirname( __FILE__ ) . '/../../AbstractTests.php');
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class cbErrorPadawanTest extends cbAbstractTests
+class CbErrorPadawanTest extends CbAbstractTests
 {
     /**
      * cbErrorPadawan object to test
@@ -76,7 +76,7 @@ class cbErrorPadawanTest extends cbAbstractTests
     protected function setUp()
     {
         parent::setUp();
-        $this->_cbErrorPadawan = new cbErrorPadawan('source/', $this->_getMockXMLHandler());
+        $this->_cbErrorPadawan = new CbErrorPadawan('source/', $this->_getMockXMLHandler());
     }
     
     /**

@@ -48,7 +48,7 @@
 require_once realpath(dirname( __FILE__ ) . '/../../AbstractTests.php');
 
 /**
- * cbErrorPMDTest
+ * CbErrorPMDTest
  *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -60,7 +60,7 @@ require_once realpath(dirname( __FILE__ ) . '/../../AbstractTests.php');
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class cbErrorPMDTest extends cbAbstractTests
+class CbErrorPMDTest extends CbAbstractTests
 {
     /**
      * cbErrorPMD object to test
@@ -76,7 +76,7 @@ class cbErrorPMDTest extends cbAbstractTests
     protected function setUp()
     {
         parent::setUp();
-        $this->_cbErrorPMD = new cbErrorPMD('source/', $this->_getMockXMLHandler());
+        $this->_cbErrorPMD = new CbErrorPMD('source/', $this->_getMockXMLHandler());
     }
     
     /**

@@ -48,7 +48,7 @@
 require_once realpath(dirname( __FILE__ ) . '/../../AbstractTests.php');
 
 /**
- * cbErrorCheckstyleTest
+ * CbErrorCheckstyleTest
  *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -60,7 +60,7 @@ require_once realpath(dirname( __FILE__ ) . '/../../AbstractTests.php');
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class cbErrorCheckstyleTest extends cbAbstractTests
+class CbErrorCheckstyleTest extends CbAbstractTests
 {
     /**
      * cbErrorCheckstyle object to test
@@ -76,7 +76,7 @@ class cbErrorCheckstyleTest extends cbAbstractTests
     protected function setUp()
     {
         parent::setUp();
-        $this->_cbErrorCheckstyle = new cbErrorCheckstyle('source/', $this->_getMockXMLHandler());
+        $this->_cbErrorCheckstyle = new CbErrorCheckstyle('source/', $this->_getMockXMLHandler());
     }
     
     /**

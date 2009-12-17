@@ -46,7 +46,7 @@
  */
 
 /**
- * cbMockPluginError
+ * CbMockPluginError
  * 
  * Mock object for abstract class cbPluginError
  *
@@ -61,7 +61,7 @@
  * @since      Class available since 1.0
  * @see        cbPluginError
  */
-class cbMockPluginError extends cbPluginError 
+class CbMockPluginError extends CbPluginError 
 {
     /**
      * (non-PHPdoc)

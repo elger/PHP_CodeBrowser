@@ -48,7 +48,7 @@
  */
 
 /**
- * cbErrorCPD
+ * CbErrorCPD
  * 
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -61,7 +61,7 @@
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class cbErrorCPD extends cbPluginError
+class CbErrorCPD extends CbPluginError
 {
     /**
      * Setter mothod for the plugin name
@@ -107,14 +107,8 @@ class cbErrorCPD extends cbPluginError
         $errorS['description'] = htmlentities(
             '... ' . substr($attributesF['path'], strlen($attributesF['path']) - 30)
         );
-        $errorF['name']        = $this->getRelativeFilePath(
-            $attributesF['path'], 
-            $this->projectSourceDir
-        );
-        $errorS['name']        = $this->getRelativeFilePath(
-            $attributesS['path'], 
-            $this->projectSourceDir
-        );
+        $errorF['name']        = $attributesF['path'];
+        $errorS['name']        = $attributesS['path'];
         
         return array($errorF , $errorS);
     }

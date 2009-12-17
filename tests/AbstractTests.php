@@ -46,7 +46,7 @@
  */
 
 /**
- * cbAbstractTests
+ * CbAbstractTests
  *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -58,7 +58,7 @@
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class cbAbstractTests extends PHPUnit_Framework_TestCase
+class CbAbstractTests extends PHPUnit_Framework_TestCase
 {
     /**
      * Merged cruisecontrol XML error file
@@ -151,7 +151,7 @@ class cbAbstractTests extends PHPUnit_Framework_TestCase
     {
         $functions = array('loadXML', 'countItems', 'saveXML');
         $params = array($this->_getMockFDHandler());
-        $mockXMLHandler = $this->getMock('cbXMLHandler', $functions, $params);
+        $mockXMLHandler = $this->getMock('CbXMLHandler', $functions, $params);
         
         return $mockXMLHandler;
     }
@@ -165,7 +165,7 @@ class cbAbstractTests extends PHPUnit_Framework_TestCase
     protected function _getMockFDHandler() 
     {
         $functions = array('createFile', 'loadFile', 'copyFile', 'copyDirectory');
-        $mockFDHandler = $this->getMock('cbFDHandler', $functions);
+        $mockFDHandler = $this->getMock('CbFDHandler', $functions);
         
         return $mockFDHandler;
     }
@@ -180,7 +180,7 @@ class cbAbstractTests extends PHPUnit_Framework_TestCase
     {
         $functions = array('getJSTree', 'getHighlightedSource');
         $params = array($this->_getMockFDHandler());
-        $mockJSGenerator = $this->getMock('cbJSGenerator', $functions, $params);
+        $mockJSGenerator = $this->getMock('CbJSGenerator', $functions, $params);
         
         return $mockJSGenerator;
     }
@@ -195,7 +195,7 @@ class cbAbstractTests extends PHPUnit_Framework_TestCase
     {
         $functions = array('getErrorsByFile');
         $params = array($this->_getMockXMLHandler());
-        $mockErrorHandler = $this->getMock('cbErrorHandler', $functions, $params);
+        $mockErrorHandler = $this->getMock('CbErrorHandler', $functions, $params);
         
         return $mockErrorHandler;
     }

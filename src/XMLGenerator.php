@@ -47,7 +47,7 @@
  */
 
 /**
- * cbXMLGenerator
+ * CbXMLGenerator
  *
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
@@ -59,7 +59,7 @@
  * @link      http://www.phpunit.de/
  * @since     Class available since 1.0
  */
-class cbXMLGenerator extends cbXMLHandler
+class CbXMLGenerator extends CbXMLHandler
 {
     /**
      * The PHP_CodeBrowser XML filename including path-to-file
@@ -148,8 +148,9 @@ class cbXMLGenerator extends cbXMLHandler
     {
         $list = array();
         $keys = array_unique(array_keys($errorList));
-        foreach ($keys as $key) $list[$key] = $errorList[$key][0]['name'];
-        
+        foreach ($keys as $key) {
+            $list[$key] = $errorList[$key][0]['name'];
+        }
         asort($list);
         return $list;
     }

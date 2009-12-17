@@ -45,7 +45,7 @@
  */
 
 /**
- * cbJSGenerator
+ * CbJSGenerator
  *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -57,7 +57,7 @@
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class cbJSGenerator
+class CbJSGenerator
 {
     /**
      * File handler object
@@ -69,9 +69,9 @@ class cbJSGenerator
     /**
      * Constructor
      * 
-     * @param cbFDHandler $cbFDHandler File handler object
+     * @param CbFDHandler $cbFDHandler File handler object
      */
-    public function __construct(cbFDHandler $cbFDHandler) 
+    public function __construct(CbFDHandler $cbFDHandler) 
     {
         $this->cbFDHandler = $cbFDHandler;    
     }

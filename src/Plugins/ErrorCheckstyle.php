@@ -48,7 +48,7 @@
  */
 
 /**
- * cbErrorCheckstyle
+ * CbErrorCheckstyle
  * 
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -61,7 +61,7 @@
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class cbErrorCheckstyle extends cbPluginError
+class CbErrorCheckstyle extends CbPluginError
 {
     /**
      * Setter mothod for the plugin name
@@ -84,10 +84,7 @@ class cbErrorCheckstyle extends cbPluginError
     {
         $errorList     = array();
         $attributes    = $element->attributes();
-        $error['name'] = $this->getRelativeFilePath(
-            $attributes['name'], 
-            $this->projectSourceDir
-        );
+        $error['name'] = $attributes['name'];
         
         foreach ($element->error as $child) {
             $attributes           = $child->attributes();

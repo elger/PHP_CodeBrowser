@@ -47,7 +47,7 @@
  */
 
 /**
- * cbHTMLGenerator
+ * CbHTMLGenerator
  *
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
@@ -59,7 +59,7 @@
  * @link      http://www.phpunit.de/
  * @since     Class available since 1.0
  */
-class cbHTMLGenerator
+class CbHTMLGenerator
 {
     /**
      * Template directory
@@ -106,11 +106,11 @@ class cbHTMLGenerator
     /**
      * Constructor
      * 
-     * @param cbFDHandler    $cbFDHandler    File handler object
-     * @param cbErrorHandler $cbErrorHandler Error handler object
-     * @param cbJsGenerator  $cbJSGenerator  JS / HTML generator object
+     * @param CbFDHandler    $cbFDHandler    File handler object
+     * @param CbErrorHandler $cbErrorHandler Error handler object
+     * @param CbJsGenerator  $cbJSGenerator  JS / HTML generator object
      */
-    public function __construct(cbFDHandler $cbFDHandler, cbErrorHandler $cbErrorHandler, cbJSGenerator $cbJSGenerator)
+    public function __construct(CbFDHandler $cbFDHandler, CbErrorHandler $cbErrorHandler, CbJSGenerator $cbJSGenerator)
     {
         $this->_cbFDHandler    = $cbFDHandler;
         $this->_cbErrorHandler = $cbErrorHandler;
@@ -215,7 +215,7 @@ class cbHTMLGenerator
         foreach ($errors as $file) {
             $data['errors']   = $this->_cbErrorHandler->getErrorsByFile(
                 $cbXMLFile, 
-                $file['complete']
+                $file['file']
             );
             $data['source']   = $this->_cbJSGenerator->getHighlightedSource(
                 $file['complete'], 
@@ -279,11 +279,10 @@ class cbHTMLGenerator
      */
     private function _render($templateName, $data)
     {
-        if (!file_exists(realpath($this->_templateDir) . DIRECTORY_SEPARATOR . $templateName . '.tpl')) {
-            throw new Exception(
-                'Template ' . $templateName . '.tpl could not be found!'
-            );
-        }
+        $filePath = realpath($this->_templateDir) 
+            . DIRECTORY_SEPARATOR 
+            . $templateName 
+            . '.tpl';
         
         if (!count($data)) {
             return '';
@@ -291,7 +290,10 @@ class cbHTMLGenerator
         
         extract($data, EXTR_SKIP);
         ob_start();
-        include realpath($this->_templateDir) . DIRECTORY_SEPARATOR . $templateName . '.tpl';
+        include realpath($this->_templateDir) 
+            . DIRECTORY_SEPARATOR 
+            . $templateName 
+            . '.tpl';
         $contents = ob_get_contents();
         ob_end_clean();
         return $contents;
@@ -309,7 +311,10 @@ class cbHTMLGenerator
     private function _generateView($data, $fileName)
     {
         $this->_cbFDHandler->createFile(
-            $this->_outputDir . DIRECTORY_SEPARATOR . $fileName, $this->_render('page', $data)
+            $this->_outputDir 
+            . DIRECTORY_SEPARATOR 
+            . $fileName, 
+            $this->_render('page', $data)
         );
     }
 }

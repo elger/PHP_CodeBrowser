@@ -60,7 +60,7 @@
  * @link      http://www.phpunit.de/
  * @since     Class available since 1.0
  */
-class cbAutoloader
+class CbAutoloader
 {
     /**
      * Array of classnames and path
@@ -84,7 +84,7 @@ class cbAutoloader
             if ('php' !== substr($file->getFilename(), -3)) {
                 continue;
             }
-            $this->_classes['cb' . substr($file->getFilename(), 0, -4)] 
+            $this->_classes['Cb' . substr($file->getFilename(), 0, -4)] 
                 = realpath($file->getPath() . '/' . $file->getFilename());
         }
     }

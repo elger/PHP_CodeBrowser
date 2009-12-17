@@ -1,3 +1,10 @@
+PHP_CodeBrowser 0.1.1
+---------------------
+
+Fixed PHP_CodeBrowser error, in case of project does not has any error log files or
+only empty error log files.
+
+
 PHP_CodeBrowser 0.1.0
 ---------------------
 

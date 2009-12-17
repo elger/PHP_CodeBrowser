@@ -48,7 +48,7 @@
  */
 
 /**
- * cbErrorPMD
+ * CbErrorPMD
  * 
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -61,7 +61,7 @@
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class cbErrorPMD extends cbPluginError
+class CbErrorPMD extends CbPluginError
 {
     /**
      * Setter mothod for the plugin name
@@ -84,10 +84,7 @@ class cbErrorPMD extends cbPluginError
     {
         $errorList     = array();
         $attr          = $element->attributes();
-        $error['name'] = $this->getRelativeFilePath(
-            $attr['name'], 
-            $this->projectSourceDir
-        );
+        $error['name'] = $attr['name'];
         
         foreach ($element->violation as $child) {
             $attributes           = $child->attributes();

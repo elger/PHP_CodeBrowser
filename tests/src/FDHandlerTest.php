@@ -48,7 +48,7 @@
 require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
 
 /**
- * cbFDHandlertTests
+ * CbFDHandlertTests
  *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -60,7 +60,7 @@ require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class cbFDHandlerTest extends cbAbstractTests 
+class CbFDHandlerTest extends CbAbstractTests 
 {
     /**
      * FDHandler object to test
@@ -97,7 +97,7 @@ class cbFDHandlerTest extends cbAbstractTests
     protected function setUp()
     {
         parent::setUp();
-        $this->_cbFDHandler = new cbFDHandler();
+        $this->_cbFDHandler = new CbFDHandler();
     }
 
     /**
@@ -132,7 +132,10 @@ class cbFDHandlerTest extends cbAbstractTests
     public function testCopyFile()
     {
         $this->assertFalse(is_dir(PHPCB_TEST_OUTPUT . '/foo/bar'));
-        $this->_cbFDHandler->copyFile(PHPCB_SOURCE . '/../bin/phpcb.php', PHPCB_TEST_OUTPUT . '/foo/bar');
+        $this->_cbFDHandler->copyFile(
+            PHPCB_SOURCE . '/../bin/phpcb.php', 
+            PHPCB_TEST_OUTPUT . '/foo/bar'
+        );
         $this->assertFileExists(PHPCB_TEST_OUTPUT . '/foo/bar/phpcb.php');
     }
     
@@ -155,8 +158,8 @@ class cbFDHandlerTest extends cbAbstractTests
      */
     public function testCreateDirectory()
     {
-        $this->_cbFDHandler->createDirectory(PHPCB_TEST_OUTPUT . '/' . $this->_createDir);
-        $this->assertTrue(is_dir(PHPCB_TEST_OUTPUT . '/' . $this->_createDir));
+        $this->_cbFDHandler->createDirectory(PHPCB_TEST_OUTPUT . DIRECTORY_SEPARATOR . $this->_createDir . DIRECTORY_SEPARATOR);
+        $this->assertTrue(is_dir(PHPCB_TEST_OUTPUT . DIRECTORY_SEPARATOR . $this->_createDir));
     }
     
     /**
@@ -166,12 +169,12 @@ class cbFDHandlerTest extends cbAbstractTests
      */
     public function testCreateFile()
     {
-        $file    = PHPCB_TEST_OUTPUT . '/' . $this->_createFile;
+        $file    = PHPCB_TEST_OUTPUT . DIRECTORY_SEPARATOR . $this->_createFile;
         $content = 'This is a Test';
         
         $this->_cbFDHandler->createFile($file, $content);
         $this->assertFileExists($file);
-        $this->assertTrue(is_dir(PHPCB_TEST_OUTPUT . '/' . $this->_fileDir));
+        $this->assertTrue(is_dir(PHPCB_TEST_OUTPUT . DIRECTORY_SEPARATOR . $this->_fileDir));
         $this->assertSame($content, file_get_contents($file));
     }
     
