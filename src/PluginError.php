@@ -47,7 +47,7 @@
  */
 
 /**
- * cbPluginError
+ * CbPluginError
  *
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
@@ -59,7 +59,7 @@
  * @link      http://www.phpunit.de/
  * @since     Class available since 1.0
  */
-abstract class cbPluginError
+abstract class CbPluginError
 {
     /**
      * The name of the plugin.
@@ -95,9 +95,9 @@ abstract class cbPluginError
      * Constructor
      *
      * @param string       $projectSourceDir The project source path
-     * @param cbXMLHandler $cbXMLHandler     cbXMLHandler object
+     * @param CbXMLHandler $cbXMLHandler     cbXMLHandler object
      */
-    public function __construct($projectSourceDir, cbXMLHandler $cbXMLHandler)
+    public function __construct($projectSourceDir, CbXMLHandler $cbXMLHandler)
     {
         $this->setPluginName();
         $this->setSourcePath($projectSourceDir);
@@ -140,8 +140,9 @@ abstract class cbPluginError
             throw new Exception('XML file not loaded!');    
         }
         
+        $children = $this->_xmlElement->{$this->pluginName}->children();
         if (!isset($this->_xmlElement->{$this->pluginName}) 
-            || !is_object($children = $this->_xmlElement->{$this->pluginName}->children())
+            || !is_object($children)
         ) {
             return array();    
         }
@@ -152,51 +153,12 @@ abstract class cbPluginError
         }
         
         $errorList = array();
-        foreach ($errors as $list) foreach ($list as $error)  {
-            $errorList[hash('md5', $error['name'])][] = $error;
+        foreach ($errors as $list) {
+            foreach ($list as $error) {
+                $errorList[hash('md5', $error['name'])][] = $error;
+            }
         }
-        
         return $errorList;
-    }
-    
-    /**
-     * Cut off the difference between absolute/relative path.
-     * e.g.
-     * /home/www/htdocs/myProject/source/index.php
-     * /foo/bar/source/myProject
-     * will leave source/index.php
-     *
-     * @param string $absolutePath    The absolute path to file
-     * @param string $sourceDirectory The path defined by --source parameter
-     * 
-     * @return string|null
-     * 
-     * @throws Exception              In case of log file source differs from 
-     *                                defined source 
-     */
-    public function getRelativeFilePath ($absolutePath, $sourceDirectory)
-    {
-        $relativePath = preg_replace(
-            array(
-                sprintf('(.*%s\%s)', basename($sourceDirectory), DIRECTORY_SEPARATOR)
-            ), 
-            '', 
-            $absolutePath
-        );
-        
-        if ($relativePath == $absolutePath 
-            && !empty($sourceDirectory) 
-            && $sourceDirectory != $absolutePath) {
-            throw new Exception(
-                "The source defined by parameter --source, differs to the source extracted from log files!"
-            );
-        }
-        
-        if (empty($sourceDirectory)) {
-            return $absolutePath;
-        }
-        
-        return $relativePath;
     }
     
     /**

@@ -47,17 +47,25 @@
  */
 
 if (strpos('@php_dir@', '@php_dir') === false) {
-    define('PHPCB_ROOT_DIR', '@php_dir@/PHP_CodeBrowser');
-    define('PHPCB_TEMPLATE_DIR', '@data_dir@/PHP_CodeBrowser/templates');
+    if (!defined('PHPCB_ROOT_DIR')) { 
+        define('PHPCB_ROOT_DIR', '@php_dir@/PHP_CodeBrowser'); 
+    }
+    if (!defined('PHPCB_TEMPLATE_DIR')) { 
+        define('PHPCB_TEMPLATE_DIR', '@data_dir@/PHP_CodeBrowser/templates'); 
+    }
 } else {
-    define('PHPCB_ROOT_DIR', dirname(__FILE__) . '/../');
-    define('PHPCB_TEMPLATE_DIR', dirname(__FILE__) . '/../templates');
+    if (!defined('PHPCB_ROOT_DIR')) { 
+        define('PHPCB_ROOT_DIR', dirname(__FILE__) . '/../'); 
+    }
+    if (!defined('PHPCB_TEMPLATE_DIR')) { 
+        define('PHPCB_TEMPLATE_DIR', dirname(__FILE__) . '/../templates'); 
+    }
 }
 
 require_once dirname(__FILE__) . '/Util/Autoloader.php';
 
 /**
- * cbCLIController
+ * CbCLIController
  *
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
@@ -69,7 +77,7 @@ require_once dirname(__FILE__) . '/Util/Autoloader.php';
  * @link      http://www.phpunit.de/
  * @since     Class available since 1.0
  */
-class cbCLIController
+class CbCLIController
 {
     /**
      * Path to the Cruise Control input xml file
@@ -204,10 +212,10 @@ class cbCLIController
     public function run()
     {
         // init needed classes
-        $cbFDHandler    = new cbFDHandler();
-        $cbXMLHandler   = new cbXMLHandler($cbFDHandler);
-        $cbErrorHandler = new cbErrorHandler($cbXMLHandler);
-        $cbJSGenerator  = new cbJSGenerator($cbFDHandler);
+        $cbFDHandler    = new CbFDHandler();
+        $cbXMLHandler   = new CbXMLHandler($cbFDHandler);
+        $cbErrorHandler = new CbErrorHandler($cbXMLHandler);
+        $cbJSGenerator  = new CbJSGenerator($cbFDHandler);
 
         // clear and create output directory
         $cbFDHandler->deleteDirectory($this->_htmlOutputDir);
@@ -226,13 +234,28 @@ class cbCLIController
         }
         
         // construct the error list
-        $cbXMLGenerator = new cbXMLGenerator($cbFDHandler);
+        $cbXMLGenerator = new CbXMLGenerator($cbFDHandler);
         $cbXMLGenerator->setXMLName($this->_xmlFile);
         $cbXMLGenerator->saveCbXML($cbXMLGenerator->generateXMLFromErrors($list));
         
-        // get cb error list
+        // get cb error list, filter common source path
         $errors = $cbErrorHandler->getFilesWithErrors($this->_xmlFile);
-        $html   = new cbHTMLGenerator(
+        $errors = $cbErrorHandler->replaceCommonSourcePath($errors);
+        
+        // parse directory defined by --source parameter
+        $errors = $cbErrorHandler->parseSourceDirectory(
+            $this->_projectSourceDir, 
+            $errors
+        );
+        
+        // set project source dir from error list
+        if (!isset($this->_projectSourceDir)) {
+            $this->setProjectSourceDir(
+                $cbErrorHandler->getCommonSourcePath($errors)
+            );
+        }
+        
+        $html   = new CbHTMLGenerator(
             $cbFDHandler, $cbErrorHandler, $cbJSGenerator
         );
         $html->setTemplateDir(PHPCB_TEMPLATE_DIR);
@@ -259,13 +282,13 @@ class cbCLIController
     {
         $timeStart = microtime(true);
         
-        $xmlLogDir    = '';
-        $sourceFolder = '';
-        $htmlOutput   = '';
+        $xmlLogDir    = null;
+        $sourceFolder = null;
+        $htmlOutput   = null;
         $xmlFileName  = 'cbCodeBrowser.xml';
         
         // register autoloader
-        spl_autoload_register(array(new cbAutoloader(), 'autoload'));
+        spl_autoload_register(array(new CbAutoloader(), 'autoload'));
         
         
         $argv = $_SERVER['argv'];
@@ -275,7 +298,7 @@ class cbCLIController
                 $xmlLogDir = $argv[$key + 1];
                 break;
             case '--source':
-                $sourceFolder = $argv[$key + 1];
+                $sourceFolder = isset($argv[$key + 1]) ? $argv[$key + 1] : '';
                 break;
             case '--output':
                 $htmlOutput = $argv[$key + 1];
@@ -291,17 +314,18 @@ class cbCLIController
         }
         
         // Check for directories
-        if (!is_dir($xmlLogDir) || !is_dir($sourceFolder) || !is_dir($htmlOutput)) {
+        if (!is_dir($xmlLogDir) || !is_dir($htmlOutput) 
+        || (isset($sourceFolder) && !is_dir($sourceFolder))) {
             printf(
                 "Error: \n%s%s%s\n",
                 !is_dir($xmlLogDir) 
-                ? "- xml log directory not found\n" 
+                ? "- xml log directory [$xmlLogDir] not found\n" 
                 : '',
-                !is_dir($sourceFolder) 
-                ? "- project source directory not found\n" 
+                (isset($sourceFolder) && !is_dir($sourceFolder)) 
+                ? "- project source directory [$sourceFolder] not found\n" 
                 : '',
                 !is_dir($htmlOutput) 
-                ? "- output directory not found\n" 
+                ? "- output directory [$htmlOutput] not found\n" 
                 : '' 
             );
             self::printHelp();
@@ -310,14 +334,14 @@ class cbCLIController
         printf("Generating PHP_CodeBrowser files\n");
 
         // init new CLIController
-        $controller = new cbCLIController(
+        $controller = new CbCLIController(
             $xmlLogDir, 
             $sourceFolder, 
             $htmlOutput, 
             $htmlOutput . '/' . $xmlFileName
         );
         $controller->addErrorPlugins(
-            array('cbErrorCheckstyle', 'cbErrorPMD', 'cbErrorCPD', 'cbErrorPadawan')
+            array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan')
         );
             
         try {
@@ -340,15 +364,16 @@ class cbCLIController
     public static function printHelp()
     {
         $help = sprintf(
-            "Usage: phpcb --log <dir> --source <dir> --output <dir>
+            "Usage: phpcb --log <dir> --output <dir> [--source <dir>]
              
             PHP_CodeBrowser arguments:
-            \t--log <dir>      \tThe path to the xml log files, e.g. generated from phpunit.
-            \t--source <dir>   \tPath to the project source code.
-            \t--output <dir>   \tPath to the output folder where generated files should be stored.
+            \t--log <dir>      \t\tThe path to the xml log files, e.g. generated from phpunit.
+            \t--output <dir>   \t\tPath to the output folder where generated files should be stored.
+            \t--source <dir> (opt)   \tPath to the project source code. Parse complete source directory 
+                                \t\t\t\tif is set, else only files from logs.
 
             General arguments:
-            \t--help           \t\tPrint this help.\n\n"
+            \t--help           \t\t\tPrint this help.\n\n"
         );
         echo str_replace("  ", "", $help);
         exit();
@@ -362,7 +387,7 @@ class cbCLIController
     public static function printVersion()
     {
         $help = sprintf(
-            "PHP_CodeBrowser version 0.1.0 (alpha) by Elger Thiele (Mayflower GmbH)\n\n"
+            "PHP_CodeBrowser version 0.1.1 (alpha) by Elger Thiele (Mayflower GmbH)\n\n"
         );
         echo str_replace("  ", "", $help);
         exit();
