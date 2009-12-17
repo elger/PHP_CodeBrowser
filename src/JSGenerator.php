@@ -47,7 +47,7 @@
  */
 
 /**
- * cbJSGenerator
+ * CbJSGenerator
  *
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
@@ -59,21 +59,21 @@
  * @link      http://www.phpunit.de/
  * @since     Class available since 1.0
  */
-class cbJSGenerator
+class CbJSGenerator
 {
     /**
      * File handler object
      * 
-     * @var cbFDHandler
+     * @var CbFDHandler
      */
     private $_cbFDHandler;
     
     /**
      * Constructor
      * 
-     * @param cbFDHandler $cbFDHandler File handler object
+     * @param CbFDHandler $cbFDHandler File handler object
      */
-    public function __construct(cbFDHandler $cbFDHandler) 
+    public function __construct(CbFDHandler $cbFDHandler) 
     {
         $this->_cbFDHandler = $cbFDHandler;    
     }
@@ -292,7 +292,6 @@ class cbJSGenerator
     {
         $result = array();
         if (is_array($files)) {
-            krsort($files);
             foreach ($files as $fileId => $file) {
                 $folders = explode(DIRECTORY_SEPARATOR, $file['complete']);
                 
@@ -310,6 +309,30 @@ class cbJSGenerator
                 $result = array_merge_recursive($tree, $result);
             }
         }
-        return $result;
+        return $this->_sortFolders($result);
+    }
+    
+    /**
+     * Sort a array recursive with folders first.
+     * 
+     * @param array $folders The folder file array
+     * 
+     * @return array
+     */
+    private function _sortFolders($folders)
+    {
+        $tmpFiles = array();
+        $tmpFolders = array();
+        foreach ($folders as $key => $value) {
+            if (is_array($value)) {
+                $tmpFolders[$key] = $this->_sortFolders($value);
+            } else {
+                $tmpFiles[$key] = $value;
+            }
+        }
+        ksort($tmpFolders);
+        ksort($tmpFiles);
+        
+        return $tmpFolders + $tmpFiles;
     }
 }
