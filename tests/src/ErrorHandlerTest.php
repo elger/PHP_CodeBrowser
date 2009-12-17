@@ -290,7 +290,7 @@ class CbErrorHandlerTest extends CbAbstractTests
                 'count_notices' => 12
             ),
             array(
-                'complete' => 'Plugins/ErrorCPD.php',
+                'complete' => 'src/Plugins/ErrorCPD.php',
                 'path' => '/path/to/my/files',
                 'file' => 'ErrorCPD.php',
                 'count_errors' => 10,
@@ -299,10 +299,10 @@ class CbErrorHandlerTest extends CbAbstractTests
         );
         $result = $this->_cbErrorHandler->parseSourceDirectory(PHPCB_SOURCE, $test);
         
-        $this->assertEquals('XMLGenerator.php', $result[0]['file']);
-        $this->assertEquals(0, $result[0]['count_errors']);
-        $this->assertEquals('ErrorCPD.php', $result[11]['file']);
-        $this->assertEquals(0, $result[0]['count_errors']);
+        $this->assertEquals('XMLGenerator.php', $result['XMLGenerator.php']['file']);
+        $this->assertEquals(0, $result['XMLGenerator.php']['count_errors']);
+        $this->assertEquals('ErrorCPD.php', $result['Plugins' . DIRECTORY_SEPARATOR . 'ErrorCPD.php']['file']);
+        $this->assertEquals(0, $result['Plugins' . DIRECTORY_SEPARATOR . 'ErrorCPD.php']['count_errors']);
         
         // invlaid source directory
         $result = $this->_cbErrorHandler->parseSourceDirectory(null, $test);
@@ -322,14 +322,14 @@ class CbErrorHandlerTest extends CbAbstractTests
         $test = array(
             array(
                 'complete' => 'src' . DIRECTORY_SEPARATOR . 'XMLGenerator.php',
-                'path' => DIRECTORY_SEPARATOR . 'path/to/my/files',
+                'path' => '/path/to/my/files',
                 'file' => 'XMLGenerator.php',
                 'count_errors' => 10,
                 'count_notices' => 12
             ),
             array(
                 'complete' => 'Plugins' . DIRECTORY_SEPARATOR . 'ErrorCPD.php',
-                'path' => DIRECTORY_SEPARATOR . 'path/to/my/files',
+                'path' => '/path/to/my/files',
                 'file' => 'ErrorCPD.php',
                 'count_errors' => 10,
                 'count_notices' => 12
@@ -337,9 +337,9 @@ class CbErrorHandlerTest extends CbAbstractTests
         );
         $result = $this->_cbErrorHandler->parseSourceDirectory(PHPCB_ROOT_DIR, $test);
         
-        $this->assertEquals('XMLGenerator.php', $result[0]['file']);
-        $this->assertEquals(10, $result[0]['count_errors']);
-        $this->assertEquals('ErrorCPD.php', $result[11]['file']);
-        $this->assertEquals(0, $result[11]['count_errors']);
+        $this->assertEquals('XMLGenerator.php', $result['src' . DIRECTORY_SEPARATOR . 'XMLGenerator.php']['file']);
+        $this->assertEquals(10, $result['src' . DIRECTORY_SEPARATOR . 'XMLGenerator.php']['count_errors']);
+        $this->assertEquals('ErrorCPD.php', $result['src' . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'ErrorCPD.php']['file']);
+        $this->assertEquals(0, $result['src' . DIRECTORY_SEPARATOR . 'Plugins' . DIRECTORY_SEPARATOR . 'ErrorCPD.php']['count_errors']);
     }
 }

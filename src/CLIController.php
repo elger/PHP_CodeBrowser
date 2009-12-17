@@ -247,7 +247,8 @@ class CbCLIController
             $this->_projectSourceDir, 
             $errors
         );
-        
+        sort($errors);
+
         // set project source dir from error list
         if (!isset($this->_projectSourceDir)) {
             $this->setProjectSourceDir(

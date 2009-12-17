@@ -159,7 +159,7 @@ class CbErrorHandler
         
         $fileList = array();
         foreach ($items as $name => $item) {
-            
+
             // only use supported files
             $boolean = !in_array(
                 substr($item->getFilename(), - 3), 
@@ -212,14 +212,15 @@ class CbErrorHandler
                         );
                         $error['path']     = $sourceDir;
                         $exists            = true;
-                        $fileList[]        = $error;
+                        $fileList[$tmp['complete']] = $error;
                     }
                 }
             }
             if (!$exists) {
-                $fileList[] = $tmp;
+                $fileList[$tmp['complete']] = $tmp;
             }
         }
+        ksort($fileList);
         return $fileList;
     }
     
