@@ -231,7 +231,7 @@ class CbFDHandlerTest extends CbAbstractTests
      */
     public function testLoadFileException()
     {
-        $this->_cbFDHandler->loadFile('foo.xml');
+        $this->_cbFDHandler->loadFile('foobar.xml');
     }
 }
 

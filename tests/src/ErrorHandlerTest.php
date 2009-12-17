@@ -206,9 +206,9 @@ class CbErrorHandlerTest extends CbAbstractTests
     public function testGetCommonSourcePath()
     {
         $test = array(
-            array('path' => '/path/to/my/folder/and/files'),
-            array('path' => '/path/to/my/files'),
-            array('path' => '/path/to/my/other/source/directory')
+            array('path' => '/path/to/my' . DIRECTORY_SEPARATOR . 'folder/and/files'),
+            array('path' => '/path/to/my' . DIRECTORY_SEPARATOR . 'files'),
+            array('path' => '/path/to/my' . DIRECTORY_SEPARATOR . 'other/source/directory')
         );
         
         $result = $this->_cbErrorHandler->getCommonSourcePath($test);
@@ -225,16 +225,16 @@ class CbErrorHandlerTest extends CbAbstractTests
     {
         $test = array(
             array(
-                'complete' => '/path/to/my/files/folder/file.txt',
-                'path' => '/path/to/my/files'
+                'complete' => '/path/to/my' . DIRECTORY_SEPARATOR . 'files/folder/file.txt',
+                'path' => '/path/to/my' . DIRECTORY_SEPARATOR . 'files'
             ),
             array(
-                'complete' => '/path/to/my/folder/and/files/otherFile.txt',
-                'path' => '/path/to/my/folder/and/files'
+                'complete' => '/path/to/my' . DIRECTORY_SEPARATOR . 'folder/and/files/otherFile.txt',
+                'path' => '/path/to/my' . DIRECTORY_SEPARATOR . 'folder/and/files'
             ),
             array(
-                'complete' => '/path/to/my/other/source/directory/sameFile.txt',
-                'path' => '/path/to/my/other/source/directory
+                'complete' => '/path/to/my' . DIRECTORY_SEPARATOR . 'other/source/directory/sameFile.txt',
+                'path' => '/path/to/my' . DIRECTORY_SEPARATOR . 'other/source/directory
             ')
         );
         
@@ -254,16 +254,16 @@ class CbErrorHandlerTest extends CbAbstractTests
     {
         $test = array(
             array(
-                'complete' => '/baz/to/my/file.txt',
-                'path' => '/baz/to/my'
+                'complete' => DIRECTORY_SEPARATOR . 'baz/to/my/file.txt',
+                'path' => DIRECTORY_SEPARATOR . 'baz/to/my'
             ),
             array(
-                'complete' => '/bar/to/my/otherFile.txt',
-                'path' => '/bar/to/my'
+                'complete' => DIRECTORY_SEPARATOR . 'bar/to/my/otherFile.txt',
+                'path' => DIRECTORY_SEPARATOR . 'bar/to/my'
             ),
             array(
-                'complete' => '/foo/to/my/sameFile.txt',
-                'path' => '/foo/to/my'
+                'complete' => DIRECTORY_SEPARATOR . 'foo/to/my/sameFile.txt',
+                'path' => DIRECTORY_SEPARATOR . 'foo/to/my'
             )
         );
         
@@ -321,15 +321,15 @@ class CbErrorHandlerTest extends CbAbstractTests
     {
         $test = array(
             array(
-                'complete' => 'src/XMLGenerator.php',
-                'path' => '/path/to/my/files',
+                'complete' => 'src' . DIRECTORY_SEPARATOR . 'XMLGenerator.php',
+                'path' => DIRECTORY_SEPARATOR . 'path/to/my/files',
                 'file' => 'XMLGenerator.php',
                 'count_errors' => 10,
                 'count_notices' => 12
             ),
             array(
-                'complete' => 'Plugins/ErrorCPD.php',
-                'path' => '/path/to/my/files',
+                'complete' => 'Plugins' . DIRECTORY_SEPARATOR . 'ErrorCPD.php',
+                'path' => DIRECTORY_SEPARATOR . 'path/to/my/files',
                 'file' => 'ErrorCPD.php',
                 'count_errors' => 10,
                 'count_notices' => 12

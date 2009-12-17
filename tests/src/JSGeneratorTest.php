@@ -112,13 +112,37 @@ class CbJSGeneratorTest extends CbAbstractTests
         $this->_mockFDHandler
             ->expects($this->once())
             ->method('loadFile')
-            ->with($this->equalTo(PHPCB_TEST_DIR . '/src/MyJSGenerator.php'))
-            ->will($this->returnValue(trim(file_get_contents(PHPCB_TEST_DIR . '/src/JSTestGenerator.php'))));
+            ->with(
+                $this->equalTo(
+                    PHPCB_TEST_DIR 
+                    . DIRECTORY_SEPARATOR 
+                    . 'src' 
+                    . DIRECTORY_SEPARATOR 
+                    . 'MyJSGenerator.php'
+                 )
+            )
+            ->will(
+                $this->returnValue(
+                    trim(
+                        file_get_contents(
+                            PHPCB_TEST_DIR 
+                            . DIRECTORY_SEPARATOR 
+                            . 'src'
+                            . DIRECTORY_SEPARATOR
+                            . 'JSTestGenerator.php'
+                        )
+                    )
+                )
+            );
             
         $content = $this->_cbJSGenerator
-                                ->getHighlightedSource('MyJSGenerator.php', 
-                                                       $mockErrors['b0456446720360d02791c1a3d143f703'], 
-                                                       PHPCB_TEST_DIR . '/src');
+            ->getHighlightedSource(
+                'MyJSGenerator.php', 
+                $mockErrors['b0456446720360d02791c1a3d143f703'], 
+                PHPCB_TEST_DIR 
+                . DIRECTORY_SEPARATOR
+                . 'src'
+            );
         $this->assertNotNull($content);   
         $this->assertContains('<li id="line-249" class="white"><a name="line-249"></a><code><span class="comment">', $content);  
         $this->assertContains('<li id="line-250-254" class="moreErrors" ><ul><li id="line-250" class="transparent"><a name="line-250"></a><code><span class="comment">    </span><span class="keyword">private function </span><span class="default">getFoldersFilesTree </span><span class="keyword">(</span><span class="default">$files</span><span class="keyword">)</span></code></li>', $content);
@@ -138,7 +162,7 @@ class CbJSGeneratorTest extends CbAbstractTests
     public function testGetJSTree($errors)
     {
         $bufferedContent = $this->_cbJSGenerator->getJSTree($errors);
-        $this->assertContains('a.add(2,1,\'JSGenerator.php ( <span class="errors">29E</span> | <span class="notices">29N</span> )\',\'./src/JSGenerator.php.html\',\'\',\'reviewView\')', $bufferedContent);
+        $this->assertContains('JSGenerator.php ( <span class="errors">29E</span> | <span class="notices">29N</span> )', $bufferedContent);
     }
     
     /**
