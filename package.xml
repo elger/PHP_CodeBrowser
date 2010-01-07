@@ -189,7 +189,7 @@
       <package>
         <name>phpUnderControl</name>
         <channel>pear.phpunit.de</channel>
-        <min>0.4.7</min>
+        <min>0.5.0</min>
       </package>
       <package>
         <name>PHP_CodeSniffer</name>
@@ -219,9 +219,7 @@
       <install as="PHP_CodeBrowser/Plugins/ErrorCPD.php" name="src/Plugins/ErrorCPD.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPadawan.php" name="src/Plugins/ErrorPadawan.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php" name="src/Plugins/ErrorPMD.php" />
-      
       <install as="PHP_CodeBrowser/Util/Autoloader.php" name="src/Util/Autoloader.php" />
-      
       <install as="PHP_CodeBrowser/CLIController.php" name="src/CLIController.php" />
       <install as="PHP_CodeBrowser/ErrorHandler.php" name="src/ErrorHandler.php" />
       <install as="PHP_CodeBrowser/FDHandler.php" name="src/FDHandler.php" />
@@ -230,7 +228,6 @@
       <install as="PHP_CodeBrowser/PluginError.php" name="src/PluginError.php" />
       <install as="PHP_CodeBrowser/XMLGenerator.php" name="src/XMLGenerator.php" />
       <install as="PHP_CodeBrowser/XMLHandler.php" name="src/XMLHandler.php" />
-    
       <install as="phpcb.bat" name="bin/phpcb.bat" />
       <install as="phpcb" name="bin/phpcb.php" />
     </filelist>
@@ -241,9 +238,7 @@
       <install as="PHP_CodeBrowser/Plugins/ErrorCPD.php" name="src/Plugins/ErrorCPD.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPadawan.php" name="src/Plugins/ErrorPadawan.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php" name="src/Plugins/ErrorPMD.php" />
-      
       <install as="PHP_CodeBrowser/Util/Autoloader.php" name="src/Util/Autoloader.php" />
-      
       <install as="PHP_CodeBrowser/CLIController.php" name="src/CLIController.php" />
       <install as="PHP_CodeBrowser/ErrorHandler.php" name="src/ErrorHandler.php" />
       <install as="PHP_CodeBrowser/FDHandler.php" name="src/FDHandler.php" />
@@ -252,7 +247,6 @@
       <install as="PHP_CodeBrowser/PluginError.php" name="src/PluginError.php" />
       <install as="PHP_CodeBrowser/XMLGenerator.php" name="src/XMLGenerator.php" />
       <install as="PHP_CodeBrowser/XMLHandler.php" name="src/XMLHandler.php" />
-        
       <install as="phpcb" name="bin/phpcb.php" />
       <ignore name="bin/phpcb.bat" />
     </filelist>
