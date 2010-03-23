@@ -201,10 +201,6 @@
         <channel>pear.php.net</channel>
         <min>1.4.3</min>
       </package>
-      <extension>
-        <name>xdebug</name>
-        <min>2.0.5</min>
-      </extension>
     </optional>
   </dependencies>
 
