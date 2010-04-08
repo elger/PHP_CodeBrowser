@@ -2,9 +2,9 @@
 /**
  * Cli controller
  * 
- * PHP Version 5.2.6
+ * PHP Version 5.2
  *
- * Copyright (c) 2007-2009, Mayflower GmbH
+ * Copyright (c) 2007-2010, Mayflower GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,7 @@
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
- * @copyright 2007-2009 Mayflower GmbH
+ * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   SVN: $Id$
  * @link      http://www.phpunit.de/
@@ -71,7 +71,7 @@ require_once dirname(__FILE__) . '/Util/Autoloader.php';
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
  * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright 2007-2009 Mayflower GmbH
+ * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   Release: @package_version@
  * @link      http://www.phpunit.de/
@@ -354,7 +354,7 @@ class CbCLIController
         $timeEnd = microtime(true);
         $time    = $timeEnd - $timeStart;
         
-        printf("\nScript took %s seconds to execute\n\n", $time);
+        printf("\nScript took %01.2f seconds to execute\n\n", $time);
     }
     
     /**
@@ -388,7 +388,7 @@ class CbCLIController
     public static function printVersion()
     {
         $help = sprintf(
-            "PHP_CodeBrowser version 0.1.1 (alpha) by Elger Thiele (Mayflower GmbH)\n\n"
+            "PHP_CodeBrowser by Mayflower GmbH\n\n"
         );
         echo str_replace("  ", "", $help);
         exit();
