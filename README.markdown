@@ -45,7 +45,7 @@ In case the optional `--source` parameter is used the given target directory wil
 
 Otherwise only files from error logs will be parsed.
     
-### Integration in CruiseControl ###
+### Integration in CruiseControl and Hudson ###
     
     ...
     <!-- phpcb should be called after xml file generation -->
@@ -83,6 +83,10 @@ Open `/path/to/defined/output/index.html`.
          </iframe>
       </cruisecontrol:artifactsLink>
     </cruisecontrol:tab>
+
+### Hudson ###
+
+You have to install the HTML Publisher Plugin and create job settings to directory with the PHP_CodeBrowser reports.
 
 ## Contact Information ##
 
