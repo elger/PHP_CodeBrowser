@@ -215,7 +215,7 @@ class CbHTMLGenerator
         foreach ($errors as $file) {
             $data['errors']   = $this->_cbErrorHandler->getErrorsByFile(
                 $cbXMLFile, 
-                $file['file']
+                $file['complete']
             );
             $data['source']   = $this->_cbJSGenerator->getHighlightedSource(
                 $file['complete'], 
