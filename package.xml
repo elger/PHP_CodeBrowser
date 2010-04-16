@@ -148,7 +148,7 @@
       </dir> <!-- /scripts -->
       
       <file name="README.markdown" role="doc" />
-      <file name="CHANGELOG" role="doc" />
+      <file name="CHANGELOG.markdown" role="doc" />
       <file name="LICENSE" role="doc" />
       <!--
       <file name="config.xml" role="doc">
