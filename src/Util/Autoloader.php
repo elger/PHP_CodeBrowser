@@ -64,14 +64,14 @@ class CbAutoloader
 {
     /**
      * Array of classnames and path
-     * 
+     *
      * @var array
      */
     private $_classes;
-    
+
     /**
      * Constructor
-     * 
+     *
      * Parses this project root directory for all files and its classnames
      */
     public function __construct ()
@@ -79,22 +79,22 @@ class CbAutoloader
         $files = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator(PHPCB_ROOT_DIR)
         );
-        
+
         foreach ($files as $file) {
             if ('php' !== substr($file->getFilename(), -3)) {
                 continue;
             }
-            $this->_classes['Cb' . substr($file->getFilename(), 0, -4)] 
+            $this->_classes['Cb' . substr($file->getFilename(), 0, -4)]
                 = realpath($file->getPath() . '/' . $file->getFilename());
         }
     }
-    
+
     /**
      * Autoloader function
      * Includes the file matching by the given classname
-     * 
+     *
      * @param string $className The classname that file should be included
-     * 
+     *
      * @return void
      */
     public function autoload ($className)

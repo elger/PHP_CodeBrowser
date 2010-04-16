@@ -94,7 +94,7 @@ class CbAllTests extends PHPUnit_Framework_TestSuite
         spl_autoload_register( array( new CbAutoloader(), 'autoload' ) );
 
         $this->setName('AllTests');
-        
+
         // source
         $this->addTestSuite('CbFDHandlerTest');
         $this->addTestSuite('CbXMLHandlerTest');
@@ -103,17 +103,17 @@ class CbAllTests extends PHPUnit_Framework_TestSuite
         $this->addTestSuite('CbPluginErrorTest');
         $this->addTestSuite('CbHTMLGeneratorTest');
         $this->addTestSuite('CbJSGeneratorTest');
-                
+
         // plugins
         $this->addTestSuite('CbErrorPMDTest');
         $this->addTestSuite('CbErrorCPDTest');
         $this->addTestSuite('CbErrorCheckstyleTest');
         $this->addTestSuite('CbErrorPadawanTest');
     }
-    
+
     /**
      * Suite
-     * 
+     *
      * @return void
      */
     public static function suite ()

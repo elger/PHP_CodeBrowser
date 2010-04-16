@@ -1,7 +1,7 @@
 <?php
 /**
  * Checkstyle
- * 
+ *
  * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
@@ -49,7 +49,7 @@
 
 /**
  * CbErrorCheckstyle
- * 
+ *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
  * @subpackage Plugins
@@ -72,12 +72,12 @@ class CbErrorCheckstyle extends CbPluginError
     {
         $this->pluginName = 'checkstyle';
     }
-    
+
     /**
      * Mapper method for this plugin.
-     * 
+     *
      * @param SingleXMLElement $element The XML plugin node with its errors
-     * 
+     *
      * @return array
      */
     public function mapError (SimpleXMLElement $element)
@@ -85,7 +85,7 @@ class CbErrorCheckstyle extends CbPluginError
         $errorList     = array();
         $attributes    = $element->attributes();
         $error['name'] = $attributes['name'];
-        
+
         foreach ($element->error as $child) {
             $attributes           = $child->attributes();
             $error['line']        = (int) $attributes['line'];

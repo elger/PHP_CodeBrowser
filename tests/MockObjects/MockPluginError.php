@@ -47,7 +47,7 @@
 
 /**
  * CbMockPluginError
- * 
+ *
  * Mock object for abstract class cbPluginError
  *
  * @category   PHP_CodeBrowser
@@ -61,7 +61,7 @@
  * @since      Class available since 1.0
  * @see        cbPluginError
  */
-class CbMockPluginError extends CbPluginError 
+class CbMockPluginError extends CbPluginError
 {
     /**
      * (non-PHPdoc)
@@ -71,7 +71,7 @@ class CbMockPluginError extends CbPluginError
     {
         $this->pluginName = 'checkstyle';
     }
-    
+
     /**
      * (non-PHPdoc)
      * @see src/cbPluginError#mapError($element)

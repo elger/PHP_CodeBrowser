@@ -60,36 +60,36 @@ require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class CbFDHandlerTest extends CbAbstractTests 
+class CbFDHandlerTest extends CbAbstractTests
 {
     /**
      * FDHandler object to test
-     * 
+     *
      * @var cbDFHandler
      */
     private $_cbFDHandler;
-    
+
     /**
      * Dummy folder path for creation test
-     * 
+     *
      * @var string
      */
     protected $_createDir = 'my/test/directory';
-    
+
     /**
      * Dummy folder path for creation test
-     * 
+     *
      * @var string
      */
     protected $_fileDir = 'my/new/folder';
-    
+
     /**
      * Dummy folder file for creation test
-     * 
+     *
      * @var string
      */
     protected $_createFile = 'my/new/folder/myFile.txt';
-	
+
     /**
      * (non-PHPdoc)
      * @see tests/cbAbstractTests#setUp()
@@ -109,10 +109,10 @@ class CbFDHandlerTest extends CbAbstractTests
         $this->_cbFDHandler = null;
         parent::tearDown();
     }
-    
+
     /**
      * Test if given directory is copied recursive and corectly
-     * 
+     *
      * @return void
      */
     public function testCopyDirectory()
@@ -123,37 +123,37 @@ class CbFDHandlerTest extends CbAbstractTests
         $this->assertTrue(is_dir(PHPCB_TEST_OUTPUT . '/css'));
         $this->assertFileExists(PHPCB_TEST_OUTPUT . '/js/side-bar.js');
     }
-    
+
     /**
      * Test if given file ist copied correctly
-     * 
+     *
      * @return void
      */
     public function testCopyFile()
     {
         $this->assertFalse(is_dir(PHPCB_TEST_OUTPUT . '/foo/bar'));
         $this->_cbFDHandler->copyFile(
-            PHPCB_SOURCE . '/../bin/phpcb.php', 
+            PHPCB_SOURCE . '/../bin/phpcb.php',
             PHPCB_TEST_OUTPUT . '/foo/bar'
         );
         $this->assertFileExists(PHPCB_TEST_OUTPUT . '/foo/bar/phpcb.php');
     }
-    
+
     /**
      * Test exception
-     * 
+     *
      * @return void
-     * 
+     *
      * @expectedException Exception
      */
     public function testExceptionCopyFile()
     {
         $this->_cbFDHandler->copyFile('foo.bar', '');
     }
-    
+
     /**
      * Test if given directory is created
-     *  
+     *
      * @return void
      */
     public function testCreateDirectory()
@@ -161,26 +161,26 @@ class CbFDHandlerTest extends CbAbstractTests
         $this->_cbFDHandler->createDirectory(PHPCB_TEST_OUTPUT . DIRECTORY_SEPARATOR . $this->_createDir . DIRECTORY_SEPARATOR);
         $this->assertTrue(is_dir(PHPCB_TEST_OUTPUT . DIRECTORY_SEPARATOR . $this->_createDir));
     }
-    
+
     /**
      * Test if given file is created
-     * 
+     *
      * @return void
      */
     public function testCreateFile()
     {
         $file    = PHPCB_TEST_OUTPUT . DIRECTORY_SEPARATOR . $this->_createFile;
         $content = 'This is a Test';
-        
+
         $this->_cbFDHandler->createFile($file, $content);
         $this->assertFileExists($file);
         $this->assertTrue(is_dir(PHPCB_TEST_OUTPUT . DIRECTORY_SEPARATOR . $this->_fileDir));
         $this->assertSame($content, file_get_contents($file));
     }
-    
+
     /**
      * Directories should be deleted recursively within all files
-     * 
+     *
      * @return void
      */
     public function testDeleteDirectory()
@@ -188,18 +188,18 @@ class CbFDHandlerTest extends CbAbstractTests
         if (!is_dir(PHPCB_TEST_OUTPUT . '/foo')) mkdir(PHPCB_TEST_OUTPUT . '/foo');
         if (!is_dir(PHPCB_TEST_OUTPUT . '/foo/bar')) mkdir(PHPCB_TEST_OUTPUT . '/foo/bar');
         file_put_contents(PHPCB_TEST_OUTPUT . '/foo/bar/foo.txt', 'somecontent');
-        
+
         $this->assertTrue(file_exists(PHPCB_TEST_OUTPUT . '/foo/bar/foo.txt'));
-        
+
         $this->_cbFDHandler->deleteDirectory(PHPCB_TEST_OUTPUT . '/foo');
-        
+
         $this->assertFileNotExists(PHPCB_TEST_OUTPUT . '/foo/bar/foo.txt');
         $this->assertFalse(is_dir(PHPCB_TEST_OUTPUT . '/foo'));
     }
-    
+
     /**
      * Test if file is deleted correctly
-     * 
+     *
      * @return void
      */
     public function testDeleteFile()
@@ -209,24 +209,24 @@ class CbFDHandlerTest extends CbAbstractTests
         $this->_cbFDHandler->deleteFile(PHPCB_TEST_OUTPUT . '/deleteFile.txt');
         $this->assertFileNotExists(PHPCB_TEST_OUTPUT . '/deleteFile.txt');
     }
-    
+
     /**
      * Test if content of a loaded file is correct initialized
-     * 
+     *
      * @return void
      */
     public function testLoadFile ()
     {
         $content = $this->_cbFDHandler->loadFile(self::$_cbXMLBasic);
-        
+
         $this->assertSame('<?xml version="1.0" encoding="utf-8"?><codebrowser/>', $content);
     }
-    
+
     /**
      * Check if Exception is thrown probably
-     * 
+     *
      * @return void
-     * 
+     *
      * @expectedException Exception
      */
     public function testLoadFileException()

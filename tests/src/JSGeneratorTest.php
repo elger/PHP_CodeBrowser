@@ -60,22 +60,22 @@ require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class CbJSGeneratorTest extends CbAbstractTests 
+class CbJSGeneratorTest extends CbAbstractTests
 {
     /**
      * cbJSGenerator object to test
-     * 
+     *
      * @var cbJSGenerator
      */
     protected $_cbJSGenerator;
-    
+
     /**
      * Mock object for cbFDHandler
-     * 
+     *
      * @var object
      */
     protected $_mockFDHandler;
-    
+
     /**
      * (non-PHPdoc)
      * @see tests/cbAbstractTests#setUp()
@@ -83,11 +83,11 @@ class CbJSGeneratorTest extends CbAbstractTests
     protected function setUp ()
     {
         parent::setUp();
-        
-        $this->_mockFDHandler = $this->_getMockFDhandler();   
+
+        $this->_mockFDHandler = $this->_getMockFDhandler();
         $this->_cbJSGenerator = new CbJSGenerator($this->_mockFDHandler);
     }
-    
+
     /**
      * (non-PHPdoc)
      * @see tests/cbAbstractTests#tearDown()
@@ -97,27 +97,27 @@ class CbJSGeneratorTest extends CbAbstractTests
         $this->_cbJSGenerator = null;
         parent::tearDown();
     }
-   
+
     /**
      * Test if proper content is generated.
      * It is expeceted that source code from file is present and error Highlighting
      * is resolved the right way.
-     * 
+     *
      * @return void
      */
     public function testGetHighlightedSource()
     {
         $mockErrors = unserialize(file_get_contents(self::$_serializedErrors));
-        
+
         $this->_mockFDHandler
             ->expects($this->once())
             ->method('loadFile')
             ->with(
                 $this->equalTo(
-                    PHPCB_TEST_DIR 
-                    . DIRECTORY_SEPARATOR 
-                    . 'src' 
-                    . DIRECTORY_SEPARATOR 
+                    PHPCB_TEST_DIR
+                    . DIRECTORY_SEPARATOR
+                    . 'src'
+                    . DIRECTORY_SEPARATOR
                     . 'MyJSGenerator.php'
                  )
             )
@@ -125,8 +125,8 @@ class CbJSGeneratorTest extends CbAbstractTests
                 $this->returnValue(
                     trim(
                         file_get_contents(
-                            PHPCB_TEST_DIR 
-                            . DIRECTORY_SEPARATOR 
+                            PHPCB_TEST_DIR
+                            . DIRECTORY_SEPARATOR
                             . 'src'
                             . DIRECTORY_SEPARATOR
                             . 'JSTestGenerator.php'
@@ -134,29 +134,29 @@ class CbJSGeneratorTest extends CbAbstractTests
                     )
                 )
             );
-            
+
         $content = $this->_cbJSGenerator
             ->getHighlightedSource(
-                'MyJSGenerator.php', 
-                $mockErrors['b0456446720360d02791c1a3d143f703'], 
-                PHPCB_TEST_DIR 
+                'MyJSGenerator.php',
+                $mockErrors['b0456446720360d02791c1a3d143f703'],
+                PHPCB_TEST_DIR
                 . DIRECTORY_SEPARATOR
                 . 'src'
             );
-        $this->assertNotNull($content);   
-        $this->assertContains('<li id="line-249" class="white"><a name="line-249"></a><code><span class="comment">', $content);  
+        $this->assertNotNull($content);
+        $this->assertContains('<li id="line-249" class="white"><a name="line-249"></a><code><span class="comment">', $content);
         $this->assertContains('<li id="line-250-254" class="moreErrors" ><ul><li id="line-250" class="transparent"><a name="line-250"></a><code><span class="comment">    </span><span class="keyword">private function </span><span class="default">getFoldersFilesTree </span><span class="keyword">(</span><span class="default">$files</span><span class="keyword">)</span></code></li>', $content);
         $this->assertContains('<li id="line-251" class="transparent"><a name="line-251"></a><code><span class="keyword">', $content);
-        $this->assertTrue((int)substr_count($content, '<ul>', 0) == (int)substr_count($content, '</ul>', 0));  
-        $this->assertTrue((int)substr_count($content, '<li ', 0) == (int)substr_count($content, '</li>', 0));                                        
+        $this->assertTrue((int)substr_count($content, '<ul>', 0) == (int)substr_count($content, '</ul>', 0));
+        $this->assertTrue((int)substr_count($content, '<li ', 0) == (int)substr_count($content, '</li>', 0));
     }
-    
+
     /**
      * Test if expected javascript source is generated.
      * Using data provider getErrorsFromFile for getting files with errors.
-     * 
+     *
      * @return void
-     * 
+     *
      * @dataProvider getErrorsFromFile
      */
     public function testGetJSTree($errors)
@@ -164,15 +164,15 @@ class CbJSGeneratorTest extends CbAbstractTests
         $bufferedContent = $this->_cbJSGenerator->getJSTree($errors);
         $this->assertContains('JSGenerator.php ( <span class="errors">29E</span> | <span class="notices">29N</span> )', $bufferedContent);
     }
-    
+
     /**
      * Data provider for file errors
-     * 
+     *
      * @return array
      */
     public function getErrorsFromFile()
     {
-        return array(array(array (0 => 
+        return array(array(array (0 =>
                                   array (
                                     'complete' => 'src/JSGenerator.php',
                                     'file' => 'JSGenerator.php',

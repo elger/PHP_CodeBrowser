@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Error
- * 
+ *
  * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
@@ -63,34 +63,34 @@ abstract class CbPluginError
 {
     /**
      * The name of the plugin.
-     * This should be the name that is written to the XML error files by 
+     * This should be the name that is written to the XML error files by
      * cruisecontrol.
      *
      * @var string
      */
     public $pluginName;
-    
+
     /**
      * The path to the source directory
      *
      * @var string
      */
     public $projectSourceDir;
-    
+
     /**
-     * The loaded XML file 
-     * 
+     * The loaded XML file
+     *
      * @var SimpleXMLElement
      */
     private $_xmlElement;
-    
+
     /**
      * The cbXMLHandler object
-     * 
+     *
      * @var cbXMLHandler
      */
     private $_cbXMLHandler;
-    
+
     /**
      * Constructor
      *
@@ -103,33 +103,33 @@ abstract class CbPluginError
         $this->setSourcePath($projectSourceDir);
         $this->_cbXMLHandler = $cbXMLHandler;
     }
-    
+
     /**
      * Setter method for cruisecontrol XML File
      *
      * @param DOMDocument $domDocument The cruisecontrol XML File
-     * 
+     *
      * @return void
      */
     public function setXML(DOMDocument $domDocument)
     {
         $this->_xmlElement = simplexml_import_dom($domDocument);
     }
-    
+
     /**
      * Setter method for the project source directory
      *
      * @param string $projectSourceDir The project source directory
-     * 
+     *
      * @return void
      */
     public function setSourcePath($projectSourceDir)
     {
         $this->projectSourceDir = $projectSourceDir;
     }
-    
+
     /**
-     * Parse the cc XML file for defined error type, e.g. "pmd" and map this 
+     * Parse the cc XML file for defined error type, e.g. "pmd" and map this
      * error to the needed PHP_CodeBrowser format.
      *
      * @return array
@@ -137,21 +137,21 @@ abstract class CbPluginError
     public function parseXMLError()
     {
         if (!isset($this->_xmlElement)) {
-            throw new Exception('XML file not loaded!');    
+            throw new Exception('XML file not loaded!');
         }
-        
+
         $children = $this->_xmlElement->{$this->pluginName}->children();
-        if (!isset($this->_xmlElement->{$this->pluginName}) 
+        if (!isset($this->_xmlElement->{$this->pluginName})
             || !is_object($children)
         ) {
-            return array();    
+            return array();
         }
-        
+
         $errors = array();
         foreach ($children as $child) {
             $errors[] = $this->mapError($child);
         }
-        
+
         $errorList = array();
         foreach ($errors as $list) {
             foreach ($list as $error) {
@@ -160,7 +160,7 @@ abstract class CbPluginError
         }
         return $errorList;
     }
-    
+
     /**
      * Setter method for the plugin name.
      * This name should be the one used by cruisecontrol.
@@ -168,12 +168,12 @@ abstract class CbPluginError
      * @return void
      */
     abstract function setPluginName ();
-    
+
     /**
      * The detailed mapper method for each single plugin, returning an errorlist.
      *
      * @param SimpleXMLElement $element The errorlist for each plugin node
-     * 
+     *
      * @return array
      */
     abstract function mapError (SimpleXMLElement $element);

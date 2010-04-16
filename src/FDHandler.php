@@ -1,7 +1,7 @@
 <?php
 /**
  * File and directory handler
- * 
+ *
  * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
@@ -61,35 +61,35 @@
  */
 class CbFDHandler
 {
-    
+
     /**
      * Creates a file with given name and content.
      * If directories to file do not exists they will be created.
      *
      * @param string $fileName    The filename
      * @param string $fileContent The content of the file
-     * 
+     *
      * @return void
      */
     public function createFile($fileName, $fileContent)
     {
         $realName = basename($fileName);
         $path     = substr($fileName, 0, - 1 * (strlen($realName)));
-        
+
         if (!empty($path)) {
             $this->createDirectory($path);
         }
         file_put_contents(realpath($path) . '/' . $realName, $fileContent);
     }
-    
+
     /**
-     * Delete a file. The filename could inherit a absolute or relative 
-     * path-to-file, 
+     * Delete a file. The filename could inherit a absolute or relative
+     * path-to-file,
      * e.g. foo/bar/myfile.php
      *
      * @param string $fileName The (path-to) filename
-     * 
-     * @return void 
+     *
+     * @return void
      */
     public function deleteFile($fileName)
     {
@@ -97,34 +97,34 @@ class CbFDHandler
             unlink($fileName);
         }
     }
-    
+
     /**
-     * Copy a file from a source to target dir. The source could inherit an 
+     * Copy a file from a source to target dir. The source could inherit an
      * absolute or relative path-to-file.
      *
      * @param string $fileSource   The source file
      * @param string $sourceFolder The target folder
-     * 
+     *
      * @return return void
-     * @throws Exception 
+     * @throws Exception
      */
     public function copyFile($fileSource, $sourceFolder)
     {
         if (!file_exists($fileSource)) {
             throw new Exception('File ' . $fileSource . ' does not exists!');
         }
-        
+
         $fileName = basename($fileSource);
         $this->createFile(
             $sourceFolder . '/' . $fileName, self::loadFile($fileSource)
         );
     }
-    
+
     /**
      * Return the content of a given file.
      *
      * @param string $fileName The file the content should be read in
-     * 
+     *
      * @return string
      * @throws Exception
      */
@@ -135,13 +135,13 @@ class CbFDHandler
         }
         return trim(file_get_contents($fileName));
     }
-    
+
     /**
      * Create a directory and its inherit path to directory if not present,
-     * e.g. path/that/does/not/exist/myfolder/ 
+     * e.g. path/that/does/not/exist/myfolder/
      *
      * @param string $target The target folder to create
-     * 
+     *
      * @return void
      */
     public function createDirectory($target)
@@ -157,13 +157,13 @@ class CbFDHandler
             }
         }
     }
-    
+
     /**
      * Delete a directory within all its items.
      * Note that the given directory $source will be deleted as well.
      *
      * @param string $source The directory to delete.
-     * 
+     *
      * @return void
      * @throws Exception
      */
@@ -171,36 +171,36 @@ class CbFDHandler
     {
         $iterator = new DirectoryIterator($source);
         while ($iterator->valid()) {
-            
+
             $src = realpath($source . '/' . $iterator->current());
-            
+
             // delete file
             if ($iterator->isFile()) {
                 $this->deleteFile($src);
             }
-            
+
             // delete folder recursive
             if (! $iterator->isDot() && $iterator->isDir()) {
                 $this->deleteDirectory($src);
             }
-            
+
             $iterator->next();
         }
         unset($iterator);
 
         // delete the source root folder as well
         if (!rmdir($source)) {
-            throw new Exception('Could not delete directory ' . $source); 
+            throw new Exception('Could not delete directory ' . $source);
         }
     }
-    
+
     /**
      * Copy a directory within all its items.
      *
      * @param string $source  The source directory
      * @param string $target  The target to create
      * @param array  $exclude List of files / folders that should not be copyed
-     * 
+     *
      * @return void
      */
     public function copyDirectory($source, $target, $exclude = array())
@@ -209,19 +209,19 @@ class CbFDHandler
         $this->createDirectory($target);
         $iterator = new DirectoryIterator($source);
         while ($iterator->valid()) {
-            
+
             $item = $iterator->current();
-            
+
             // create new file
             if ($iterator->isFile()) {
                 $this->copyFile($source . '/' . $item, $target);
             }
 
             // create folder recursive
-            if (!$iterator->isDot() 
-                && $iterator->isDir() 
+            if (!$iterator->isDot()
+                && $iterator->isDir()
                 && !in_array($item, $exclude)
-            ) {                
+            ) {
                 $this->copyDirectory($source . '/' . $item, $target . '/' . $item);
             }
             $iterator->next();

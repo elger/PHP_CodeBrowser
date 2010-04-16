@@ -1,7 +1,7 @@
 <?php
 /**
  * HTML Generator
- * 
+ *
  * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
@@ -63,49 +63,49 @@ class CbHTMLGenerator
 {
     /**
      * Template directory
-     * 
+     *
      * @var string
      */
     private $_templateDir;
-    
+
     /**
      * Output directory
-     * 
+     *
      * @var string
      */
     private $_outputDir;
-    
+
     /**
      * Available ressource folders
-     * 
+     *
      * @var array
      */
     private $_ressourceFolders = array('css' , 'js' , 'img');
-    
+
     /**
      * File handler object
-     * 
+     *
      * @var cbFDHandler
      */
     private $_cbFDHandler;
-    
+
     /**
      * Error handler object
-     * 
+     *
      * @var cbErrorHandler
      */
     private $_cbErrorHandler;
-    
+
     /**
      * JS / HTML generator object
-     * 
+     *
      * @var cbJSGenerator
      */
     private $_cbJSGenerator;
 
     /**
      * Constructor
-     * 
+     *
      * @param CbFDHandler    $cbFDHandler    File handler object
      * @param CbErrorHandler $cbErrorHandler Error handler object
      * @param CbJsGenerator  $cbJSGenerator  JS / HTML generator object
@@ -116,37 +116,37 @@ class CbHTMLGenerator
         $this->_cbErrorHandler = $cbErrorHandler;
         $this->_cbJSGenerator  = $cbJSGenerator;
     }
-    
+
     /**
      * Setter method
-     * 
+     *
      * @param string $templateDir Path to template diretory
-     * 
+     *
      * @return void
      */
     public function setTemplateDir ($templateDir)
     {
         $this->_templateDir = $templateDir;
     }
-    
+
     /**
      * Setter mothod
      * Path where generated view-files should be saved.
-     * 
+     *
      * @param string $outputDir Path to output directory
-     * 
+     *
      * @return void
      */
     public function setOutputDir($outputDir)
     {
         $this->_outputDir = $outputDir;
     }
-    
+
     /**
      * Default start page
-     * 
+     *
      * @param array $errors List of all PHP_CodeBrowser errors
-     * 
+     *
      * @return void
      * @throws Exception
      */
@@ -155,23 +155,23 @@ class CbHTMLGenerator
         if (!is_array($errors)) {
             throw new Exception('Wrong data format for errorlist!');
         }
-        
+
         $data['title']   = 'Code Browser - Overview (flat view mode)';
         $data['files']   = $errors;
         $data['csspath'] = '';
-        
+
         $dataGenrate['title']   = $data['title'];
         $dataGenrate['csspath'] = '';
         $dataGenrate['content'] = $this->_render('flatView', $data);
-        
+
         $this->_generateView($dataGenrate, 'flatView.html');
     }
-    
+
     /**
      * JS Tree view page
-     * 
+     *
      * @param array $errors List of all PHP_CodeBrowser errors
-     * 
+     *
      * @return void
      * @throws Exception
      */
@@ -180,26 +180,26 @@ class CbHTMLGenerator
         if (!is_array($errors)) {
             throw new Exception('Wrong data format for errorlist!');
         }
-        
+
         $data['title']   = 'Code Browser - Tree View';
         $data['files']   = $errors;
         $data['csspath'] = '';
         $data['tree']    = $this->_cbJSGenerator->getJSTree($errors);
-        
+
         $dataGenrate['title']   = $data['title'];
         $dataGenrate['csspath'] = '';
         $dataGenrate['content'] = $this->_render('tree', $data);
-        
+
         $this->_generateView($dataGenrate, 'tree.html');
     }
-    
+
     /**
      * Code Browser for each file with errors
-     * 
+     *
      * @param array  $errors        List of all PHP_CodeBrowser errors
      * @param string $cbXMLFile     Name of the PHP_CodeBrowser error XML file
      * @param string $projectSource Path to project source files
-     * 
+     *
      * @return void
      * @throws Exception
      * @see cbErrorHandler::getErrorsByFile
@@ -210,16 +210,16 @@ class CbHTMLGenerator
         if (!is_array($errors)) {
             throw new Exception('Wrong data format for errorlist!');
         }
-        
+
         $data['title'] = 'Code Browser - Review View';
         foreach ($errors as $file) {
             $data['errors']   = $this->_cbErrorHandler->getErrorsByFile(
-                $cbXMLFile, 
+                $cbXMLFile,
                 $file['complete']
             );
             $data['source']   = $this->_cbJSGenerator->getHighlightedSource(
-                $file['complete'], 
-                $data['errors'], 
+                $file['complete'],
+                $data['errors'],
                 $projectSource
             );
             $data['filepath'] = $file['complete'];
@@ -228,20 +228,20 @@ class CbHTMLGenerator
             for ($i = 1; $i <= $depth; $i ++) {
                 $data['csspath'] .= '../';
             }
-            
+
             $dataGenrate['title']   = $data['title'];
             $dataGenrate['csspath'] = $data['csspath'];
             $dataGenrate['content'] = $this->_render('reviewView', $data);
-            
+
             $this->_generateView($dataGenrate, $file['complete'] . '.html');
         }
     }
-    
+
     /**
      * Copy needed resources to output directory
-     * 
+     *
      * @param boolean $hasErrors Flag to define which index.html will be generated.
-     * 
+     *
      * @return void
      * @throws Exception
      * @see cbFDHandler::copyFile
@@ -249,18 +249,18 @@ class CbHTMLGenerator
     public function copyRessourceFolders($hasErrors = true)
     {
         if (!isset($this->_outputDir)) {
-            throw new Exception('Output directory is not set!');    
+            throw new Exception('Output directory is not set!');
         }
 
         foreach ($this->_ressourceFolders as $folder) {
             $this->_cbFDHandler->copyDirectory(
-                $this->_templateDir . DIRECTORY_SEPARATOR . $folder, 
+                $this->_templateDir . DIRECTORY_SEPARATOR . $folder,
                 $this->_outputDir . DIRECTORY_SEPARATOR . $folder
             );
         }
-        
+
         $template = ($hasErrors) ?  'index.tpl' : 'noErrors.tpl';
-        
+
         $content = $this->_cbFDHandler->loadFile(
             $this->_templateDir . DIRECTORY_SEPARATOR . $template
         );
@@ -268,52 +268,52 @@ class CbHTMLGenerator
             $this->_outputDir . DIRECTORY_SEPARATOR . 'index.html', $content
         );
     }
-    
+
     /**
      * Render different template types
-     * 
+     *
      * @param string $templateName Template file to use for rendering
      * @param array  $data         Given dataset to use for rendering
-     * 
+     *
      * @return string              HTML files as string from output buffer
      */
     private function _render($templateName, $data)
     {
-        $filePath = realpath($this->_templateDir) 
-            . DIRECTORY_SEPARATOR 
-            . $templateName 
+        $filePath = realpath($this->_templateDir)
+            . DIRECTORY_SEPARATOR
+            . $templateName
             . '.tpl';
-        
+
         if (!count($data)) {
             return '';
         }
-        
+
         extract($data, EXTR_SKIP);
         ob_start();
-        include realpath($this->_templateDir) 
-            . DIRECTORY_SEPARATOR 
-            . $templateName 
+        include realpath($this->_templateDir)
+            . DIRECTORY_SEPARATOR
+            . $templateName
             . '.tpl';
         $contents = ob_get_contents();
         ob_end_clean();
         return $contents;
     }
-    
+
     /**
      * Save rendered file to output directory
-     * 
+     *
      * @param array  $data     Dataset information used for rendering
      * @param string $fileName The filename of analyzed file
-     * 
+     *
      * @return void
      * @see cbFDHandler::createFile
      */
     private function _generateView($data, $fileName)
     {
         $this->_cbFDHandler->createFile(
-            $this->_outputDir 
-            . DIRECTORY_SEPARATOR 
-            . $fileName, 
+            $this->_outputDir
+            . DIRECTORY_SEPARATOR
+            . $fileName,
             $this->_render('page', $data)
         );
     }

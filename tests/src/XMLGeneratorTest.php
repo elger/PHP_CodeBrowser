@@ -60,22 +60,22 @@ require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class CbXMLGeneratorTest extends CbAbstractTests 
+class CbXMLGeneratorTest extends CbAbstractTests
 {
     /**
      * XMLGenerator object to test
-     * 
+     *
      * @var cbXMLGenerator
      */
     protected $_cbXMLGenerator;
-    
+
     /**
      * Mock object for cbFDHandler
-     * 
+     *
      * @var object
      */
     protected $_mockFDHandler;
-    
+
     /**
      * (non-PHPdoc)
      * @see tests/cbAbstractTests#setUp()
@@ -86,7 +86,7 @@ class CbXMLGeneratorTest extends CbAbstractTests
         $this->_mockFDHandler = $this->_getMockFDHandler();
         $this->_cbXMLGenerator = new CbXMLGenerator($this->_mockFDHandler);
     }
-    
+
     /**
      * (non-PHPdoc)
      * @see tests/cbAbstractTests#tearDown()
@@ -96,22 +96,22 @@ class CbXMLGeneratorTest extends CbAbstractTests
         $this->_cbXMLGenerator = null;
         parent::tearDown();
     }
-    
+
     /**
      * Test if expected XML generation from errors match stored XML file.
-     * 
+     *
      * @return void
      */
     public function testGenerateXMLFromErrors()
     {
-        $this->_cbXMLGenerator->cbXMLName = 'TestXMLGenerator.xml';    
-        $this->assertEquals($this->_cbXMLGenerator->generateXMLFromErrors($this->_getSerializedErrors()), 
+        $this->_cbXMLGenerator->cbXMLName = 'TestXMLGenerator.xml';
+        $this->assertEquals($this->_cbXMLGenerator->generateXMLFromErrors($this->_getSerializedErrors()),
                             simplexml_load_file(self::$_cbXMLFile));
     }
-    
+
     /**
      * Test setter method
-     * 
+     *
      * @return void
      */
     public function testSetXMLName()
@@ -119,27 +119,27 @@ class CbXMLGeneratorTest extends CbAbstractTests
         $this->_cbXMLGenerator->setXMLName('TestXMLGenerator.xml');
         $this->assertSame('TestXMLGenerator.xml', $this->_cbXMLGenerator->cbXMLName);
     }
-    
+
     /**
      * Test error sorting by hash key
-     * 
+     *
      * @return void
      */
-    public function testSortErrorList() 
+    public function testSortErrorList()
     {
         $sorted = $this->_cbXMLGenerator->sortErrorList($this->_getSerializedErrors());
         $this->assertArrayHasKey('b0456446720360d02791c1a3d143f703', $sorted);
         $this->assertTrue(count($sorted) == 1);
         $this->assertType('string', array_shift($sorted));
     }
-    
+
     /**
      * This method is just a wrapper on parent class.
      * Functionality is tested in parent class.
      *
      * @return void
      */
-    public function testSaveCbXML() 
+    public function testSaveCbXML()
     {
         $tmpXML = simplexml_load_string('<?xml version="1.0" encoding="utf-8"?><codebrowser></codebrowser>');
         $this->assertFileNotExists(self::$_cbTestXML);

@@ -62,62 +62,62 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
 {
     /**
      * Merged cruisecontrol XML error file
-     * 
+     *
      * @var string
      */
     protected static $_ccXMLFile;
-    
+
     /**
      * PHP_CodeBrowser error file
-     * 
+     *
      * @var string
      */
     protected static $_cbXMLFile;
-    
+
     /**
      * Basic XML file with valid headers
-     * 
+     *
      * @var string
      */
     protected static $_cbXMLBasic;
-    
+
     /**
      * Path information for a dummy TXT file
-     * 
+     *
      * @var string
      */
     protected static $_cbTestFile;
-    
+
     /**
      * Path information for a dummy XML file
-     * 
+     *
      * @var string
      */
     protected static $_cbTestXML;
-    
+
     /**
      * File of serialized cb error list
-     * 
+     *
      * @var string
      */
     protected static $_serializedErrors;
-    
+
     /**
      * Path information for generated XML test file
-     * 
+     *
      * @var string
      */
     protected static $_cbGeneratedXMLTest;
-    
+
     /**
-     * Global setup method for all test cases. Basic variables are initalized. 
-     * 
+     * Global setup method for all test cases. Basic variables are initalized.
+     *
      * @return void
      */
     protected function setUp() {
-        
+
         parent::setUp();
-        
+
         self::$_ccXMLFile          = PHPCB_TEST_DIR . '/xmllint_codebrowser_merge.xml';
         self::$_cbXMLFile          = PHPCB_TEST_DIR . '/ccCodeBrowser.xml';
         self::$_cbXMLBasic         = PHPCB_TEST_DIR . '/basic.xml';
@@ -125,55 +125,55 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
         self::$_cbTestXML          = PHPCB_TEST_OUTPUT . '/cbTestXML.xml';
         self::$_cbGeneratedXMLTest = PHPCB_TEST_DIR . '/GeneratedXMLTest.xml';
         self::$_serializedErrors   = PHPCB_TEST_DIR . '/serializedErrors.txt';
-        
+
         mkdir(PHPCB_TEST_OUTPUT);
     }
 
     /**
      * Global tear down method for all test cases. Cleaning up generated data and output.
-     * 
+     *
      * @return void
      */
-    protected function tearDown() 
+    protected function tearDown()
     {
         parent::tearDown();
         $this->_cleanUp(PHPCB_TEST_OUTPUT);
         rmdir(PHPCB_TEST_OUTPUT);
     }
-    
+
     /**
-     * Setup a mock object for cbXMLHandler class, and provide a list of functions 
-     * that should be mockable.  
-     * 
+     * Setup a mock object for cbXMLHandler class, and provide a list of functions
+     * that should be mockable.
+     *
      * @return object
      */
-    protected function _getMockXMLHandler() 
+    protected function _getMockXMLHandler()
     {
         $functions = array('loadXML', 'countItems', 'saveXML');
         $params = array($this->_getMockFDHandler());
         $mockXMLHandler = $this->getMock('CbXMLHandler', $functions, $params);
-        
+
         return $mockXMLHandler;
     }
-    
+
     /**
-     * Setup a mock object for cbFDHandler class, and provide a list of functions 
-     * that should be mockable.  
-     * 
+     * Setup a mock object for cbFDHandler class, and provide a list of functions
+     * that should be mockable.
+     *
      * @return object
      */
-    protected function _getMockFDHandler() 
+    protected function _getMockFDHandler()
     {
         $functions = array('createFile', 'loadFile', 'copyFile', 'copyDirectory');
         $mockFDHandler = $this->getMock('CbFDHandler', $functions);
-        
+
         return $mockFDHandler;
     }
-    
+
     /**
-     * Setup a mock object for cbJSGenerator class, and provide a list of functions 
-     * that should be mockable.  
-     * 
+     * Setup a mock object for cbJSGenerator class, and provide a list of functions
+     * that should be mockable.
+     *
      * @return object
      */
     protected function _getMockJSGenerator()
@@ -181,14 +181,14 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
         $functions = array('getJSTree', 'getHighlightedSource');
         $params = array($this->_getMockFDHandler());
         $mockJSGenerator = $this->getMock('CbJSGenerator', $functions, $params);
-        
+
         return $mockJSGenerator;
     }
-    
+
     /**
-     * Setup a mock object for cbErrorHandler class, and provide a list of functions 
-     * that should be mockable.  
-     * 
+     * Setup a mock object for cbErrorHandler class, and provide a list of functions
+     * that should be mockable.
+     *
      * @return object
      */
     protected function _getMockErrorHandler()
@@ -196,25 +196,25 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
         $functions = array('getErrorsByFile');
         $params = array($this->_getMockXMLHandler());
         $mockErrorHandler = $this->getMock('CbErrorHandler', $functions, $params);
-        
+
         return $mockErrorHandler;
     }
-    
+
     /**
      * Load the cb error list
-     * 
+     *
      * @return array List of cb errors
      */
     protected function _getSerializedErrors()
     {
         return unserialize(file_get_contents(self::$_serializedErrors));
     }
-    
+
     /**
      * Cleanup the test directory output folder
-     * 
+     *
      * @param string $dir The directory to clean up
-     * 
+     *
      * @return void
      */
     protected function _cleanUp($dir)
@@ -224,7 +224,7 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
 
             // delete file
             if ($iterator->isFile()) unlink($dir . '/' . $iterator->current());
-            
+
             // delete folder recursive
             if (! $iterator->isDot() && $iterator->isDir()) {
                 $this->_cleanUp($dir . '/' . $iterator->current());

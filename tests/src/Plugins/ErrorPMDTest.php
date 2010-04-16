@@ -64,11 +64,11 @@ class CbErrorPMDTest extends CbAbstractTests
 {
     /**
      * cbErrorPMD object to test
-     * 
+     *
      * @var cbErrorPMD
      */
     protected $_cbErrorPMD;
-    
+
     /**
      * (non-PHPdoc)
      * @see tests/cbAbstractTests#setUp()
@@ -78,7 +78,7 @@ class CbErrorPMDTest extends CbAbstractTests
         parent::setUp();
         $this->_cbErrorPMD = new CbErrorPMD('source/', $this->_getMockXMLHandler());
     }
-    
+
     /**
      * (non-PHPdoc)
      * @see tests/cbAbstractTests#tearDown()
@@ -87,21 +87,21 @@ class CbErrorPMDTest extends CbAbstractTests
     {
         parent::tearDown();
     }
-    
+
     /**
      * Test error parsing / mapping
-     * 
+     *
      * @return void
-     * 
+     *
      * @dataProvider pmdElement
      */
     public function testMapError($element)
     {
         $list = $this->_cbErrorPMD->mapError(simplexml_load_string($element));
-        
+
         $this->assertType('array', $list);
         $this->assertEquals(2, count($list));
-        
+
         foreach ($list as $error) {
             $this->assertArrayHasKey('source', $error);
             $this->assertArrayHasKey('line', $error);
@@ -110,32 +110,32 @@ class CbErrorPMDTest extends CbAbstractTests
             $this->assertArrayHasKey('description', $error);
             $this->assertArrayHasKey('name', $error);
         }
-        
+
         $tmp = (array) $list[0]['source'];
-        
+
         $this->assertEquals('NPathComplexity', $tmp[0]);
     }
-    
+
     /**
      * Test empty error file expected emtpy array
-     * 
+     *
      * @return void
-     * 
+     *
      * @dataProvider pmdEmptyElement
      */
     public function testMapErrorEmpty($element)
     {
         $list = $this->_cbErrorPMD->mapError(simplexml_load_string($element));
-        
+
         $this->assertType('array', $list);
         $this->assertEquals(0, count($list));
     }
-    
+
     /**
      * Test expected mapping fail
-     * 
+     *
      * @return void
-     * 
+     *
      * @expectedException PHPUnit_Framework_Error
      */
     public function testMapErrorFail()
@@ -143,10 +143,10 @@ class CbErrorPMDTest extends CbAbstractTests
         $this->cbErrorPMD->mapError(simplexml_load_string(array()));
         $this->cbErrorPMD->mapError(simplexml_load_string('foo'));
     }
-    
+
     /**
      * Test setter method
-     * 
+     *
      * @return void
      */
     public function testSetPluginName()
@@ -154,13 +154,13 @@ class CbErrorPMDTest extends CbAbstractTests
         $this->assertEquals('pmd', $this->_cbErrorPMD->pluginName);
 
         $this->_cbErrorPMD->setPluginName('foo');
-        
+
         $this->assertEquals('pmd', $this->_cbErrorPMD->pluginName);
     }
-    
+
     /**
      * Data provider for an error elements of a certain file
-     * 
+     *
      * @return array
      */
     public function pmdElement()
@@ -170,7 +170,7 @@ class CbErrorPMDTest extends CbAbstractTests
                     <violation rule="CodeCoverage" priority="1" line="77" to-line="88" package="cbTestPackage" class="cbTestClass" method="__construct">The code coverage is 0.00 which is considered low.</violation>
                 </file>'));
     }
-    
+
     /**
      * Data provider for an empty error element of a certain file
      */

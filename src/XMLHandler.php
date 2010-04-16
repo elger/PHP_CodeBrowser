@@ -1,7 +1,7 @@
 <?php
 /**
  * XML Handler
- * 
+ *
  * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
@@ -48,7 +48,7 @@
 
 /**
  * CbXMLHandler
- * 
+ *
  * This class provides basic functionality according xml handling, like saving
  * xml structs to storage, reading, parsing or mergin xml structs.
  *
@@ -66,33 +66,33 @@ class CbXMLHandler
 {
     /**
      * File handler object
-     * 
+     *
      * @var cbFDHandler
      */
     public $cbFDHandler;
-    
+
     /**
      * A list of xml files to merge
-     * 
+     *
      * @var array
      */
     protected $xmlFiles;
-    
+
     /**
      * Constructor
-     * 
+     *
      * @param CbFDHandler $cbFDHandler File handler object
      */
-    public function __construct(CbFDHandler $cbFDHandler) 
+    public function __construct(CbFDHandler $cbFDHandler)
     {
         $this->cbFDHandler = $cbFDHandler;
     }
-    
+
     /**
      * Load a XML file.
      *
      * @param string $filename The (path-to) file
-     * 
+     *
      * @return SimpleXMLElement
      */
     public function loadXML($filename)
@@ -100,48 +100,48 @@ class CbXMLHandler
         if (! file_exists($filename)) {
             throw new Exception('Error: Cannot open ' . $filename);
         }
-        
+
         return simplexml_load_file($filename);
     }
-    
+
     /**
      * Load a XML from a string definition
      *
      * @param string $xmlString The XML string
-     * 
+     *
      * @return SimpleXMLElement
      */
     public function loadXMLFromString($xmlString)
     {
         return simplexml_load_string($xmlString);
     }
-    
+
     /**
      * Save a SimpleXMLElement as XML file.
      *
      * @param string           $fileName The filename of XML file
      * @param SimpleXMLElement $resource The XML resource
-     * 
-     * @return void 
+     *
+     * @return void
      */
     public function saveXML($fileName, SimpleXMLElement $resource)
     {
         $domSXE = dom_import_simplexml($resource);
         $dom    = new DOMDocument('1.0');
-        
+
         $dom->appendChild($dom->importNode($domSXE, true));
         $dom->formatOutput = true;
-        
+
         $this->cbFDHandler->createFile($fileName, $dom->saveXML());
     }
-    
+
     /**
      * Count specified items in a given XML node.
      *
      * @param SimpleXMLElement $element  The XML element node
      * @param string           $itemName The item name to find
      * @param string           $type     The type of the item to count
-     * 
+     *
      * @return int
      */
     public function countItems (SimpleXMLElement $element, $itemName, $type)
@@ -155,12 +155,12 @@ class CbXMLHandler
         }
         return $amount;
     }
-    
+
     /**
      * Set a directory with xml files to merge
-     * 
+     *
      * @param string $directory The path to directory where xml files are stored
-     * 
+     *
      * @return array Array object of DOMDocument elements
      */
     public function addDirectory($directory)
@@ -168,11 +168,11 @@ class CbXMLHandler
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($directory)
         );
-        
+
         while ($iterator->valid()) {
-            
+
             $current = $iterator->current();
-            if ($current->isFile() 
+            if ($current->isFile()
                 && ($current->getFilename() !== $current->getBasename('.xml'))
             ) {
                 $xml = new DOMDocument('1.0', 'UTF-8');
@@ -183,46 +183,46 @@ class CbXMLHandler
             }
             $iterator->next();
         }
-        
+
         if (!isset($this->xmlFiles)) {
             throw new Exception(
                 sprintf('Valid xml log files could not be found in "%s"', $directory)
             );
         }
-        
+
         return $this->xmlFiles;
     }
-    
+
     /**
-     * Add xml files to merge 
-     * 
-     * @param DOMDocument $domDocument The files to merge, eather as string 
+     * Add xml files to merge
+     *
+     * @param DOMDocument $domDocument The files to merge, eather as string
      *                                 (single) or array (multiple)
-     *  
+     *
      * @return void
      */
     public function addXMLFile(DOMDocument $domDocument)
     {
         $this->xmlFiles[] = $domDocument;
     }
-    
+
     /**
      * Merges present files to a single DOMDocument
-     * 
+     *
      * @return DOMDocument
      */
     public function mergeFiles()
     {
         $xml    = new DOMDocument('1.0', 'UTF-8');
         $cruise = $xml->createElement('cruisecontrol');
-        
+
         $xml->preserveWhiteSpace = false;
         $xml->formatOutput       = true;
-        
+
         if (!isset($this->xmlFiles)) {
             return $xml;
         }
-        
+
         foreach ($this->xmlFiles as $xmlFile) {
             foreach ($xmlFile->childNodes as $node) {
                 $cruise->appendChild($xml->importNode($node, true));

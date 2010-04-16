@@ -61,26 +61,26 @@ class CbJSGenerator
 {
     /**
      * File handler object
-     * 
+     *
      * @var cbFDHandler
      */
     private $cbFDHandler;
-    
+
     /**
      * Constructor
-     * 
+     *
      * @param CbFDHandler $cbFDHandler File handler object
      */
-    public function __construct(CbFDHandler $cbFDHandler) 
+    public function __construct(CbFDHandler $cbFDHandler)
     {
-        $this->cbFDHandler = $cbFDHandler;    
+        $this->cbFDHandler = $cbFDHandler;
     }
-    
+
     /**
      * Generate javascript source tree for HTML files.
      *
      * @param array $errors The PHP_CodeBrowser error list
-     * 
+     *
      * @return string
      */
     public function getJSTree ($errors)
@@ -99,13 +99,13 @@ class CbJSGenerator
         ob_end_clean();
         return $contents;
     }
-    
+
     /**
-     * Generate javascript highlighted source for HTML files. 
+     * Generate javascript highlighted source for HTML files.
      *
      * @param string $fileName The filename where source should be highlighted
      * @param arry   $errors   The error list for this files as highlight base
-     * 
+     *
      * @return string
      * @see cbFDHandler::loadFile
      */
@@ -118,10 +118,10 @@ class CbJSGenerator
         ini_set('highlight.keyword', 'keyword');
         ini_set('highlight.string', 'string');
         ini_set('highlight.html', 'html');
-        
+
         $code     = highlight_string($code, true);
-        $code     = str_replace(array('&nbsp;' , '&amp;' , '<br />' , '<span style="color: '), 
-                                array(' ' , '&#38;' , "\n" , '<span class="'), 
+        $code     = str_replace(array('&nbsp;' , '&amp;' , '<br />' , '<span style="color: '),
+                                array(' ' , '&#38;' , "\n" , '<span class="'),
                                 substr($code, 33, - 15));
         $code     = trim($code);
         $code     = str_replace("\r", "\n", $code);
@@ -129,22 +129,22 @@ class CbJSGenerator
         $lines    = explode("\n", $code);
         $previous = false;
 
-        // Output Listing 
+        // Output Listing
         echo " <ol class=\"code\">\n";
         foreach ($lines as $key => $line) {
             if (substr($line, 0, 7) == '</span>') {
                 $previous = false;
                 $line     = substr($line, 7);
             }
-            
+
             if (empty($line)) {
-                $line = '&#160;';   
+                $line = '&#160;';
             }
-            
+
             if ($previous) {
                 $line = "<span class=\"$previous\">" . $line;
             }
-            
+
             // Set Previous Style
             if (strpos($line, '<span') !== false) {
                 switch (substr($line, strrpos($line, '<span') + 13, 1)) {
@@ -162,14 +162,14 @@ class CbJSGenerator
                         break;
                 }
             }
-            
-            // Unset Previous Style Unless Span Continues 
+
+            // Unset Previous Style Unless Span Continues
             if (substr($line, - 7) == '</span>') {
                 $previous = false;
             } elseif ($previous) {
                 $line .= '</span>';
             }
-            
+
             $num           = $key + 1;
             $classname     = 'white';
             $classnameEven = 'even';
@@ -178,25 +178,25 @@ class CbJSGenerator
             $max           = 0;
             $min           = count($lines);
             $singleRow     = false;
-            
+
             foreach ($errors as $error) {
-                
+
                 if (($error['line'] <= $num) && ($error['to-line'] >= $num)) {
-                    
+
                     if ($max <= (int)$error['to-line']) {
-                        $max = (int)$error['to-line'];    
+                        $max = (int)$error['to-line'];
                     }
                     if ($min >= (int)$error['line']) {
-                        $min = (int)$error['line'];   
+                        $min = (int)$error['line'];
                     }
-                    
+
                     $classnameEven = 'transparent';
                     $classname     = 'transparent';
-                    
+
                     if ((int)$error['line'] == $num) {
-                        $prefix = sprintf('<li id="line-%s-%s" class="%s" ><ul>', 
-                                          $error['line'], 
-                                          $error['to-line'], 
+                        $prefix = sprintf('<li id="line-%s-%s" class="%s" ><ul>',
+                                          $error['line'],
+                                          $error['to-line'],
                                           (($prefix != '') ? 'moreErrors' : $error['source']));
                     }
                     if ((int)$error['to-line'] == $num) {
@@ -204,8 +204,8 @@ class CbJSGenerator
                     }
                 }
             }
-            if ($num < $max && $min == $num) $suffix = ''; 
-            echo sprintf('%s<li id="line-%d" class="%s"> <a name="line-%d"></a> <code>%s</code></li>%s' . "\n", 
+            if ($num < $max && $min == $num) $suffix = '';
+            echo sprintf('%s<li id="line-%d" class="%s"> <a name="line-%d"></a> <code>%s</code></li>%s' . "\n",
                          $prefix, $num, (($key % 2) ? $classnameEven : $classname), $num, $line, $suffix);
         }
         echo "</ol>\n";
@@ -213,14 +213,14 @@ class CbJSGenerator
         ob_end_clean();
         return $contents;
     }
-    
+
     /**
-     * Echos out the Tree recursive. 
-     * This function should be only called in a buffered output. 
+     * Echos out the Tree recursive.
+     * This function should be only called in a buffered output.
      *
      * @param array   $tree     Tree array of folders/files
      * @param integer $parentId Id of the parent object
-     * 
+     *
      * @return void
      */
     private function echoJSTreeNodes ($tree, $parentId, $errors)
@@ -232,17 +232,17 @@ class CbJSGenerator
                 echo sprintf("a.add(%d,%d,'%s', '');", $id, $parentId, $key);
                 $this->echoJSTreeNodes($value, $id, $errors);
             } else {
-                $key = sprintf('%s ( <span class="errors">%sE</span> | <span class="notices">%sN</span> )', 
+                $key = sprintf('%s ( <span class="errors">%sE</span> | <span class="notices">%sN</span> )',
                                $key, $errors[$value]['count_errors'], $errors[$value]['count_notices']);
-                echo sprintf("a.add(%d,%d,'%s','./%s.html','','reviewView');", 
+                echo sprintf("a.add(%d,%d,'%s','./%s.html','','reviewView');",
                              $id, $parentId, $key, $errors[$value]['complete']);
             }
         }
     }
-    
+
     /**
      * Get folders and files in an tree array
-     * 
+     *
      * @param array $files Array of files with errors
      *
      * @return array
@@ -254,11 +254,11 @@ class CbJSGenerator
             krsort($files);
             foreach ($files as $fileId => $file) {
                 $folders = explode('/', $file['complete']);
-                
+
                 $folders[count($folders)] = $fileId;
                 krsort($folders);
                 $tree = null;
-                
+
                 foreach ($folders as $folder) {
                     if (is_numeric($folder)) $tree = $folder;
                     elseif ($folder != '')   $tree = array($folder => $tree);

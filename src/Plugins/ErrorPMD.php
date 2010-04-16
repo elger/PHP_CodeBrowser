@@ -1,7 +1,7 @@
 <?php
 /**
  * PMD
- * 
+ *
  * PHP Version 5.2.6
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
@@ -49,7 +49,7 @@
 
 /**
  * CbErrorPMD
- * 
+ *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
  * @subpackage Plugins
@@ -72,12 +72,12 @@ class CbErrorPMD extends CbPluginError
     {
         $this->pluginName = 'pmd';
     }
-    
+
     /**
      * Mapper method for this plugin.
-     * 
+     *
      * @param SingleXMLElement $element The XML plugin node with its errors
-     * 
+     *
      * @return array
      */
     public function mapError (SimpleXMLElement $element)
@@ -85,7 +85,7 @@ class CbErrorPMD extends CbPluginError
         $errorList     = array();
         $attr          = $element->attributes();
         $error['name'] = $attr['name'];
-        
+
         foreach ($element->violation as $child) {
             $attributes           = $child->attributes();
             $error['line']        = (int) $attributes['line'];
@@ -93,8 +93,8 @@ class CbErrorPMD extends CbPluginError
             $error['source']      = (string) $attributes['rule'];
             $error['severity']    = 'error';
             $error['description'] = str_replace(
-                '&#10;', 
-                '', 
+                '&#10;',
+                '',
                 htmlentities((string) $child)
             );
             $errorList[]          = $error;

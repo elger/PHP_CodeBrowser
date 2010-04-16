@@ -64,11 +64,11 @@ class CbErrorCheckstyleTest extends CbAbstractTests
 {
     /**
      * cbErrorCheckstyle object to test
-     * 
+     *
      * @var cbErrorCheckstyle
      */
     protected $_cbErrorCheckstyle;
-    
+
     /**
      * (non-PHPdoc)
      * @see tests/cbAbstractTests#setUp()
@@ -78,7 +78,7 @@ class CbErrorCheckstyleTest extends CbAbstractTests
         parent::setUp();
         $this->_cbErrorCheckstyle = new CbErrorCheckstyle('source/', $this->_getMockXMLHandler());
     }
-    
+
     /**
      * (non-PHPdoc)
      * @see tests/cbAbstractTests#tearDown()
@@ -87,21 +87,21 @@ class CbErrorCheckstyleTest extends CbAbstractTests
     {
         parent::tearDown();
     }
-    
+
     /**
      * Test error parsing / mapping
-     * 
+     *
      * @return void
-     * 
+     *
      * @dataProvider pmdElement
      */
     public function testMapError($element)
     {
         $list = $this->_cbErrorCheckstyle->mapError(simplexml_load_string($element));
-        
+
         $this->assertType('array', $list);
         $this->assertEquals(2, count($list));
-        
+
         foreach ($list as $error) {
             $this->assertArrayHasKey('source', $error);
             $this->assertArrayHasKey('line', $error);
@@ -110,32 +110,32 @@ class CbErrorCheckstyleTest extends CbAbstractTests
             $this->assertArrayHasKey('description', $error);
             $this->assertArrayHasKey('name', $error);
         }
-        
+
         $tmp = (array) $list[0]['source'];
-        
+
         $this->assertEquals('Checkstyle', $tmp[0]);
     }
-    
+
     /**
      * Test empty error file expected emtpy array
-     * 
+     *
      * @return void
-     * 
+     *
      * @dataProvider pmdEmptyElement
      */
     public function testMapErrorEmpty($element)
     {
         $list = $this->_cbErrorCheckstyle->mapError(simplexml_load_string($element));
-        
+
         $this->assertType('array', $list);
         $this->assertEquals(0, count($list));
     }
-    
+
     /**
      * Test expected mapping fail
-     * 
+     *
      * @return void
-     * 
+     *
      * @expectedException PHPUnit_Framework_Error
      */
     public function testMapErrorFail()
@@ -143,10 +143,10 @@ class CbErrorCheckstyleTest extends CbAbstractTests
         $this->cbErrorPMD->mapError(simplexml_load_string(array()));
         $this->cbErrorPMD->mapError(simplexml_load_string('foo'));
     }
-    
+
     /**
      * Test setter method
-     * 
+     *
      * @return void
      */
     public function testSetPluginName()
@@ -154,13 +154,13 @@ class CbErrorCheckstyleTest extends CbAbstractTests
         $this->assertEquals('checkstyle', $this->_cbErrorCheckstyle->pluginName);
 
         $this->_cbErrorCheckstyle->setPluginName('foo');
-        
+
         $this->assertEquals('checkstyle', $this->_cbErrorCheckstyle->pluginName);
     }
-    
+
     /**
      * Data provider for an error elements of a certain file
-     * 
+     *
      * @return array
      */
     public function pmdElement()
@@ -174,7 +174,7 @@ class CbErrorCheckstyleTest extends CbAbstractTests
             )
         );
     }
-    
+
     /**
      * Data provider for an empty error element of a certain file
      */

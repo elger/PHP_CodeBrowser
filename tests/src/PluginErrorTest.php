@@ -49,8 +49,8 @@ require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
 
 /**
  * CbPluginErrorTests
- * 
- * As the cbPluginError is abstract an mock proxy is setup. 
+ *
+ * As the cbPluginError is abstract an mock proxy is setup.
  *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -63,34 +63,34 @@ require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
  * @since      Class available since 1.0
  * @see        cbMockPluginError
  */
-class CbPluginErrorTest extends CbAbstractTests 
+class CbPluginErrorTest extends CbAbstractTests
 {
     /**
      * MockPluginError object to test.
      * In order to test the abstract class, it is mocked
-     *  
+     *
      * @var cbMockPluginError
      */
     protected $_cbPluginError;
-    
+
     /**
      * Mock object of cbXMLHandler
-     * 
+     *
      * @var object
      */
     protected $_mockXMLHandler;
-    
+
     /**
      * (non-PHPdoc)
      * @see tests/cbAbstractTests#setUp()
      */
-    public function setUp() 
+    public function setUp()
     {
-        parent::setUp();        
+        parent::setUp();
         $this->_mockXMLHandler = $this->_getMockXMLHandler();
         $this->_cbPluginError = new CbMockPluginError(PHPCB_SOURCE, $this->_mockXMLHandler);
     }
-    
+
     /**
      * (non-PHPdoc)
      * @see tests/cbAbstractTests#tearDown()
@@ -101,61 +101,61 @@ class CbPluginErrorTest extends CbAbstractTests
         $this->_mockXMLHandler = null;
         $this->_cbPluginError = null;
     }
-    
+
     /**
      * Test construct if objects are initalized properly
-     * 
+     *
      * @return void
      */
-    public function test__construct() 
+    public function test__construct()
     {
         $this->assertEquals(PHPCB_SOURCE, $this->_cbPluginError->projectSourceDir);
     }
-    
+
     /**
      * Test exception
-     * 
+     *
      * @return void
      * @expectedException Exception
      */
-    public function testParseXMLErrorException() 
+    public function testParseXMLErrorException()
     {
         $this->_cbPluginError->parseXMLError();
     }
-    
+
     /**
      * Test empty node
-     * 
+     *
      * @return void
      */
-    public function testParseXMLErrorEmpty() 
+    public function testParseXMLErrorEmpty()
     {
         $dom = new DOMDocument('1.0', 'UTF-8');
         $dom->appendChild($dom->createElement('foo', 'bar'));
-        
+
         $this->_cbPluginError->setXML($dom);
         $list = $this->_cbPluginError->parseXMLError();
-        
+
         $this->assertEquals(array(), $list);
         $this->assertTrue(0 === count($list));
     }
-    
+
     /**
      * Test if file iteration and hashing works correctly.
      * As class itself abstract it mock with static return values in mock object
-     * 
+     *
      * @return void
      * @see cbMockPluginError::mapError
      */
-    public function testParseXMLError() 
+    public function testParseXMLError()
     {
         $domDoc = new DOMDocument('1.0', 'UTF-8');
-        $domDoc->load(self::$_ccXMLFile);      
-                        
+        $domDoc->load(self::$_ccXMLFile);
+
         $this->_cbPluginError->setXML($domDoc);
-        
+
         $result = $this->_cbPluginError->parseXMLError();
-        
+
         $this->assertArrayHasKey('eae7d2bf1565776108392eeba1e3dc44', $result);
         $this->assertTrue(count($result['eae7d2bf1565776108392eeba1e3dc44']) == 1);
     }
