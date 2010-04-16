@@ -1,3 +1,9 @@
+PHP_CodeBrowser 0.1.4
+---------------------
+
+* Fixed missing line numbers bug in PMD plugin
+
+
 PHP_CodeBrowser 0.1.3
 ---------------------
 

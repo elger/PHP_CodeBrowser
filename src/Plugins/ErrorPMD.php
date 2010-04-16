@@ -2,9 +2,9 @@
 /**
  * PMD
  *
- * PHP Version 5.2.6
+ * PHP Version 5.2
  *
- * Copyright (c) 2007-2009, Mayflower GmbH
+ * Copyright (c) 2007-2010, Mayflower GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,9 +40,8 @@
  * @package    PHP_CodeBrowser
  * @subpackage Plugins
  * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
+ * @copyright  2007-2010 Mayflower GmbH
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    SVN: $Id$
  * @link       http://www.phpunit.de/
  * @since      File available since 1.0
  */
@@ -55,7 +54,7 @@
  * @subpackage Plugins
  * @author     Elger Thiele <elger.thiele@mayflower.de>
  * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
+ * @copyright  2007-2010 Mayflower GmbH
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
@@ -88,8 +87,8 @@ class CbErrorPMD extends CbPluginError
 
         foreach ($element->violation as $child) {
             $attributes           = $child->attributes();
-            $error['line']        = (int) $attributes['line'];
-            $error['to-line']     = (int) $attributes['to-line'];
+            $error['line']        = (int) $attributes['beginline'];
+            $error['to-line']     = (int) $attributes['endline'];
             $error['source']      = (string) $attributes['rule'];
             $error['severity']    = 'error';
             $error['description'] = str_replace(
