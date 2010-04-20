@@ -1,3 +1,9 @@
+PHP_CodeBrowser 0.1.4
+---------------------
+
+* Fixed bug in PMD plugin (Issue #5)
+
+
 PHP_CodeBrowser 0.1.3
 ---------------------
 
