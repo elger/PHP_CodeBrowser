@@ -86,7 +86,7 @@ Open `/path/to/defined/output/index.html`.
 
 ### Hudson ###
 
-You have to install the HTML Publisher Plugin and create job settings to directory with the PHP_CodeBrowser reports.
+Have a look at the [standard template for Hudson jobs for PHP projects](http://github.com/sebastianbergmann/php-hudson-template) to see how PHP_CodeBrowser can be used together with Hudson.
 
 ## Contact Information ##
 
