@@ -2,6 +2,8 @@ PHP_CodeBrowser 0.1.4
 ---------------------
 
 * Fixed missing line numbers bug in PMD plugin
+* Fixed bug in PMD plugin (Issue #5)
+* Now using Sebastian Bergmann's PHP_Timer utility
 
 
 PHP_CodeBrowser 0.1.3
