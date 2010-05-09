@@ -190,6 +190,11 @@
         <min>0.5.0</min>
       </package>
       <package>
+        <name>PHP_Timer</name>
+        <channel>pear.phpunit.de</channel>
+        <min>1.0.0</min>
+      </package>
+      <package>
         <name>PHP_CodeSniffer</name>
         <channel>pear.php.net</channel>
         <min>1.2.0</min>
