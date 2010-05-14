@@ -73,7 +73,7 @@ class CbViewReview extends CbViewAbstract
     {
         
         $formattedCode = trim(highlight_string($sourceCode, true));
-//        echo $formattedCode;
+
         $sourceDom = new DOMDocument();
         
         $sourceDom->loadHTML(utf8_encode($formattedCode));
@@ -98,7 +98,7 @@ class CbViewReview extends CbViewAbstract
         //create first li element wih its anchor
         $li = $targetDom->createElement('li');
         $anchor = $targetDom->createElement('a');
-        $anchor->setAttribute('name', 'line_' . $lineNumber);
+        $anchor->setAttribute('name', 'line_0');
         $li->appendChild($anchor);
         $li->setAttribute('id', 'line_0');
         
@@ -179,11 +179,8 @@ class CbViewReview extends CbViewAbstract
                 }
                 
                 
-            } else {
-//                echo '!!!' . $sourceElement->wholeText . '<hr>';
-//                echo $lineNumber . '<br>';
-//              var_dump($sourceElement->wholeText);
             }
+            
         }
         return $targetDom->saveHTML();
         
@@ -199,7 +196,6 @@ class CbViewReview extends CbViewAbstract
             	$outputIssues[$i][] = $error;
             }
         }
-        
         
         return $outputIssues;
     }

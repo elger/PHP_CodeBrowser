@@ -238,38 +238,41 @@ class CbCLIController
 
         $issueHandler = new CbIssueHandler($cbIssueXml, $plugins);
         $files = $issueHandler->getFilesWithIssues();
-        $list = array();
-
         CbLogger::log('Found '.count($files).' files with issues');
-		$commonPathPrefix = '';
-    	foreach($files as $file) {
+
+
+        if (isset($this->_projectSourceDir)) {
+            $fileIterator = new CbSourceIterator($this->_projectSourceDir);
+        } else {
+            $fileIterator = new ArrayIterator($files);
+        }
+
+        $commonPathPrefix = '';
+        foreach($files as $file) {
             $commonPathPrefix = CbIOHelper::getCommonPathPrefix($file, $commonPathPrefix);
         }
-        CbLogger::log('Common path Prefix "'.$commonPathPrefix.'"', CbLogger::PRIORITY_DEBUG);
-		
-        foreach($files as $file) {
-            CbLogger::log('Get issues for "'.$file.'"', CbLogger::PRIORITY_DEBUG);
-            
-            $issues = $issueHandler->getIssuesByFile($file);
+
+        foreach($fileIterator as $file) {
+            if (in_array($file, $files)) {
+                CbLogger::log(
+                    'Get issues for "'.$file.'"',
+                    CbLogger::PRIORITY_DEBUG
+                );
+                $issues = $issueHandler->getIssuesByFile($file);
+            } else {
+                $issues = array();
+            }
+            // generate html review files
             $cbViewReview->generate($issues, $file, $commonPathPrefix);
         }
-		$cbViewReview->copyRessourceFolders(true);
-        CbLogger::log('Parse source directory');
+        $cbViewReview->copyRessourceFolders(true);
 
-        // parse directory defined by --source parameter
-//        $errors = $issueHandler->parseSourceDirectory(
-//            $this->_projectSourceDir,
-//            $errors
-//        );
-//        sort($errors);
-
-        // set project source dir from error list
         
 
 //        $html = new CbHTMLGenerator(
 //            $cbIOHelper, $issueHandler, $cbJSGenerator
 //        );
-//        
+//
 //        $html->setTemplateDir(PHPCB_TEMPLATE_DIR);
 //        $html->setOutputDir($this->_htmlOutputDir);
 
