@@ -61,40 +61,13 @@
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class CbErrorPadawan extends CbPluginError
+class CbErrorPadawan extends CbPluginsAbstract
 {
-    /**
-     * Setter mothod for the plugin name
-     *
-     * @return void
-     */
-    public function setPluginName ()
-    {
-        $this->pluginName = 'padawan';
-    }
+    public $pluginName = 'padawan';
 
-    /**
-     * Mapper method for this plugin.
-     *
-     * @param SingleXMLElement $element The XML plugin node with its errors
-     *
-     * @return array
-     */
-    public function mapError (SimpleXMLElement $element)
-    {
-        $errorList     = array();
-        $attributes    = $element->attributes();
-        $error['name'] = $attributes['name'];
+    protected $lineStartAttr = 'line';
+    protected $lineEndAttr = 'line';
+    protected $descriptionAttr = 'message';
+    protected $severityAttr = 'severity';
 
-        foreach ($element->error as $child) {
-            $attributes           = $child->attributes();
-            $error['line']        = $attributes['line'];
-            $error['to-line']     = $attributes['line'];
-            $error['source']      = 'Padawan';
-            $error['severity']    = $attributes['severity'];
-            $error['description'] = htmlentities($attributes['message']);
-            $errorList[]          = $error;
-        }
-        return $errorList;
-    }
 }

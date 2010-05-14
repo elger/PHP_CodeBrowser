@@ -60,44 +60,29 @@
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class CbErrorPMD extends CbPluginError
+class CbErrorPMD extends CbPluginsAbstract
 {
-    /**
-     * Setter mothod for the plugin name
-     *
-     * @return void
-     */
-    public function setPluginName ()
+    public $pluginName = 'pmd';
+
+    protected $lineStartAttr = 'beginline';
+    protected $lineEndAttr = 'endline';
+
+    protected function getSource(DOMElement $element)
     {
-        $this->pluginName = 'pmd';
+        return $element->getAttribute('rule');
     }
 
-    /**
-     * Mapper method for this plugin.
-     *
-     * @param SingleXMLElement $element The XML plugin node with its errors
-     *
-     * @return array
-     */
-    public function mapError (SimpleXMLElement $element)
+    protected function getSeverity(DOMElement $element)
     {
-        $errorList     = array();
-        $attr          = $element->attributes();
-        $error['name'] = $attr['name'];
+        return 'error';
+    }
 
-        foreach ($element->violation as $child) {
-            $attributes           = $child->attributes();
-            $error['line']        = (int) $attributes['beginline'];
-            $error['to-line']     = (int) $attributes['endline'];
-            $error['source']      = (string) $attributes['rule'];
-            $error['severity']    = 'error';
-            $error['description'] = str_replace(
-                '&#10;',
-                '',
-                htmlentities((string) $child)
-            );
-            $errorList[]          = $error;
-        }
-        return $errorList;
+    protected function getDescription(DOMElement $element)
+    {
+        return str_replace(
+            '&#10;',
+            '',
+            htmlentities($element->textContent)
+        );
     }
 }

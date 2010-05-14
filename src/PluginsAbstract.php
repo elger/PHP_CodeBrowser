@@ -59,7 +59,7 @@
  * @link      http://www.phpunit.de/
  * @since     Class available since 1.0
  */
-abstract class CbPluginError
+abstract class CbPluginsAbstract
 {
     /**
      * The name of the plugin.
@@ -71,110 +71,112 @@ abstract class CbPluginError
     public $pluginName;
 
     /**
-     * The path to the source directory
+     * The CbIssueXml object
      *
-     * @var string
+     * @var CbIssueXml
      */
-    public $projectSourceDir;
+    protected $_cbIssueXml;
 
-    /**
-     * The loaded XML file
-     *
-     * @var SimpleXMLElement
-     */
-    private $_xmlElement;
-
-    /**
-     * The cbXMLHandler object
-     *
-     * @var cbXMLHandler
-     */
-    private $_cbXMLHandler;
+    protected $lineStartAttr;
+    protected $lineEndAttr;
+    protected $descriptionAttr;
+    protected $severityAttr;
 
     /**
      * Constructor
      *
-     * @param string       $projectSourceDir The project source path
-     * @param CbXMLHandler $cbXMLHandler     cbXMLHandler object
+     * @param CbIssueXml $cbIssueXml     CbIssueXml object
      */
-    public function __construct($projectSourceDir, CbXMLHandler $cbXMLHandler)
+    public function __construct(CbIssueXml $cbIssueXml)
     {
-        $this->setPluginName();
-        $this->setSourcePath($projectSourceDir);
-        $this->_cbXMLHandler = $cbXMLHandler;
-    }
-
-    /**
-     * Setter method for cruisecontrol XML File
-     *
-     * @param DOMDocument $domDocument The cruisecontrol XML File
-     *
-     * @return void
-     */
-    public function setXML(DOMDocument $domDocument)
-    {
-        $this->_xmlElement = simplexml_import_dom($domDocument);
-    }
-
-    /**
-     * Setter method for the project source directory
-     *
-     * @param string $projectSourceDir The project source directory
-     *
-     * @return void
-     */
-    public function setSourcePath($projectSourceDir)
-    {
-        $this->projectSourceDir = $projectSourceDir;
+        $this->_cbIssueXml = $cbIssueXml;
     }
 
     /**
      * Parse the cc XML file for defined error type, e.g. "pmd" and map this
      * error to the needed PHP_CodeBrowser format.
      *
+     * @param String $file      Name of the file to parse the errors for.
      * @return array
      */
-    public function parseXMLError()
+    public function parseXMLError($file)
     {
-        if (!isset($this->_xmlElement)) {
+        if (!isset($this->_cbIssueXml)) {
             throw new Exception('XML file not loaded!');
         }
 
-        $children = $this->_xmlElement->{$this->pluginName}->children();
-        if (!isset($this->_xmlElement->{$this->pluginName})
-            || !is_object($children)
-        ) {
-            return array();
-        }
-
         $errors = array();
-        foreach ($children as $child) {
-            $errors[] = $this->mapError($child);
+        foreach ($this->getIssues($file) as $fileNode) {
+            $errors = array_merge($errors, $this->mapIssues($fileNode, $file));
         }
-
-        $errorList = array();
-        foreach ($errors as $list) {
-            foreach ($list as $error) {
-                $errorList[hash('md5', $error['name'])][] = $error;
-            }
-        }
-        return $errorList;
+        return $errors;
     }
 
-    /**
-     * Setter method for the plugin name.
-     * This name should be the one used by cruisecontrol.
-     *
-     * @return void
-     */
-    abstract function setPluginName ();
+    protected function getIssues($file)
+    {
+        return $this->_cbIssueXml->query('/cruisecontrol/'.$this->pluginName.'/file[@name="'.$file.'"]');
+    }
+
+    public function getFilesWithErrors()
+    {
+        $filenames = array();
+
+        foreach ($this->_cbIssueXml->query('/cruisecontrol/'.$this->pluginName.'/file[@name]') as $node) {
+            $filenames[] = $node->getAttribute('name');
+        }
+
+        return array_unique($filenames);
+    }
 
     /**
      * The detailed mapper method for each single plugin, returning an errorlist.
      *
-     * @param SimpleXMLElement $element The errorlist for each plugin node
+     * @param DomNode $element The XML plugin node with its errors
+     * @param filename
      *
      * @return array
      */
-    abstract function mapError (SimpleXMLElement $element);
+    public function mapIssues(DomNode $element, $filename)
+    {
+        $errorList = array();
+        foreach($element->childNodes as $child) {
+            if (!($child instanceof DOMElement)){
+                continue;
+            }
+            $errorList[] = new CbIssue(
+                $filename,
+                $this->getLineStart($child),
+                $this->getLineEnd($child),
+                $this->getSource($child),
+                $this->getDescription($child),
+                $this->getSeverity($child)
+            );
+        }
+        return $errorList;
+    }
+
+    protected function getLineStart(DOMElement $element)
+    {
+        return (int) $element->getAttribute($this->lineStartAttr);
+    }
+
+    protected function getLineEnd(DOMElement $element)
+    {
+        return (int) $element->getAttribute($this->lineEndAttr);
+    }
+
+    protected function getSource(DOMElement $element)
+    {
+        return $this->pluginName;
+    }
+
+    protected function getDescription(DOMElement $element)
+    {
+        return htmlentities($element->getAttribute($this->descriptionAttr));
+    }
+
+    protected function getSeverity(DOMElement $element)
+    {
+        return htmlentities($element->getAttribute($this->severityAttr));
+    }
 }

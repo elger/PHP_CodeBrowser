@@ -61,40 +61,12 @@
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class CbErrorCheckstyle extends CbPluginError
+class CbErrorCheckstyle extends CbPluginsAbstract
 {
-    /**
-     * Setter mothod for the plugin name
-     *
-     * @return void
-     */
-    public function setPluginName ()
-    {
-        $this->pluginName = 'checkstyle';
-    }
+    public $pluginName = 'checkstyle';
 
-    /**
-     * Mapper method for this plugin.
-     *
-     * @param SingleXMLElement $element The XML plugin node with its errors
-     *
-     * @return array
-     */
-    public function mapError (SimpleXMLElement $element)
-    {
-        $errorList     = array();
-        $attributes    = $element->attributes();
-        $error['name'] = $attributes['name'];
-
-        foreach ($element->error as $child) {
-            $attributes           = $child->attributes();
-            $error['line']        = (int) $attributes['line'];
-            $error['to-line']     = (int) $attributes['line'];
-            $error['source']      = 'Checkstyle';
-            $error['severity']    = (string) $attributes['severity'];
-            $error['description'] = htmlentities((string)$attributes['message']);
-            $errorList[]          = $error;
-        }
-        return $errorList;
-    }
+    protected $lineStartAttr = 'line';
+    protected $lineEndAttr = 'line';
+    protected $descriptionAttr = 'message';
+    protected $severityAttr = 'severity';
 }

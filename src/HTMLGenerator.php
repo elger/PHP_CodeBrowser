@@ -92,9 +92,9 @@ class CbHTMLGenerator
     /**
      * Error handler object
      *
-     * @var cbErrorHandler
+     * @var cbIssueHandler
      */
-    private $_cbErrorHandler;
+    private $_cbIssueHandler;
 
     /**
      * JS / HTML generator object
@@ -107,13 +107,13 @@ class CbHTMLGenerator
      * Constructor
      *
      * @param CbFDHandler    $cbFDHandler    File handler object
-     * @param CbErrorHandler $cbErrorHandler Error handler object
+     * @param CbIssueHandler $cbIssueHandler Error handler object
      * @param CbJsGenerator  $cbJSGenerator  JS / HTML generator object
      */
-    public function __construct(CbFDHandler $cbFDHandler, CbErrorHandler $cbErrorHandler, CbJSGenerator $cbJSGenerator)
+    public function __construct(CbFDHandler $cbFDHandler, CbIssueHandler $cbIssueHandler, CbJSGenerator $cbJSGenerator)
     {
         $this->_cbFDHandler    = $cbFDHandler;
-        $this->_cbErrorHandler = $cbErrorHandler;
+        $this->_cbIssueHandler = $cbIssueHandler;
         $this->_cbJSGenerator  = $cbJSGenerator;
     }
 
@@ -202,7 +202,7 @@ class CbHTMLGenerator
      *
      * @return void
      * @throws Exception
-     * @see cbErrorHandler::getErrorsByFile
+     * @see cbIssueHandler::getIssuesByFile
      * @see cbJSGenerator::getHighlightedSource
      */
     public function generateViewReview($errors, $cbXMLFile, $projectSource)
@@ -213,7 +213,7 @@ class CbHTMLGenerator
 
         $data['title'] = 'Code Browser - Review View';
         foreach ($errors as $file) {
-            $data['errors']   = $this->_cbErrorHandler->getErrorsByFile(
+            $data['errors']   = $this->_cbIssueHandler->getIssuesByFile(
                 $cbXMLFile,
                 $file['complete']
             );

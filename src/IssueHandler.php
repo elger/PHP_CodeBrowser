@@ -47,7 +47,7 @@
  */
 
 /**
- * CbErrorHandler
+ * CbIssueHandler
  *
  * This class is providing a lists of errors as well lists of filenames that have
  * related errors.
@@ -64,14 +64,14 @@
  * @link      http://www.phpunit.de/
  * @since     Class available since 1.0
  */
-class CbErrorHandler
+class CbIssueHandler
 {
     /**
-     * cbXMLHandler object
+     * CbIssueXml object
      *
-     * @var cbXMLHandler
+     * @var CbIssueXml
      */
-    public $cbXMLHandler;
+    public $cbIssueXml;
 
     /**
      * Supported file types for code browsing
@@ -80,14 +80,17 @@ class CbErrorHandler
      */
     private $_supportedFileTypes = array('php');
 
+    protected $plugins = array();
+
     /**
      * Default constructor
      *
-     * @param cbXMLHandler $cbXMLHandler The cbXMLHandler object
+     * @param CbIssueXml $cbIssueXml The cbXMLHandler object
      */
-    public function __construct (CbXMLHandler $cbXMLHandler)
+    public function __construct (CbIssueXml $cbIssueXml, array $plugins)
     {
-        $this->cbXMLHandler = $cbXMLHandler;
+        $this->cbIssueXml = $cbIssueXml;
+        $this->plugins = $plugins;
     }
 
     /**
@@ -227,61 +230,44 @@ class CbErrorHandler
     /**
      * Get the related error elements for given $fileName.
      *
-     * @param string $cbXMLFile The XML file to read in
      * @param string $fileName  The $fileName to search for, could be a mixe of path
      *                          with filename as well (e.g.
      *                          relative/path/filename.php)
      *
      * @return SimpleXMLElement
      */
-    public function getErrorsByFile ($cbXMLFile, $fileName)
+    public function getIssuesByFile($fileName)
     {
-        $element = $this->cbXMLHandler->loadXML($cbXMLFile);
-        foreach ($element as $file) {
-            if (
-                0 === substr_compare($file['name'], $fileName, -1*strlen($fileName))
-            ) {
-                return $file->children();
-            }
+        $list = array();
+        foreach ($this->plugins as $plugin) {
+            $list = $this->buildIssueTree($plugin->parseXMLError($fileName), $list);
         }
-        return array();
+        return $list;
+    }
+
+    protected function buildIssueTree($newIssues, $oldIssues)
+    {
+        foreach ($newIssues as $issue) {
+            if (!isset($oldIssues[$issue->lineStart])) {
+                $oldIssues[$issue->lineStart] = array();
+            }
+            $oldIssues[$issue->lineStart][] = $issue;
+        }
+        return $oldIssues;
     }
 
     /**
      * Get all the filenames with errors.
      *
-     * @param string $cbXMLFileName The XML file with all information
-     *
      * @return array
      */
-    public function getFilesWithErrors ($cbXMLFileName)
+    public function getFilesWithIssues()
     {
-        $element = $this->cbXMLHandler->loadXML($cbXMLFileName);
-        $files   = array();
-        $path    = '';
-
-        foreach ($element->children() as $file) {
-            $tmp['complete']      = (string)$file['name'];
-            $tmp['file']          = basename($file['name']);
-            $tmp['path']          = dirname($file['name']);
-            $tmp['count_errors']  = $this->cbXMLHandler->countItems(
-                $file->children(),
-                'severity',
-                'error'
-            );
-            $tmp['count_notices'] = $this->cbXMLHandler->countItems(
-                $file->children(),
-                'severity',
-                'notice'
-            );
-            $tmp['count_notices'] += $this->cbXMLHandler->countItems(
-                $file->children(),
-                'severity',
-                'warning'
-            );
-            $files[]              = $tmp;
+        $files = array();
+        foreach ($this->plugins as $plugin) {
+            $files = array_merge($files, $plugin->getFilesWithErrors());
         }
-        return $files;
+        return array_unique($files);
     }
 
     /**

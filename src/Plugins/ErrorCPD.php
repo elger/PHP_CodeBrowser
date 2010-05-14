@@ -61,55 +61,70 @@
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class CbErrorCPD extends CbPluginError
+class CbErrorCPD extends CbPluginsAbstract
 {
-    /**
-     * Setter mothod for the plugin name
-     *
-     * @return void
-     */
-    public function setPluginName ()
+    public $pluginName = 'pmd-cpd';
+
+    protected function getIssues($file)
     {
-        $this->pluginName = 'pmd-cpd';
+        return $this->_cbIssueXml->query('/cruisecontrol/'.$this->pluginName.'/*/file[@path="'.$file.'"]');
     }
 
     /**
      * Mapper method for this plugin.
      *
-     * @param SingleXMLElement $xmlElement The XML plugin node with its errors
+     * @param SingleXMLElement $element The XML plugin node with its errors
      *
      * @return array
      */
-    public function mapError (SimpleXMLElement $xmlElement)
+    public function mapIssues(DOMNode $element, $filename)
     {
-        $attributes = $xmlElement->attributes();
+        $parentNode = $element->parentNode;
 
-        if (is_null($xmlElement->file[0])) {
-            return array();
+        $files = $this->_cbIssueXml->query('file[@path="'.$filename.'"]', $parentNode);
+
+        $lineCount = (int)$parentNode->getAttribute('lines');
+
+        $result = array();
+        foreach ($files as $file) {
+            $result[] = new CbIssue(
+                $file->getAttribute('path'),
+                (int) $file->getAttribute('line'),
+                (int) $file->getAttribute('line') + $lineCount,
+                $this->pluginName,
+                htmlentities(
+                    $this->getDescription($parentNode->childNodes, $file)
+                ),
+                'notice'
+            );
+        }
+        return $result;
+    }
+
+    public function getFilesWithErrors()
+    {
+        $filenames = array();
+
+        foreach ($this->_cbIssueXml->query('/cruisecontrol/'.$this->pluginName.'/*/file[@path]') as $node) {
+            $filenames[] = $node->getAttribute('path');
         }
 
-        $attributesF           = $xmlElement->file[0]->attributes();
-        $attributesS           = $xmlElement->file[1]->attributes();
-        $errorF['line']        = (int) $attributesF['line'];
-        $errorF['to-line']
-            = (int) $attributesF['line'] + (int) $attributes['lines'];
-        $errorF['source']      = 'Duplication';
-        $errorF['severity']    = 'notice';
-        $errorF['description'] = htmlentities(
-            '... ' . substr($attributesS['path'], strlen($attributesS['path']) - 30)
-        );
-
-        $errorS['line']        = (int) $attributesS['line'];
-        $errorS['to-line']
-            = (int) $attributesS['line'] + (int) $attributes['lines'];
-        $errorS['source']      = 'Duplication';
-        $errorS['severity']    = 'notice';
-        $errorS['description'] = htmlentities(
-            '... ' . substr($attributesF['path'], strlen($attributesF['path']) - 30)
-        );
-        $errorF['name']        = $attributesF['path'];
-        $errorS['name']        = $attributesS['path'];
-
-        return array($errorF , $errorS);
+        return array_unique($filenames);
     }
+
+    protected function getDescription(DOMNodeList $allNodes, DOMNode $currentNode)
+    {
+        $source = array();
+        foreach ($allNodes as $node) {
+            if ($node instanceof DOMElement && !$node->isSameNode($currentNode)) {
+                $source[] = sprintf(
+                    '%s (%d)',
+                    $node->getAttribute('path'),
+                    $node->getAttribute('line')
+                );
+            }
+        }
+        return "Copy paste from:\n".implode("\n", $source);
+    }
+
 }

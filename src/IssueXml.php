@@ -62,30 +62,23 @@
  * @link      http://www.phpunit.de/
  * @since     Class available since 1.0
  */
-class CbXMLHandler
+class CbIssueXml extends DOMDocument
 {
-    /**
-     * File handler object
-     *
-     * @var cbFDHandler
-     */
-    public $cbFDHandler;
 
-    /**
-     * A list of xml files to merge
-     *
-     * @var array
-     */
-    protected $xmlFiles;
+    public $preserveWhiteSpace = false;
+    public $formatOutput = true;
+
+    protected $_xpath;
 
     /**
      * Constructor
      *
      * @param CbFDHandler $cbFDHandler File handler object
      */
-    public function __construct(CbFDHandler $cbFDHandler)
+    public function __construct($version = '1.0', $encoding = 'UTF-8')
     {
-        $this->cbFDHandler = $cbFDHandler;
+        parent::__construct($version, $encoding);
+        $this->appendChild($this->createElement('cruisecontrol'));
     }
 
     /**
@@ -117,25 +110,6 @@ class CbXMLHandler
     }
 
     /**
-     * Save a SimpleXMLElement as XML file.
-     *
-     * @param string           $fileName The filename of XML file
-     * @param SimpleXMLElement $resource The XML resource
-     *
-     * @return void
-     */
-    public function saveXML($fileName, SimpleXMLElement $resource)
-    {
-        $domSXE = dom_import_simplexml($resource);
-        $dom    = new DOMDocument('1.0');
-
-        $dom->appendChild($dom->importNode($domSXE, true));
-        $dom->formatOutput = true;
-
-        $this->cbFDHandler->createFile($fileName, $dom->saveXML());
-    }
-
-    /**
      * Count specified items in a given XML node.
      *
      * @param SimpleXMLElement $element  The XML element node
@@ -161,7 +135,7 @@ class CbXMLHandler
      *
      * @param string $directory The path to directory where xml files are stored
      *
-     * @return array Array object of DOMDocument elements
+     * @return CbXMLHandler     This object
      */
     public function addDirectory($directory)
     {
@@ -169,28 +143,34 @@ class CbXMLHandler
             new RecursiveDirectoryIterator($directory)
         );
 
-        while ($iterator->valid()) {
+        $xml = new DOMDocument('1.0', 'UTF-8');
+        $xml->validateOnParse = true;
 
-            $current = $iterator->current();
+        foreach ($iterator as $current) {
             if ($current->isFile()
                 && ($current->getFilename() !== $current->getBasename('.xml'))
             ) {
-                $xml = new DOMDocument('1.0', 'UTF-8');
-                $xml->validateOnParse = true;
+                echo "START Read File: ".$current->getFilename()." ".PHP_Timer::resourceUsage()."\n";
+
                 if (@$xml->load(realpath($current))) {
+                    echo "END Read File: ".$current->getFilename()." ".PHP_Timer::resourceUsage()."\n";
                     $this->addXMLFile($xml);
+                    echo "ADDED File: ".$current->getFilename()." ".PHP_Timer::resourceUsage()."\n";
                 }
             }
-            $iterator->next();
         }
 
-        if (!isset($this->xmlFiles)) {
+        echo 'START unset $xml '.PHP_Timer::resourceUsage()."\n";
+        $xml = null;
+        echo 'END unset $xml '.PHP_Timer::resourceUsage()."\n";
+
+        if (!$this->documentElement->hasChildNodes()) {
             throw new Exception(
                 sprintf('Valid xml log files could not be found in "%s"', $directory)
             );
         }
-
-        return $this->xmlFiles;
+        echo 'QUIT addDirectory '.PHP_Timer::resourceUsage()."\n";
+        return $this;
     }
 
     /**
@@ -203,32 +183,28 @@ class CbXMLHandler
      */
     public function addXMLFile(DOMDocument $domDocument)
     {
-        $this->xmlFiles[] = $domDocument;
+        foreach ($domDocument->childNodes as $node) {
+            $this->documentElement->appendChild($this->importNode($node, true));
+        }
     }
 
-    /**
-     * Merges present files to a single DOMDocument
-     *
-     * @return DOMDocument
-     */
-    public function mergeFiles()
+    public function query($xpath, DOMNode $contextNode = null)
     {
-        $xml    = new DOMDocument('1.0', 'UTF-8');
-        $cruise = $xml->createElement('cruisecontrol');
-
-        $xml->preserveWhiteSpace = false;
-        $xml->formatOutput       = true;
-
-        if (!isset($this->xmlFiles)) {
-            return $xml;
+        $start = microtime(true);
+        if (!isset($this->_xpath)) {
+            $this->_xpath = new DOMXPath($this);
         }
 
-        foreach ($this->xmlFiles as $xmlFile) {
-            foreach ($xmlFile->childNodes as $node) {
-                $cruise->appendChild($xml->importNode($node, true));
-            }
+        if ($contextNode) {
+            $result = $this->_xpath->query($xpath, $contextNode);
+        } else {
+            $result = $this->_xpath->query($xpath);
         }
-        $xml->appendChild($cruise);
-        return $xml;
+        if (microtime(true)-$start > 2) {
+            echo 'XPATH: '.$xpath
+                .($contextNode ? ' on '.$contextNode->getNodePath() : '')
+                .' '.round((microtime(true)-$start), 2)."ms\n";
+        }
+        return $result;
     }
 }

@@ -214,37 +214,31 @@ class CbCLIController
     {
         // init needed classes
         $cbFDHandler    = new CbFDHandler();
-        $cbXMLHandler   = new CbXMLHandler($cbFDHandler);
-        $cbErrorHandler = new CbErrorHandler($cbXMLHandler);
-        $cbJSGenerator  = new CbJSGenerator($cbFDHandler);
+        $cbIssueXml     = new CbIssueXml();
 
         // clear and create output directory
         $cbFDHandler->deleteDirectory($this->_htmlOutputDir);
         $cbFDHandler->createDirectory($this->_htmlOutputDir);
 
         // merge xml files
-        $cbXMLHandler->addDirectory($this->_logDir);
-        $mergedDOMDoc = $cbXMLHandler->mergeFiles();
-
+        $cbIssueXml->addDirectory($this->_logDir);
+print "\nAdded directory: " . PHP_Timer::resourceUsage() . "\n";
         // conversion of XML file cc to cb format
-        $list = array();
+        $plugins = array();
         foreach ($this->_registeredErrorPlugins as $className) {
-            $plugin = new $className($this->_projectSourceDir, $cbXMLHandler);
-            $plugin->setXML($mergedDOMDoc);
-            $list = array_merge_recursive($list, $plugin->parseXMLError());
+            $plugin = $plugins[] = new $className($cbIssueXml);
         }
 
-        // construct the error list
-        $cbXMLGenerator = new CbXMLGenerator($cbFDHandler);
-        $cbXMLGenerator->setXMLName($this->_xmlFile);
-        $cbXMLGenerator->saveCbXML($cbXMLGenerator->generateXMLFromErrors($list));
-
-        // get cb error list, filter common source path
-        $errors = $cbErrorHandler->getFilesWithErrors($this->_xmlFile);
-        $errors = $cbErrorHandler->replaceCommonSourcePath($errors);
-
+        $issueHandler = new CbIssueHandler($cbIssueXml, $plugins);
+        $files = $issueHandler->getFilesWithIssues();
+        $list = array();
+print "\nRetrieved file list (".count($files)."): " . PHP_Timer::resourceUsage() . "\n";
+        foreach($files as $file) {
+            $issues = $issueHandler->getIssuesByFile($file);
+        }
+return;
         // parse directory defined by --source parameter
-        $errors = $cbErrorHandler->parseSourceDirectory(
+        $errors = $issueHandler->parseSourceDirectory(
             $this->_projectSourceDir,
             $errors
         );
@@ -253,12 +247,12 @@ class CbCLIController
         // set project source dir from error list
         if (!isset($this->_projectSourceDir)) {
             $this->setProjectSourceDir(
-                $cbErrorHandler->getCommonSourcePath($errors)
+                $issueHandler->getCommonSourcePath($errors)
             );
         }
 
         $html   = new CbHTMLGenerator(
-            $cbFDHandler, $cbErrorHandler, $cbJSGenerator
+            $cbFDHandler, $issueHandler, $cbJSGenerator
         );
         $html->setTemplateDir(PHPCB_TEMPLATE_DIR);
         $html->setOutputDir($this->_htmlOutputDir);
@@ -341,7 +335,8 @@ class CbCLIController
             $htmlOutput . '/' . $xmlFileName
         );
         $controller->addErrorPlugins(
-            array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan')
+            array( 'CbErrorCheckstyle','CbErrorCPD', 'CbErrorPadawan', 'CbErrorPMD')
+            // array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan')
         );
 
         try {
