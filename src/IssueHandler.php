@@ -1,10 +1,10 @@
 <?php
 /**
- * Error handler
+ * Issue handler
  *
  * PHP Version 5.2.6
  *
- * Copyright (c) 2007-2009, Mayflower GmbH
+ * Copyright (c) 2007-2010, Mayflower GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,7 @@
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
- * @copyright 2007-2009 Mayflower GmbH
+ * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   SVN: $Id$
  * @link      http://www.phpunit.de/
@@ -51,14 +51,14 @@
  *
  * This class is providing a lists of errors as well lists of filenames that have
  * related errors.
- * For providing this lists the prior generated PHP_CodeBrowser error xml file is
- * parsed.
+ * For providing these lists the prior generated CbIssueXml is parsed.
  *
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
  * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright 2007-2009 Mayflower GmbH
+ * @author    Michel Hartmann <michel.hartmann@mayflower.de>
+ * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   Release: @package_version@
  * @link      http://www.phpunit.de/
@@ -80,6 +80,10 @@ class CbIssueHandler
      */
     private $_supportedFileTypes = array('php');
 
+    /**
+     * Plugins to use for parsing the xml.
+     * @var array
+     */
     protected $plugins = array();
 
     /**
@@ -230,8 +234,8 @@ class CbIssueHandler
     /**
      * Get the related error elements for given $fileName.
      *
-     * @param string $fileName  The $fileName to search for, could be a mixe of path
-     *                          with filename as well (e.g.
+     * @param string $fileName  The $fileName to search for, could be a mixe of
+     *                          path with filename as well (e.g.
      *                          relative/path/filename.php)
      *
      * @return SimpleXMLElement
@@ -240,12 +244,18 @@ class CbIssueHandler
     {
         $list = array();
         foreach ($this->plugins as $plugin) {
-            $list = $this->buildIssueTree($plugin->parseXMLError($fileName), $list);
+            $list = $this->buildIssueTree($plugin->getIssuesByFile($fileName), $list);
         }
         return $list;
     }
 
-    protected function buildIssueTree($newIssues, $oldIssues)
+    /**
+     * Build a tree of issues to be able to get issues by line number.
+     * @param array $newIssues  Issues to add
+     * @param array $oldIssues  Exisiting issues as tree.
+     * @return array
+     */
+    protected function buildIssueTree(array $newIssues, array $oldIssues)
     {
         foreach ($newIssues as $issue) {
             if (!isset($oldIssues[$issue->lineStart])) {
@@ -257,7 +267,7 @@ class CbIssueHandler
     }
 
     /**
-     * Get all the filenames with errors.
+     * Get all the filenames with issues.
      *
      * @return array
      */
@@ -265,52 +275,8 @@ class CbIssueHandler
     {
         $files = array();
         foreach ($this->plugins as $plugin) {
-            $files = array_merge($files, $plugin->getFilesWithErrors());
+            $files = array_merge($files, $plugin->getFilesWithIssues());
         }
         return array_unique($files);
-    }
-
-    /**
-     * Filters the string from the beginning the two input strings have in common.
-     *
-     * Example:
-     * /path/to/source/folder/myFile.php
-     * /path/to/source/other/folder/otherFile.php
-     * will return
-     * /path/to/source
-     *
-     * @param string $path1  String for comparing
-     * @param string $path2  String for comparing
-     * @param int    $length The length for comparing the strings
-     *
-     * @return string
-     */
-    private function _getCommonErrorPath($path1, $path2, $length = 0)
-    {
-        $length = (strlen($path1) < strlen($path2))
-        ?
-        strlen($path1)
-        :
-        strlen($path2);
-
-        if (!$length && 0 === ($length = strlen($path2))) {
-            return $path1;
-        }
-
-        switch (strncmp($path1, $path2, $length)) {
-        case 0 :
-            $path = substr($path1, 0, $length);
-            break;
-        default :
-            $path = $this->_getCommonErrorPath(
-                substr($path1, 0, $length-1), substr($path2, 0, $length-1)
-            );
-            break;
-        }
-        return (DIRECTORY_SEPARATOR == substr($path, -1))
-            ?
-            substr($path, 0, -1)
-            :
-            $path;
     }
 }

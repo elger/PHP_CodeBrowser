@@ -72,6 +72,7 @@ require_once 'PHP/Timer.php';
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
  * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
+ * @author    Michel Hartmann <michel.hartmann@mayflower.de>
  * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   Release: @package_version@
@@ -214,15 +215,18 @@ class CbCLIController
     {
         // init needed classes
         $cbIOHelper    = new CbIOHelper();
-        $cbIssueXml     = new CbIssueXml();
+        $cbIssueXml    = new CbIssueXml();
+        $cbViewReview  = new CbViewReview($cbIOHelper);
 
         // clear and create output directory
         $cbIOHelper->deleteDirectory($this->_htmlOutputDir);
         $cbIOHelper->createDirectory($this->_htmlOutputDir);
 
+        CbLogger::log('Load XML files', CbLogger::PRIORITY_DEBUG);
         // merge xml files
         $cbIssueXml->addDirectory($this->_logDir);
-print "\nAdded directory: " . PHP_Timer::resourceUsage() . "\n";
+
+        CbLogger::log('Load Plugins', CbLogger::PRIORITY_DEBUG);
         // conversion of XML file cc to cb format
         $plugins = array();
         foreach ($this->_registeredErrorPlugins as $className) {
@@ -232,40 +236,54 @@ print "\nAdded directory: " . PHP_Timer::resourceUsage() . "\n";
         $issueHandler = new CbIssueHandler($cbIssueXml, $plugins);
         $files = $issueHandler->getFilesWithIssues();
         $list = array();
-print "\nRetrieved file list (".count($files)."): " . PHP_Timer::resourceUsage() . "\n";
+
+        CbLogger::log('Found '.count($files).' files with issues');
+		$commonPathPrefix = '';
         foreach($files as $file) {
+            CbLogger::log('Get issues for "'.$file.'"', CbLogger::PRIORITY_DEBUG);
+
+            $commonPathPrefix = CbIOHelper::getCommonPathPrefix($file, $commonPathPrefix);
             $issues = $issueHandler->getIssuesByFile($file);
+            
+            $cbViewReview->generate($issues, $file);
+            
+            // generate html review files
+            
         }
-return;
+
+        CbLogger::log('Parse source directory');
+
         // parse directory defined by --source parameter
-        $errors = $issueHandler->parseSourceDirectory(
-            $this->_projectSourceDir,
-            $errors
-        );
-        sort($errors);
+//        $errors = $issueHandler->parseSourceDirectory(
+//            $this->_projectSourceDir,
+//            $errors
+//        );
+//        sort($errors);
 
         // set project source dir from error list
-        if (!isset($this->_projectSourceDir)) {
-            $this->setProjectSourceDir(
-                $issueHandler->getCommonSourcePath($errors)
-            );
-        }
+//        if (!isset($this->_projectSourceDir)) {
+//            $this->setProjectSourceDir(
+//                //$issueHandler->getCommonSourcePath($errors)
+//                $commonPathPrefix
+//            );
+//        }
 
-        $html   = new CbHTMLGenerator(
-            $cbIOHelper, $issueHandler, $cbJSGenerator
-        );
-        $html->setTemplateDir(PHPCB_TEMPLATE_DIR);
-        $html->setOutputDir($this->_htmlOutputDir);
+//        $html = new CbHTMLGenerator(
+//            $cbIOHelper, $issueHandler, $cbJSGenerator
+//        );
+//        
+//        $html->setTemplateDir(PHPCB_TEMPLATE_DIR);
+//        $html->setOutputDir($this->_htmlOutputDir);
 
-        if (!empty($errors)) {
-            $html->generateViewFlat($errors);
-            $html->generateViewTree($errors);
-            $html->generateViewReview(
-                $errors, $this->_xmlFile, $this->_projectSourceDir
-            );
-        }
+//        if (!empty($errors)) {
+//            $html->generateViewFlat($errors);
+//            $html->generateViewTree($errors);
+//            $html->generateViewReview(
+//                $errors, $this->_xmlFile, $this->_projectSourceDir
+//            );
+//        }
         // copy needed resources like css, js, images
-        $html->copyRessourceFolders(!empty($errors));
+//        $html->copyRessourceFolders(!empty($errors));
     }
 
 
@@ -304,6 +322,8 @@ return;
             case '--version':
                 self::printVersion();
                 break;
+            case '--logfile':
+                CbLogger::setLogFile($argv[$key + 1]);
             }
         }
 
@@ -324,8 +344,9 @@ return;
             );
             self::printHelp();
         }
+        CbLogger::setLogLevel(CbLogger::PRIORITY_DEBUG);
 
-        printf("Generating PHP_CodeBrowser files\n");
+        CbLogger::log('Generating PHP_CodeBrowser files');
 
         // init new CLIController
         $controller = new CbCLIController(
@@ -335,17 +356,18 @@ return;
             $htmlOutput . '/' . $xmlFileName
         );
         $controller->addErrorPlugins(
-            array( 'CbErrorCheckstyle','CbErrorCPD', 'CbErrorPadawan', 'CbErrorPMD')
-            // array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan')
+            array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan')
         );
 
         try {
             $controller->run();
         } catch (Exception $e) {
-            printf("PHP-CodeBrowser Error: \n%s\n", $e->getMessage());
+            CbLogger::log(
+                sprintf("PHP-CodeBrowser Error: \n%s\n", $e->getMessage())
+            );
         }
 
-        print "\n" . PHP_Timer::resourceUsage() . "\n";
+        CbLogger::log(PHP_Timer::resourceUsage());
     }
 
     /**
@@ -356,13 +378,14 @@ return;
     public static function printHelp()
     {
         $help = sprintf(
-            "Usage: phpcb --log <dir> --output <dir> [--source <dir>]
+            "Usage: phpcb --log <dir> --output <dir> [--source <dir>] [--logfile <dir>]
 
             PHP_CodeBrowser arguments:
             \t--log <dir>      \t\tThe path to the xml log files, e.g. generated from phpunit.
             \t--output <dir>   \t\tPath to the output folder where generated files should be stored.
             \t--source <dir> (opt)   \tPath to the project source code. Parse complete source directory
                                 \t\t\t\tif is set, else only files from logs.
+            \t--logfile <dir> (opt) \tPath of the file to use for logging the output.
 
             General arguments:
             \t--help           \t\t\tPrint this help.\n\n"

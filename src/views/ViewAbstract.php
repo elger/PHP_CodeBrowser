@@ -26,20 +26,20 @@ class CbViewAbstract
     /**
      * File handler object
      *
-     * @var cbFDHandler
+     * @var cbIOHelper
      */
-    protected $_cbFDHandler;
+    protected $_cbIOHelper;
     
     
     
     /**
      * Constructor
      *
-     * @param CbFDHandler    $cbFDHandler    File handler object
+     * @param CbIOHelper    $cbIOHelper    File handler object
      */
-    public function __construct(CbFDHandler $cbFDHandler)
+    public function __construct(CbIOHelper $cbIOHelper)
     {
-        $this->_cbFDHandler    = $cbFDHandler;
+        $this->_cbIOHelper = $cbIOHelper;
     }
     
     /**
@@ -75,7 +75,7 @@ class CbViewAbstract
      *
      * @return void
      * @throws Exception
-     * @see cbFDHandler::copyFile
+     * @see cbIOHelper::copyFile
      */
     public function copyRessourceFolders($hasErrors = true)
     {
@@ -84,7 +84,7 @@ class CbViewAbstract
         }
 
         foreach ($this->_ressourceFolders as $folder) {
-            $this->_cbFDHandler->copyDirectory(
+            $this->_cbIOHelper->copyDirectory(
                 $this->_templateDir . DIRECTORY_SEPARATOR . $folder,
                 $this->_outputDir . DIRECTORY_SEPARATOR . $folder
             );
@@ -92,10 +92,10 @@ class CbViewAbstract
 
         $template = ($hasErrors) ?  'index.tpl' : 'noErrors.tpl';
 
-        $content = $this->_cbFDHandler->loadFile(
+        $content = $this->_cbIOHelper->loadFile(
             $this->_templateDir . DIRECTORY_SEPARATOR . $template
         );
-        $this->_cbFDHandler->createFile(
+        $this->_cbIOHelper->createFile(
             $this->_outputDir . DIRECTORY_SEPARATOR . 'index.html', $content
         );
     }
@@ -137,11 +137,11 @@ class CbViewAbstract
      * @param string $fileName The filename of analyzed file
      *
      * @return void
-     * @see cbFDHandler::createFile
+     * @see cbIOHelper::createFile
      */
     protected function _generateView($data, $fileName)
     {
-        $this->_cbFDHandler->createFile(
+        $this->_cbIOHelper->createFile(
             $this->_outputDir
             . DIRECTORY_SEPARATOR
             . $fileName,
