@@ -17,7 +17,7 @@ class CbViewReview extends CbViewAbstract
 
         $issues = $this->_formatIssues($issueList);
 
-        $shortFilename = strstr($fileName, $commonPathPrefix);
+        $shortFilename = substr($fileName, strlen($commonPathPrefix));
 
         $data['issues']   = $issues;
         $data['title']    = 'Code Browser - ViewReview View';
@@ -183,12 +183,10 @@ class CbViewReview extends CbViewAbstract
 
         }
         return $targetDom->saveHTML();
-
     }
 
     private function _formatIssues($issueList)
     {
-
         $outputIssues = array();
 
         foreach ($issueList as $issues) foreach ($issues as $error) {

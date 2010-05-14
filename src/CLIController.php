@@ -220,7 +220,7 @@ class CbCLIController
 
         $cbViewReview->setOutputDir($this->_htmlOutputDir);
         $cbViewReview->setTemplateDir(PHPCB_TEMPLATE_DIR);
-        
+
         // clear and create output directory
         $cbIOHelper->deleteDirectory($this->_htmlOutputDir);
         $cbIOHelper->createDirectory($this->_htmlOutputDir);
@@ -247,10 +247,7 @@ class CbCLIController
             $fileIterator = new ArrayIterator($files);
         }
 
-        $commonPathPrefix = '';
-        foreach($files as $file) {
-            $commonPathPrefix = CbIOHelper::getCommonPathPrefix($file, $commonPathPrefix);
-        }
+        $commonPathPrefix = CbIOHelper::getCommonPathPrefix($files);
 
         foreach($fileIterator as $file) {
             if (in_array($file, $files)) {
@@ -267,7 +264,7 @@ class CbCLIController
         }
         $cbViewReview->copyRessourceFolders(true);
 
-        
+
 
 //        $html = new CbHTMLGenerator(
 //            $cbIOHelper, $issueHandler, $cbJSGenerator
