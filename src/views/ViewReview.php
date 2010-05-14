@@ -168,8 +168,8 @@ class CbViewReview extends CbViewAbstract
                         //increment line number
                         $lineNumber++;
                     } else {
-                        echo $lineNumber . ' - ' . htmlspecialchars($sourceChildElement->wholeText) . '<hr>';
-                        // apend content to urrent li element
+                        
+                        // apend content to current li element
                         $span = $targetDom->createElement('span');
                         $span->nodeValue = htmlspecialchars($sourceChildElement->wholeText);
                         $span->setAttribute('style', $elementStyle );
