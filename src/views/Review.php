@@ -167,18 +167,10 @@ class CbViewReview extends CbViewAbstract
         
         $outputIssues = array(); 
         
-        foreach ($issueList as $issues) {
-            
-            foreach ($issues as $error) {
-                
-                for ($i = $error->lineStart; $i <= $error->lineEnd; $i++) {
-                    
-                    $outputIssues[$i][] = $error;
-                    
-                }
-                
+        foreach ($issueList as $issues) foreach ($issues as $error) {
+	        for ($i = $error->lineStart; $i <= $error->lineEnd; $i++) {
+            	$outputIssues[$i][] = $error;
             }
-            
         }
         
 //        echo '<pre>';
