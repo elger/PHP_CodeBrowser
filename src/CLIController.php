@@ -51,14 +51,14 @@ if (strpos('@php_dir@', '@php_dir') === false) {
         define('PHPCB_ROOT_DIR', '@php_dir@/PHP_CodeBrowser');
     }
     if (!defined('PHPCB_TEMPLATE_DIR')) {
-        define('PHPCB_TEMPLATE_DIR', '@data_dir@/PHP_CodeBrowser/templates');
+        define('PHPCB_TEMPLATE_DIR', '@data_dir@/PHP_CodeBrowser/views/templates');
     }
 } else {
     if (!defined('PHPCB_ROOT_DIR')) {
         define('PHPCB_ROOT_DIR', dirname(__FILE__) . '/../');
     }
     if (!defined('PHPCB_TEMPLATE_DIR')) {
-        define('PHPCB_TEMPLATE_DIR', dirname(__FILE__) . '/../templates');
+        define('PHPCB_TEMPLATE_DIR', dirname(__FILE__) . '/../src/views/templates');
     }
 }
 
@@ -218,6 +218,9 @@ class CbCLIController
         $cbIssueXml    = new CbIssueXml();
         $cbViewReview  = new CbViewReview($cbIOHelper);
 
+        $cbViewReview->setOutputDir($this->_htmlOutputDir);
+        $cbViewReview->setTemplateDir(PHPCB_TEMPLATE_DIR);
+        
         // clear and create output directory
         $cbIOHelper->deleteDirectory($this->_htmlOutputDir);
         $cbIOHelper->createDirectory($this->_htmlOutputDir);
@@ -239,18 +242,18 @@ class CbCLIController
 
         CbLogger::log('Found '.count($files).' files with issues');
 		$commonPathPrefix = '';
+    	foreach($files as $file) {
+            $commonPathPrefix = CbIOHelper::getCommonPathPrefix($file, $commonPathPrefix);
+        }
+        CbLogger::log('Common path Prefix "'.$commonPathPrefix.'"', CbLogger::PRIORITY_DEBUG);
+		
         foreach($files as $file) {
             CbLogger::log('Get issues for "'.$file.'"', CbLogger::PRIORITY_DEBUG);
-
-            $commonPathPrefix = CbIOHelper::getCommonPathPrefix($file, $commonPathPrefix);
+            
             $issues = $issueHandler->getIssuesByFile($file);
-            
-            $cbViewReview->generate($issues, $file);
-            
-            // generate html review files
-            
+            $cbViewReview->generate($issues, $file, $commonPathPrefix);
         }
-
+		$cbViewReview->copyRessourceFolders(true);
         CbLogger::log('Parse source directory');
 
         // parse directory defined by --source parameter
@@ -261,12 +264,7 @@ class CbCLIController
 //        sort($errors);
 
         // set project source dir from error list
-//        if (!isset($this->_projectSourceDir)) {
-//            $this->setProjectSourceDir(
-//                //$issueHandler->getCommonSourcePath($errors)
-//                $commonPathPrefix
-//            );
-//        }
+        
 
 //        $html = new CbHTMLGenerator(
 //            $cbIOHelper, $issueHandler, $cbJSGenerator

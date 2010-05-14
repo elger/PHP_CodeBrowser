@@ -7,25 +7,25 @@ class CbViewReview extends CbViewAbstract
      * @param array  $issueList
      * @param string $filePath
      */
-    public function generate(Array $issueList, $filePath)
+    public function generate(Array $issueList, $fileName, $commonPathPrefix)
     {
         if (!is_array($issueList)) {
             throw new Exception('Wrong data format for errorlist!');
         }
 
-        $sourceCode  = $this->_cbIOHelper->loadFile($filePath);
+        $sourceCode  = $this->_cbIOHelper->loadFile($fileName);
         
         $issues = $this->_formatIssues($issueList);
         
         $data['issues']   = $issues;
         $data['title']    = 'Code Browser - ViewReview View';
-        $data['filepath'] = $filePath;
+        $data['filepath'] = str_replace($commonPathPrefix, '', $fileName);
         $data['csspath']  = '';
         $data['source']   = $this->_formatSourceCode($sourceCode, $issues);
         $data['jsCode']   = $this->_grenerateJSCode($issues);
-        $depth = substr_count($filePath, DIRECTORY_SEPARATOR);
+        $depth = substr_count(str_replace($commonPathPrefix, '', $fileName), DIRECTORY_SEPARATOR);
         
-        for ($i = 1; $i <= $depth; $i ++) {
+        for ($i = 1; $i < $depth; $i ++) {
             $data['csspath'] .= '../';
         }
         $dataGenrate['title']   = $data['title'];
@@ -33,7 +33,7 @@ class CbViewReview extends CbViewAbstract
         
         $dataGenrate['content'] = $this->_render('review', $data);
 
-        $this->_generateView($dataGenrate, 'proxy.php.html');
+        $this->_generateView($dataGenrate, str_replace($commonPathPrefix, '', $fileName) . '.html');
         
     }
     
@@ -93,7 +93,7 @@ class CbViewReview extends CbViewAbstract
         
         $targetDom->appendChild($targetParent);
         
-        
+        $lineNumber = 1;
         
         //create first li element wih its anchor
         $li = $targetDom->createElement('li');
@@ -118,7 +118,7 @@ class CbViewReview extends CbViewAbstract
             
         }        
         
-        $lineNumber = 1;
+        
         
         //iterate through all <span> elements 
         foreach ($sourceElements as $sourceElement) {
@@ -168,7 +168,7 @@ class CbViewReview extends CbViewAbstract
                         //increment line number
                         $lineNumber++;
                     } else {
-                        echo $lineNumber . ' - ' . htmlspecialchars($sourceChildElement->wholeText) . '<hr>';
+//                        echo $lineNumber . ' - ' . htmlspecialchars($sourceChildElement->wholeText) . '<hr>';
                         // apend content to urrent li element
                         $span = $targetDom->createElement('span');
                         $span->nodeValue = htmlspecialchars($sourceChildElement->wholeText);
@@ -200,8 +200,6 @@ class CbViewReview extends CbViewAbstract
             }
         }
         
-//        echo '<pre>';
-//        var_dump($outputIssues);die();
         
         return $outputIssues;
     }
