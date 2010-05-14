@@ -105,33 +105,32 @@ class CbIssueXml extends DOMDocument
             new RecursiveDirectoryIterator($directory)
         );
 
-        $xml = new DOMDocument('1.0', 'UTF-8');
-        $xml->validateOnParse = true;
-
         foreach ($iterator as $current) {
             if ($current->isFile()
                 && ($current->getFilename() !== $current->getBasename('.xml'))
             ) {
-                echo "START Read File: ".$current->getFilename()." ".PHP_Timer::resourceUsage()."\n";
-
+                CbLogger::log('Read file: '.realpath($current));
+                $xml = new DOMDocument('1.0', 'UTF-8');
+                $xml->validateOnParse = true;
                 if (@$xml->load(realpath($current))) {
-                    echo "END Read File: ".$current->getFilename()." ".PHP_Timer::resourceUsage()."\n";
+                    CbLogger::log('ADD file', CbLogger::PRIORITY_DEBUG);
                     $this->addXMLFile($xml);
-                    echo "ADDED File: ".$current->getFilename()." ".PHP_Timer::resourceUsage()."\n";
+                } else {
+                    CbLogger::log(
+                        'Could not read file "'.realpath($current).'"',
+                        CbLogger::PRIORITY_WARN
+                    );
                 }
+                CbLogger::log('DESTROY DOMDocument', CbLogger::PRIORITY_DEBUG);
+                unset($xml);
             }
         }
-
-        echo 'START unset $xml '.PHP_Timer::resourceUsage()."\n";
-        $xml = null;
-        echo 'END unset $xml '.PHP_Timer::resourceUsage()."\n";
 
         if (!$this->documentElement->hasChildNodes()) {
             throw new Exception(
                 sprintf('Valid xml log files could not be found in "%s"', $directory)
             );
         }
-        echo 'QUIT addDirectory '.PHP_Timer::resourceUsage()."\n";
         return $this;
     }
 
@@ -170,9 +169,9 @@ class CbIssueXml extends DOMDocument
             $result = $xpath->query($expression);
         }
         if (microtime(true)-$start > 0.1) {
-            echo 'XPATH: '.$expression
+            CbLogger::log('XPATH: '.$expression
                 .($contextNode ? ' on '.$contextNode->getNodePath() : '')
-                .' '.round((microtime(true)-$start), 2)."s\n";
+                .' '.round((microtime(true)-$start), 2).'s');
         }
         return $result;
     }

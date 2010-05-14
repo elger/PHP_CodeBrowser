@@ -166,4 +166,10 @@ class CbErrorCPD extends CbPluginsAbstract
         return htmlentities("Copy paste from:\n".implode("\n", $source));
     }
 
+    /**
+     * Default string to use as source for issue.
+     * @var String
+     */
+    protected $source = 'Duplication';
+
 }

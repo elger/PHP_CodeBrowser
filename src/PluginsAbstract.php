@@ -103,6 +103,12 @@ abstract class CbPluginsAbstract
     protected $severityAttr;
 
     /**
+     * Default string to use as source for issue.
+     * @var String
+     */
+    protected $source;
+
+    /**
      * Constructor
      *
      * @param CbIssueXml $issueXml     The cc XML document.
@@ -137,7 +143,7 @@ abstract class CbPluginsAbstract
     protected function getIssueNodes($filename)
     {
         return $this->issueXml->query(
-            '/cruisecontrol/'.$this->pluginName.'/file[@name="'.$filename.'"]'
+            '/*/'.$this->pluginName.'/file[@name="'.$filename.'"]'
         );
     }
 
@@ -151,7 +157,7 @@ abstract class CbPluginsAbstract
         $filenames = array();
 
         $issueNodes = $this->issueXml->query(
-            '/cruisecontrol/'.$this->pluginName.'/file[@name]'
+            '/*/'.$this->pluginName.'/file[@name]'
         );
         foreach ($issueNodes as $node) {
             $filenames[] = $node->getAttribute('name');
@@ -226,7 +232,7 @@ abstract class CbPluginsAbstract
      */
     protected function getSource(DOMElement $element)
     {
-        return $this->pluginName;
+        return $this->source;
     }
 
     /**

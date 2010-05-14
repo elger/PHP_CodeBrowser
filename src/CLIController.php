@@ -221,9 +221,11 @@ class CbCLIController
         $cbIOHelper->deleteDirectory($this->_htmlOutputDir);
         $cbIOHelper->createDirectory($this->_htmlOutputDir);
 
+        CbLogger::log('Load XML files', CbLogger::PRIORITY_DEBUG);
         // merge xml files
         $cbIssueXml->addDirectory($this->_logDir);
-print "\nAdded directory: " . PHP_Timer::resourceUsage() . "\n";
+
+        CbLogger::log('Load Plugins', CbLogger::PRIORITY_DEBUG);
         // conversion of XML file cc to cb format
         $plugins = array();
         foreach ($this->_registeredErrorPlugins as $className) {
@@ -233,11 +235,14 @@ print "\nAdded directory: " . PHP_Timer::resourceUsage() . "\n";
         $issueHandler = new CbIssueHandler($cbIssueXml, $plugins);
         $files = $issueHandler->getFilesWithIssues();
         $list = array();
-print "\nRetrieved file list (".count($files)."): " . PHP_Timer::resourceUsage() . "\n";
+        CbLogger::log('Found '.count($files).' files with issues');
+
         foreach($files as $file) {
+            CbLogger::log('Get issues for "'.$file.'"', CbLogger::PRIORITY_DEBUG);
             $issues = $issueHandler->getIssuesByFile($file);
         }
-return;
+
+        CbLogger::log('Parse source directory');
         // parse directory defined by --source parameter
         $errors = $issueHandler->parseSourceDirectory(
             $this->_projectSourceDir,
@@ -305,6 +310,8 @@ return;
             case '--version':
                 self::printVersion();
                 break;
+            case '--logfile':
+                CbLogger::setLogFile($argv[$key + 1]);
             }
         }
 
@@ -325,8 +332,9 @@ return;
             );
             self::printHelp();
         }
+        CbLogger::setLogLevel(CbLogger::PRIORITY_DEBUG);
 
-        printf("Generating PHP_CodeBrowser files\n");
+        CbLogger::log('Generating PHP_CodeBrowser files');
 
         // init new CLIController
         $controller = new CbCLIController(
@@ -342,10 +350,12 @@ return;
         try {
             $controller->run();
         } catch (Exception $e) {
-            printf("PHP-CodeBrowser Error: \n%s\n", $e->getMessage());
+            CbLogger::log(
+                sprintf("PHP-CodeBrowser Error: \n%s\n", $e->getMessage())
+            );
         }
 
-        print "\n" . PHP_Timer::resourceUsage() . "\n";
+        CbLogger::log(PHP_Timer::resourceUsage());
     }
 
     /**
@@ -356,13 +366,14 @@ return;
     public static function printHelp()
     {
         $help = sprintf(
-            "Usage: phpcb --log <dir> --output <dir> [--source <dir>]
+            "Usage: phpcb --log <dir> --output <dir> [--source <dir>] [--logfile <dir>]
 
             PHP_CodeBrowser arguments:
             \t--log <dir>      \t\tThe path to the xml log files, e.g. generated from phpunit.
             \t--output <dir>   \t\tPath to the output folder where generated files should be stored.
             \t--source <dir> (opt)   \tPath to the project source code. Parse complete source directory
                                 \t\t\t\tif is set, else only files from logs.
+            \t--logfile <dir>  \t\tPath of the file to use for logging the output.
 
             General arguments:
             \t--help           \t\t\tPrint this help.\n\n"

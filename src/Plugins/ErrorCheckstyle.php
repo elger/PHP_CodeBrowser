@@ -98,4 +98,10 @@ class CbErrorCheckstyle extends CbPluginsAbstract
      */
     protected $severityAttr = 'severity';
 
+    /**
+     * Default string to use as source for issue.
+     * @var String
+     */
+    protected $source = 'Checkstyle';
+
 }
