@@ -215,7 +215,8 @@ class CbCLIController
     {
         // init needed classes
         $cbIOHelper    = new CbIOHelper();
-        $cbIssueXml     = new CbIssueXml();
+        $cbIssueXml    = new CbIssueXml();
+        $cbViewReview  = new CbViewReview($cbIOHelper);
 
         // clear and create output directory
         $cbIOHelper->deleteDirectory($this->_htmlOutputDir);
@@ -244,6 +245,8 @@ class CbCLIController
             $commonPathPrefix = CbIOHelper::getCommonPathPrefix($file, $commonPathPrefix);
             $issues = $issueHandler->getIssuesByFile($file);
             
+            $cbViewReview->generate($issues, $file);
+            
             // generate html review files
             
         }
@@ -268,9 +271,9 @@ class CbCLIController
 //        $html = new CbHTMLGenerator(
 //            $cbIOHelper, $issueHandler, $cbJSGenerator
 //        );
-        
-        $html->setTemplateDir(PHPCB_TEMPLATE_DIR);
-        $html->setOutputDir($this->_htmlOutputDir);
+//        
+//        $html->setTemplateDir(PHPCB_TEMPLATE_DIR);
+//        $html->setOutputDir($this->_htmlOutputDir);
 
 //        if (!empty($errors)) {
 //            $html->generateViewFlat($errors);
@@ -280,7 +283,7 @@ class CbCLIController
 //            );
 //        }
         // copy needed resources like css, js, images
-        $html->copyRessourceFolders(!empty($errors));
+//        $html->copyRessourceFolders(!empty($errors));
     }
 
 
@@ -382,7 +385,7 @@ class CbCLIController
             \t--output <dir>   \t\tPath to the output folder where generated files should be stored.
             \t--source <dir> (opt)   \tPath to the project source code. Parse complete source directory
                                 \t\t\t\tif is set, else only files from logs.
-            \t--logfile <dir>  \t\tPath of the file to use for logging the output.
+            \t--logfile <dir> (opt) \tPath of the file to use for logging the output.
 
             General arguments:
             \t--help           \t\t\tPrint this help.\n\n"
