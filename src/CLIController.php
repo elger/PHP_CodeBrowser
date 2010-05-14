@@ -232,38 +232,55 @@ print "\nAdded directory: " . PHP_Timer::resourceUsage() . "\n";
         $issueHandler = new CbIssueHandler($cbIssueXml, $plugins);
         $files = $issueHandler->getFilesWithIssues();
         $list = array();
+        
+        $commonPathPrefix = '';
+        
 print "\nRetrieved file list (".count($files)."): " . PHP_Timer::resourceUsage() . "\n";
         foreach($files as $file) {
+        	
+        	$commonPathPrefix = CbIOHelper::getCommonPathPrefix($file, $commonPathPrefix);
+        	
             $issues = $issueHandler->getIssuesByFile($file);
+            
+            // generate html review files
+            
         }
-return;
+        
+        // generate tree view, and other files
+        
+        
+       
+        
+
         // parse directory defined by --source parameter
-        $errors = $issueHandler->parseSourceDirectory(
-            $this->_projectSourceDir,
-            $errors
-        );
-        sort($errors);
+//        $errors = $issueHandler->parseSourceDirectory(
+//            $this->_projectSourceDir,
+//            $errors
+//        );
+//        sort($errors);
 
         // set project source dir from error list
-        if (!isset($this->_projectSourceDir)) {
-            $this->setProjectSourceDir(
-                $issueHandler->getCommonSourcePath($errors)
-            );
-        }
+//        if (!isset($this->_projectSourceDir)) {
+//            $this->setProjectSourceDir(
+//                //$issueHandler->getCommonSourcePath($errors)
+//                $commonPathPrefix
+//            );
+//        }
 
-        $html   = new CbHTMLGenerator(
-            $cbIOHelper, $issueHandler, $cbJSGenerator
-        );
+//        $html = new CbHTMLGenerator(
+//            $cbIOHelper, $issueHandler, $cbJSGenerator
+//        );
+        
         $html->setTemplateDir(PHPCB_TEMPLATE_DIR);
         $html->setOutputDir($this->_htmlOutputDir);
 
-        if (!empty($errors)) {
-            $html->generateViewFlat($errors);
-            $html->generateViewTree($errors);
-            $html->generateViewReview(
-                $errors, $this->_xmlFile, $this->_projectSourceDir
-            );
-        }
+//        if (!empty($errors)) {
+//            $html->generateViewFlat($errors);
+//            $html->generateViewTree($errors);
+//            $html->generateViewReview(
+//                $errors, $this->_xmlFile, $this->_projectSourceDir
+//            );
+//        }
         // copy needed resources like css, js, images
         $html->copyRessourceFolders(!empty($errors));
     }
