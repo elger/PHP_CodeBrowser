@@ -30,30 +30,34 @@
                     <strong>severity</strong>
                 </td>
             </tr>
-            <tr class="<?php print $issue->fileName; ?>">
+            <?php foreach($issues as $issue):?>
+            <?php foreach($issue as $notice):?>
+            
+            <tr class="<?php print $notice->foundBy; ?>">
                 <td align="center">
-                    <a href="#line-<?php print $issue->lineEnd-5;?>" 
-                        onclick="new Effect.Highlight('line-<?php print $issue->lineStart."-".$issue->lineEnd; ?>', {duration: 1.5});">
-                    <?php print $issue->lineStart; ?></a>
+                    <a href="#line_<?php print $notice->lineEnd;?>" 
+                        onclick="new Effect.Highlight('line_<?php print $notice->lineStart."-".$notice->lineEnd; ?>', {duration: 1.5});">
+                    <?php print $notice->lineStart; ?></a>
                 </td>
                 <td align="center">
-                    <a href="#line-<?php print $issue->lineEnd-5;?>"
-                        onclick="new Effect.Highlight('line-<?php print $issue->lineStart."-".$issue->lineEnd; ?>', {duration: 1.5});">
-                    <?php print $issue->lineEnd;?></a>
+                    <a href="#line_<?php print $notice->lineEnd;?>"
+                        onclick="new Effect.Highlight('line_<?php print $notice->lineStart."-".$notice->lineEnd; ?>', {duration: 1.5});">
+                    <?php print $notice->lineEnd;?></a>
                 </td>
                 <td>
-                    <a href="#line-<?php print $issue->lineStart-5; ?>"
-                        onclick="new Effect.Highlight('line-<?php print $issue->lineStart."-".$issue->lineEnd; ?>', {duration: 1.5});">
-                    <?php print (string)$issue->description;?></a>
+                    <a href="#line_<?php print $notice->lineStart; ?>"
+                        onclick="new Effect.Highlight('line_<?php print $notice->lineStart."-".$notice->lineEnd; ?>', {duration: 1.5});">
+                    <?php print (string)$notice->description;?></a>
                 </td>
                 <td>
-                    <?php print $issue->fileName;?>
+                    <?php print $notice->foundBy;?>
                 </td>
                 <td>
-                    <?php print $issue->severity;?>
+                    <?php print $notice->severity;?>
                 </td>
             </tr>
-            <?php } ?>
+            <?php endforeach; //$issue as $notice ?>
+            <?php endforeach; //$issues as $issue ?>
         </table>
         </div>
     </div>
@@ -66,4 +70,3 @@
     Event.observe(window, 'load', init, true);
 </script> 
 <?php endif; // div sidebar ?> 
-<pre><?php var_dump($lines)?></pre>

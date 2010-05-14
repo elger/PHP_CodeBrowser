@@ -48,8 +48,8 @@ class CbViewReview extends CbViewAbstract
             
             foreach ($lineIssues as $issue) {
                 
-                $htmlMessages[$num] .= addcslashes("<span class=\"title ".$issue->fileName."\">".
-                                      $issue->fileName . "</span>&nbsp;<span class=\"message\">".
+                $htmlMessages[$num] .= addcslashes("<span class=\"title ".$issue->foundBy."\">".
+                                      $issue->foundBy . "</span><span class=\"message\">".
                                       (string)$issue->description."</span>", "\"\'\0..\37!@\177..\377");
             }
             
@@ -72,8 +72,8 @@ class CbViewReview extends CbViewAbstract
     private function _formatSourceCode($sourceCode, $outputIssues)
     {
         
-        $formattedCode = highlight_string($sourceCode, true);
-        
+        $formattedCode = trim(highlight_string($sourceCode, true));
+//        echo $formattedCode;
         $sourceDom = new DOMDocument();
         
         $sourceDom->loadHTML(utf8_encode($formattedCode));
@@ -93,18 +93,40 @@ class CbViewReview extends CbViewAbstract
         
         $targetDom->appendChild($targetParent);
         
-        $lineNumber = 1;
+        
         
         //create first li element wih its anchor
         $li = $targetDom->createElement('li');
         $anchor = $targetDom->createElement('a');
-        $anchor->setAttribute('name', 'line-' . $lineNumber);
+        $anchor->setAttribute('name', 'line_' . $lineNumber);
         $li->appendChild($anchor);
+        $li->setAttribute('id', 'line_0');
         
-        //iterate all <span> elements 
+        
+        //  set li css class depending on line errors
+        if (isset($outputIssues[0])) {
+            
+            if (1 === count($outputIssues[0])) {
+                $li->setAttribute('class', $outputIssues[0][0]->foundBy);
+            } else if(1 <= count($outputIssues[0])) {
+                $li->setAttribute('class', 'moreErrors');
+            }
+            
+        } else {
+            
+            $li->setAttribute('class', 'white');
+            
+        }        
+        
+        $lineNumber = 1;
+        
+        //iterate through all <span> elements 
         foreach ($sourceElements as $sourceElement) {
             
             if ($sourceElement instanceof DOMElement) {
+                
+                
+                //echo $sourceElement->childNodes->item(0)->wholeText . '<hr>';
                 
                 $elementStyle = $sourceElement->getAttribute('style');
                 
@@ -146,6 +168,7 @@ class CbViewReview extends CbViewAbstract
                         //increment line number
                         $lineNumber++;
                     } else {
+                        echo $lineNumber . ' - ' . htmlspecialchars($sourceChildElement->wholeText) . '<hr>';
                         // apend content to urrent li element
                         $span = $targetDom->createElement('span');
                         $span->nodeValue = htmlspecialchars($sourceChildElement->wholeText);
@@ -156,6 +179,10 @@ class CbViewReview extends CbViewAbstract
                 }
                 
                 
+            } else {
+//                echo '!!!' . $sourceElement->wholeText . '<hr>';
+//                echo $lineNumber . '<br>';
+//              var_dump($sourceElement->wholeText);
             }
         }
         return $targetDom->saveHTML();
