@@ -13,12 +13,12 @@ class CbViewReview extends CbViewAbstract
             throw new Exception('Wrong data format for errorlist!');
         }
 
-        $sourceCode  = $this->_cbFDHandler->loadFile($filePath);
+        $sourceCode  = $this->_cbIOHelper->loadFile($filePath);
         
         $issues = $this->_formatIssues($issueList);
         
         $data['issues']   = $issues;
-        $data['title']    = 'Code Browser - Review View';
+        $data['title']    = 'Code Browser - ViewReview View';
         $data['filepath'] = $filePath;
         $data['csspath']  = '';
         $data['source']   = $this->_formatSourceCode($sourceCode, $issues);
@@ -167,18 +167,10 @@ class CbViewReview extends CbViewAbstract
         
         $outputIssues = array(); 
         
-        foreach ($issueList as $issues) {
-            
-            foreach ($issues as $error) {
-                
-                for ($i = $error->lineStart; $i <= $error->lineEnd; $i++) {
-                    
-                    $outputIssues[$i][] = $error;
-                    
-                }
-                
+        foreach ($issueList as $issues) foreach ($issues as $error) {
+	        for ($i = $error->lineStart; $i <= $error->lineEnd; $i++) {
+            	$outputIssues[$i][] = $error;
             }
-            
         }
         
 //        echo '<pre>';

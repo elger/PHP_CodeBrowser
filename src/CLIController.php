@@ -215,7 +215,8 @@ class CbCLIController
     {
         // init needed classes
         $cbIOHelper    = new CbIOHelper();
-        $cbIssueXml     = new CbIssueXml();
+        $cbIssueXml    = new CbIssueXml();
+        $cbViewReview  = new CbViewReview($cbIOHelper);
 
         // clear and create output directory
         $cbIOHelper->deleteDirectory($this->_htmlOutputDir);
@@ -234,13 +235,17 @@ class CbCLIController
 
         $issueHandler = new CbIssueHandler($cbIssueXml, $plugins);
         $files = $issueHandler->getFilesWithIssues();
-        $list = array();
         CbLogger::log('Found '.count($files).' files with issues');
 
         if (isset($this->_projectSourceDir)) {
             $fileIterator = new CbSourceIterator($this->_projectSourceDir);
         } else {
             $fileIterator = new ArrayIterator($files);
+        }
+
+        $commonPathPrefix = '';
+        foreach($files as $file) {
+            $commonPathPrefix = CbIOHelper::getCommonPathPrefix($file, $commonPathPrefix);
         }
 
         foreach($fileIterator as $file) {
@@ -253,31 +258,35 @@ class CbCLIController
             } else {
                 $issues = array();
             }
+            // generate html review files
+         //   $cbViewReview->generate($issues, $file);
         }
 return;
 
         // set project source dir from error list
-        if (!isset($this->_projectSourceDir)) {
-            $this->setProjectSourceDir(
-                $issueHandler->getCommonSourcePath($errors)
-            );
-        }
+//        if (!isset($this->_projectSourceDir)) {
+//            $this->setProjectSourceDir(
+//                //$issueHandler->getCommonSourcePath($errors)
+//                $commonPathPrefix
+//            );
+//        }
 
-        $html   = new CbHTMLGenerator(
-            $cbIOHelper, $issueHandler, $cbJSGenerator
-        );
-        $html->setTemplateDir(PHPCB_TEMPLATE_DIR);
-        $html->setOutputDir($this->_htmlOutputDir);
+//        $html = new CbHTMLGenerator(
+//            $cbIOHelper, $issueHandler, $cbJSGenerator
+//        );
+//
+//        $html->setTemplateDir(PHPCB_TEMPLATE_DIR);
+//        $html->setOutputDir($this->_htmlOutputDir);
 
-        if (!empty($errors)) {
-            $html->generateViewFlat($errors);
-            $html->generateViewTree($errors);
-            $html->generateViewReview(
-                $errors, $this->_xmlFile, $this->_projectSourceDir
-            );
-        }
+//        if (!empty($errors)) {
+//            $html->generateViewFlat($errors);
+//            $html->generateViewTree($errors);
+//            $html->generateViewReview(
+//                $errors, $this->_xmlFile, $this->_projectSourceDir
+//            );
+//        }
         // copy needed resources like css, js, images
-        $html->copyRessourceFolders(!empty($errors));
+//        $html->copyRessourceFolders(!empty($errors));
     }
 
 
@@ -379,7 +388,7 @@ return;
             \t--output <dir>   \t\tPath to the output folder where generated files should be stored.
             \t--source <dir> (opt)   \tPath to the project source code. Parse complete source directory
                                 \t\t\t\tif is set, else only files from logs.
-            \t--logfile <dir>  \t\tPath of the file to use for logging the output.
+            \t--logfile <dir> (opt) \tPath of the file to use for logging the output.
 
             General arguments:
             \t--help           \t\t\tPrint this help.\n\n"

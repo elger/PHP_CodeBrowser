@@ -186,48 +186,4 @@ class CbIssueHandler
         }
         return array_unique($files);
     }
-
-    /**
-     * Filters the string from the beginning the two input strings have in common.
-     *
-     * Example:
-     * /path/to/source/folder/myFile.php
-     * /path/to/source/other/folder/otherFile.php
-     * will return
-     * /path/to/source
-     *
-     * @param string $path1  String for comparing
-     * @param string $path2  String for comparing
-     * @param int    $length The length for comparing the strings
-     *
-     * @return string
-     */
-    private function _getCommonErrorPath($path1, $path2, $length = 0)
-    {
-        $length = (strlen($path1) < strlen($path2))
-        ?
-        strlen($path1)
-        :
-        strlen($path2);
-
-        if (!$length && 0 === ($length = strlen($path2))) {
-            return $path1;
-        }
-
-        switch (strncmp($path1, $path2, $length)) {
-        case 0 :
-            $path = substr($path1, 0, $length);
-            break;
-        default :
-            $path = $this->_getCommonErrorPath(
-                substr($path1, 0, $length-1), substr($path2, 0, $length-1)
-            );
-            break;
-        }
-        return (DIRECTORY_SEPARATOR == substr($path, -1))
-            ?
-            substr($path, 0, -1)
-            :
-            $path;
-    }
 }
