@@ -4,7 +4,7 @@
  *
  * PHP Version 5.2.6
  *
- * Copyright (c) 2007-2009, Mayflower GmbH
+ * Copyright (c) 2007-2010, Mayflower GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,8 @@
  * @package    PHP_CodeBrowser
  * @subpackage Plugins
  * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
+ * @author     Michel Hartmann <michel.hartmann@mayflower.de>
+ * @copyright  2007-2010 Mayflower GmbH
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id$
  * @link       http://www.phpunit.de/
@@ -55,7 +56,8 @@
  * @subpackage Plugins
  * @author     Elger Thiele <elger.thiele@mayflower.de>
  * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
+ * @author     Michel Hartmann <michel.hartmann@mayflower.de>
+ * @copyright  2007-2010 Mayflower GmbH
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
@@ -63,55 +65,92 @@
  */
 class CbErrorCPD extends CbPluginsAbstract
 {
+    /**
+     * Name of this plugin.
+     * Used to read issues from XML.
+     * @var String
+     */
     public $pluginName = 'pmd-cpd';
 
-    protected function getIssues($file)
+    /**
+     * Name of the attribute that holds the number of the first line
+     * of the issue.
+     * @var String
+     */
+    protected $lineStartAttr = 'line';
+
+    /**
+     * Name of the attribute that holds the number of the last line
+     * of the issue.
+     * @var String
+     */
+    protected $lineEndAttr = 'line';
+
+    /**
+     * Get all issues of a file for this plugin as a DOMNodeList.
+     * Overloaded to use different structure.
+     *
+     * @param String $file  Name of the file to search issues for.
+     * @return DOMNodeList  All DOMNodes defining issues on a file.
+     */
+    protected function getIssueNodes($file)
     {
-        return $this->_cbIssueXml->query('/cruisecontrol/'.$this->pluginName.'/*/file[@path="'.$file.'"]');
+        return $this->issueXml->query(
+            '/cruisecontrol/'.$this->pluginName.'/*/file[@path="'.$file.'"]'
+        );
     }
 
     /**
      * Mapper method for this plugin.
+     * Overloaded to use special structure.
      *
      * @param SingleXMLElement $element The XML plugin node with its errors
-     *
      * @return array
      */
     public function mapIssues(DOMNode $element, $filename)
     {
         $parentNode = $element->parentNode;
-
-        $files = $this->_cbIssueXml->query('file[@path="'.$filename.'"]', $parentNode);
-
+        $files = $this->issueXml->query('file[@path="'.$filename.'"]', $parentNode);
         $lineCount = (int)$parentNode->getAttribute('lines');
 
         $result = array();
         foreach ($files as $file) {
             $result[] = new CbIssue(
                 $file->getAttribute('path'),
-                (int) $file->getAttribute('line'),
-                (int) $file->getAttribute('line') + $lineCount,
-                $this->pluginName,
-                htmlentities(
-                    $this->getDescription($parentNode->childNodes, $file)
-                ),
+                $this->getLineStart($file),
+                $this->getLineStart($file) + $lineCount,
+                $this->getSource($file),
+                $this->getDescription($parentNode->childNodes, $file),
                 'notice'
             );
         }
         return $result;
     }
 
-    public function getFilesWithErrors()
+    /**
+     * Get an array with all files that have issues.
+     *
+     * @return array
+     */
+    public function getFilesWithIssues()
     {
         $filenames = array();
 
-        foreach ($this->_cbIssueXml->query('/cruisecontrol/'.$this->pluginName.'/*/file[@path]') as $node) {
+        foreach ($this->issueXml->query('/cruisecontrol/'.$this->pluginName.'/*/file[@path]') as $node) {
             $filenames[] = $node->getAttribute('path');
         }
 
         return array_unique($filenames);
     }
 
+    /**
+     * Get the description for an issue.
+     * Overloaded to support special structure.
+     *
+     * @param DOMNodeList $allNodes
+     * @param DOMNode $currentNode
+     * @return String
+     */
     protected function getDescription(DOMNodeList $allNodes, DOMNode $currentNode)
     {
         $source = array();
@@ -124,7 +163,7 @@ class CbErrorCPD extends CbPluginsAbstract
                 );
             }
         }
-        return "Copy paste from:\n".implode("\n", $source);
+        return htmlentities("Copy paste from:\n".implode("\n", $source));
     }
 
 }

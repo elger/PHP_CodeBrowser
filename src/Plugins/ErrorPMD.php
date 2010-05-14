@@ -40,6 +40,7 @@
  * @package    PHP_CodeBrowser
  * @subpackage Plugins
  * @author     Elger Thiele <elger.thiele@mayflower.de>
+ * @author     Michel Hartmann <michel.hartmann@mayflower.de>
  * @copyright  2007-2010 Mayflower GmbH
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @link       http://www.phpunit.de/
@@ -54,6 +55,7 @@
  * @subpackage Plugins
  * @author     Elger Thiele <elger.thiele@mayflower.de>
  * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
+ * @author     Michel Hartmann <michel.hartmann@mayflower.de>
  * @copyright  2007-2010 Mayflower GmbH
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
@@ -62,21 +64,57 @@
  */
 class CbErrorPMD extends CbPluginsAbstract
 {
+    /**
+     * Name of this plugin.
+     * Used to read issues from XML.
+     * @var String
+     */
     public $pluginName = 'pmd';
 
+    /**
+     * Name of the attribute that holds the number of the first line
+     * of the issue.
+     * @var String
+     */
     protected $lineStartAttr = 'beginline';
+    /**
+     * Name of the attribute that holds the number of the last line
+     * of the issue.
+     * @var String
+     */
     protected $lineEndAttr = 'endline';
 
+    /**
+     * Get the source of an issue.
+     * Use the rule of PMD as source.
+     *
+     * @param DOMElement $element
+     * @return String
+     */
     protected function getSource(DOMElement $element)
     {
         return $element->getAttribute('rule');
     }
 
+    /**
+     * Get the severity of an issue.
+     * Always return 'error'.
+     *
+     * @param DOMElement $element
+     * @return String
+     */
     protected function getSeverity(DOMElement $element)
     {
         return 'error';
     }
 
+    /**
+     * Get the description of an issue.
+     * Use the textContent of the element.
+     *
+     * @param DOMElement $element
+     * @return String
+     */
     protected function getDescription(DOMElement $element)
     {
         return str_replace(

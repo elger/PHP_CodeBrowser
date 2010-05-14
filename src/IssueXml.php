@@ -1,6 +1,6 @@
 <?php
 /**
- * XML Handler
+ * Issue XML Document
  *
  * PHP Version 5.2.6
  *
@@ -39,7 +39,8 @@
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
- * @copyright 2007-2009 Mayflower GmbH
+ * @author    Michel Hartmann <michel.hartmann@mayflower.de>
+ * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   SVN: $Id$
  * @link      http://www.phpunit.de/
@@ -47,16 +48,19 @@
  */
 
 /**
- * CbXMLHandler
+ * CbIssueXML
  *
- * This class provides basic functionality according xml handling, like saving
- * xml structs to storage, reading, parsing or mergin xml structs.
+ * This class is a wrapper around DOMDocument to provide additional features
+ * like simple xpath queries.
+ * It is used to merge issue XML files and execute plugins against it to retrieve
+ * the issues from them.
  *
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
  * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright 2007-2009 Mayflower GmbH
+ * @author    Michel Hartmann <michel.hartmann@mayflower.de>
+ * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   Release: @package_version@
  * @link      http://www.phpunit.de/
@@ -65,69 +69,27 @@
 class CbIssueXml extends DOMDocument
 {
 
+    /**
+     * Do not preserve white spaces.
+     * @see DOMDocument
+     * @var Boolean
+     */
     public $preserveWhiteSpace = false;
+    /**
+     * Provide nice output.
+     * @var Boolean
+     */
     public $formatOutput = true;
-
-    protected $_xpath;
 
     /**
      * Constructor
-     *
-     * @param CbFDHandler $cbFDHandler File handler object
      */
     public function __construct($version = '1.0', $encoding = 'UTF-8')
     {
         parent::__construct($version, $encoding);
-        $this->appendChild($this->createElement('cruisecontrol'));
-    }
-
-    /**
-     * Load a XML file.
-     *
-     * @param string $filename The (path-to) file
-     *
-     * @return SimpleXMLElement
-     */
-    public function loadXML($filename)
-    {
-        if (! file_exists($filename)) {
-            throw new Exception('Error: Cannot open ' . $filename);
-        }
-
-        return simplexml_load_file($filename);
-    }
-
-    /**
-     * Load a XML from a string definition
-     *
-     * @param string $xmlString The XML string
-     *
-     * @return SimpleXMLElement
-     */
-    public function loadXMLFromString($xmlString)
-    {
-        return simplexml_load_string($xmlString);
-    }
-
-    /**
-     * Count specified items in a given XML node.
-     *
-     * @param SimpleXMLElement $element  The XML element node
-     * @param string           $itemName The item name to find
-     * @param string           $type     The type of the item to count
-     *
-     * @return int
-     */
-    public function countItems (SimpleXMLElement $element, $itemName, $type)
-    {
-        $amount = 0;
-        foreach ($element as $item) {
-            $attributes = $item->attributes();
-            if ($attributes[$itemName] == $type) {
-                $amount ++;
-            }
-        }
-        return $amount;
+        $this->appendChild(
+            $this->createElement('cruisecontrol')
+        );
     }
 
     /**
@@ -135,7 +97,7 @@ class CbIssueXml extends DOMDocument
      *
      * @param string $directory The path to directory where xml files are stored
      *
-     * @return CbXMLHandler     This object
+     * @return CbIssueXml     This object
      */
     public function addDirectory($directory)
     {
@@ -174,11 +136,9 @@ class CbIssueXml extends DOMDocument
     }
 
     /**
-     * Add xml files to merge
+     * Add xml file to merge
      *
-     * @param DOMDocument $domDocument The files to merge, eather as string
-     *                                 (single) or array (multiple)
-     *
+     * @param DOMDocument $domDocument  The DOMDocument to merge.
      * @return void
      */
     public function addXMLFile(DOMDocument $domDocument)
@@ -188,22 +148,31 @@ class CbIssueXml extends DOMDocument
         }
     }
 
-    public function query($xpath, DOMNode $contextNode = null)
+    /**
+     * Perform a XPath-Query on the document.
+     *
+     * @see DOMXPath::query
+     * @param String $expression    xpath expression to query for.
+     * @param DOMNode $contextNode  node to use as context (optional)
+     * @return DOMNodeList          list of all matching nodes.
+     */
+    public function query($expression, DOMNode $contextNode = null)
     {
         $start = microtime(true);
-        if (!isset($this->_xpath)) {
-            $this->_xpath = new DOMXPath($this);
+        static $xpath;
+        if (!isset($xpath)) {
+            $xpath = new DOMXPath($this);
         }
 
         if ($contextNode) {
-            $result = $this->_xpath->query($xpath, $contextNode);
+            $result = $xpath->query($expression, $contextNode);
         } else {
-            $result = $this->_xpath->query($xpath);
+            $result = $xpath->query($expression);
         }
-        if (microtime(true)-$start > 2) {
-            echo 'XPATH: '.$xpath
+        if (microtime(true)-$start > 0.1) {
+            echo 'XPATH: '.$expression
                 .($contextNode ? ' on '.$contextNode->getNodePath() : '')
-                .' '.round((microtime(true)-$start), 2)."ms\n";
+                .' '.round((microtime(true)-$start), 2)."s\n";
         }
         return $result;
     }

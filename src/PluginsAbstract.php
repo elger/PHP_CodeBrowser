@@ -1,10 +1,10 @@
 <?php
 /**
- * Plugin Error
+ * Plugin Abstract
  *
  * PHP Version 5.2.6
  *
- * Copyright (c) 2007-2009, Mayflower GmbH
+ * Copyright (c) 2007-2010, Mayflower GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,7 +39,8 @@
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
- * @copyright 2007-2009 Mayflower GmbH
+ * @author    Michel Hartmann <michel.hartmann@mayflower.de>
+ * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   SVN: $Id$
  * @link      http://www.phpunit.de/
@@ -47,13 +48,14 @@
  */
 
 /**
- * CbPluginError
+ * CbPluginsAbstract
  *
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
  * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright 2007-2009 Mayflower GmbH
+ * @author    Michel Hartmann <michel.hartmann@mayflower.de>
+ * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   Release: @package_version@
  * @link      http://www.phpunit.de/
@@ -75,53 +77,83 @@ abstract class CbPluginsAbstract
      *
      * @var CbIssueXml
      */
-    protected $_cbIssueXml;
+    protected $issueXml;
 
+    /**
+     * Name of the attribute that holds the number of the first line
+     * of the issue.
+     * @var String
+     */
     protected $lineStartAttr;
+    /**
+     * Name of the attribute that holds the number of the last line
+     * of the issue.
+     * @var String
+     */
     protected $lineEndAttr;
+    /**
+     * Name of the attribute that holds message of the issue.
+     * @var String
+     */
     protected $descriptionAttr;
+    /**
+     * Name of the attribute that holds severity of the issue.
+     * @var String
+     */
     protected $severityAttr;
 
     /**
      * Constructor
      *
-     * @param CbIssueXml $cbIssueXml     CbIssueXml object
+     * @param CbIssueXml $issueXml     The cc XML document.
      */
-    public function __construct(CbIssueXml $cbIssueXml)
+    public function __construct(CbIssueXml $issueXml)
     {
-        $this->_cbIssueXml = $cbIssueXml;
+        $this->issueXml = $issueXml;
     }
 
     /**
      * Parse the cc XML file for defined error type, e.g. "pmd" and map this
-     * error to the needed PHP_CodeBrowser format.
+     * error to the Issue objects format.
      *
-     * @param String $file      Name of the file to parse the errors for.
+     * @param String $filename  Name of the file to parse the errors for.
      * @return array
      */
-    public function parseXMLError($file)
+    public function getIssuesByFile($filename)
     {
-        if (!isset($this->_cbIssueXml)) {
-            throw new Exception('XML file not loaded!');
+        $issues = array();
+        foreach ($this->getIssueNodes($filename) as $issueNode) {
+            $issues = array_merge($issues, $this->mapIssues($issueNode, $filename));
         }
-
-        $errors = array();
-        foreach ($this->getIssues($file) as $fileNode) {
-            $errors = array_merge($errors, $this->mapIssues($fileNode, $file));
-        }
-        return $errors;
+        return $issues;
     }
 
-    protected function getIssues($file)
+    /**
+     * Get all DOMNodes that represent issues for a specific file.
+     *
+     * @param String $filename      Name of the file to get nodes for.
+     * @return DOMNodeList
+     */
+    protected function getIssueNodes($filename)
     {
-        return $this->_cbIssueXml->query('/cruisecontrol/'.$this->pluginName.'/file[@name="'.$file.'"]');
+        return $this->issueXml->query(
+            '/cruisecontrol/'.$this->pluginName.'/file[@name="'.$filename.'"]'
+        );
     }
 
-    public function getFilesWithErrors()
+    /**
+     * Get an array with all files that have issues.
+     *
+     * @return Array
+     */
+    public function getFilesWithIssues()
     {
         $filenames = array();
 
-        foreach ($this->_cbIssueXml->query('/cruisecontrol/'.$this->pluginName.'/file[@name]') as $node) {
+        $issueNodes = $this->issueXml->query(
+            '/cruisecontrol/'.$this->pluginName.'/file[@name]'
+        );
+        foreach ($issueNodes as $node) {
             $filenames[] = $node->getAttribute('name');
         }
 
@@ -129,12 +161,15 @@ abstract class CbPluginsAbstract
     }
 
     /**
-     * The detailed mapper method for each single plugin, returning an errorlist.
+     * The detailed mapper method for each single plugin, returning an array
+     * of Issue objects.
+     * This method provides a default behaviour an can be overloaded to
+     * implement special behavior for other plugins.
      *
-     * @param DomNode $element The XML plugin node with its errors
-     * @param filename
+     * @param DomNode $element  The XML plugin node with its errors
+     * @param filename          Name of the file to return issues for.
      *
-     * @return array
+     * @return array            Array of issue objects.
      */
     public function mapIssues(DomNode $element, $filename)
     {
@@ -155,26 +190,66 @@ abstract class CbPluginsAbstract
         return $errorList;
     }
 
+    /**
+     * Default method for retrieving the first line of an issue.
+     * @see self::mapIssues
+     *
+     * @param DOMElement $element
+     *
+     * @return Integer
+     */
     protected function getLineStart(DOMElement $element)
     {
         return (int) $element->getAttribute($this->lineStartAttr);
     }
 
+    /**
+     * Default method for retrieving the last line of an issue.
+     * @see self::mapIssues
+     *
+     * @param DOMElement $element
+     *
+     * @return Integer
+     */
     protected function getLineEnd(DOMElement $element)
     {
         return (int) $element->getAttribute($this->lineEndAttr);
     }
 
+    /**
+     * Default method for retrieving the source of an issue.
+     * @see self::mapIssues
+     *
+     * @param DOMElement $element
+     *
+     * @return String
+     */
     protected function getSource(DOMElement $element)
     {
         return $this->pluginName;
     }
 
+    /**
+     * Default method for retrieving the description of an issue.
+     * @see self::mapIssues
+     *
+     * @param DOMElement $element
+     *
+     * @return String
+     */
     protected function getDescription(DOMElement $element)
     {
         return htmlentities($element->getAttribute($this->descriptionAttr));
     }
 
+    /**
+     * Default method for retrieving the severity of an issue.
+     * @see self::mapIssues
+     *
+     * @param DOMElement $element
+     *
+     * @return String
+     */
     protected function getSeverity(DOMElement $element)
     {
         return htmlentities($element->getAttribute($this->severityAttr));

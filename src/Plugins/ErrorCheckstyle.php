@@ -4,7 +4,7 @@
  *
  * PHP Version 5.2.6
  *
- * Copyright (c) 2007-2009, Mayflower GmbH
+ * Copyright (c) 2007-2010, Mayflower GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -40,7 +40,8 @@
  * @package    PHP_CodeBrowser
  * @subpackage Plugins
  * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
+ * @author     Michel Hartmann <michel.hartmann@mayflower.de>
+ * @copyright  2007-2010 Mayflower GmbH
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id$
  * @link       http://www.phpunit.de/
@@ -55,7 +56,8 @@
  * @subpackage Plugins
  * @author     Elger Thiele <elger.thiele@mayflower.de>
  * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
+ * @author     Michel Hartmann <michel.hartmann@mayflower.de>
+ * @copyright  2007-2010 Mayflower GmbH
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
@@ -63,10 +65,37 @@
  */
 class CbErrorCheckstyle extends CbPluginsAbstract
 {
+    /**
+     * Name of this plugin.
+     * Used to read issues from XML.
+     * @var String
+     */
     public $pluginName = 'checkstyle';
 
+    /**
+     * Name of the attribute that holds the number of the first line
+     * of the issue.
+     * @var String
+     */
     protected $lineStartAttr = 'line';
+
+    /**
+     * Name of the attribute that holds the number of the last line
+     * of the issue.
+     * @var String
+     */
     protected $lineEndAttr = 'line';
+
+    /**
+     * Name of the attribute that holds message of the issue.
+     * @var String
+     */
     protected $descriptionAttr = 'message';
+
+    /**
+     * Name of the attribute that holds severity of the issue.
+     * @var String
+     */
     protected $severityAttr = 'severity';
+
 }

@@ -72,6 +72,7 @@ require_once 'PHP/Timer.php';
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
  * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
+ * @author    Michel Hartmann <michel.hartmann@mayflower.de>
  * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   Release: @package_version@
@@ -335,8 +336,7 @@ return;
             $htmlOutput . '/' . $xmlFileName
         );
         $controller->addErrorPlugins(
-            array( 'CbErrorCheckstyle','CbErrorCPD', 'CbErrorPadawan', 'CbErrorPMD')
-            // array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan')
+            array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan')
         );
 
         try {
