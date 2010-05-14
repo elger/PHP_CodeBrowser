@@ -1,0 +1,190 @@
+<?php
+class CbViewReview extends CbViewAbstract
+{
+    
+    /**
+     * 
+     * @param array  $issueList
+     * @param string $filePath
+     */
+    public function generate(Array $issueList, $filePath)
+    {
+        if (!is_array($issueList)) {
+            throw new Exception('Wrong data format for errorlist!');
+        }
+
+        $sourceCode  = $this->_cbFDHandler->loadFile($filePath);
+        
+        $issues = $this->_formatIssues($issueList);
+        
+        $data['issues']   = $issues;
+        $data['title']    = 'Code Browser - Review View';
+        $data['filepath'] = $filePath;
+        $data['csspath']  = '';
+        $data['source']   = $this->_formatSourceCode($sourceCode, $issues);
+        $data['jsCode']   = $this->_grenerateJSCode($issues);
+        $depth = substr_count($filePath, DIRECTORY_SEPARATOR);
+        
+        for ($i = 1; $i <= $depth; $i ++) {
+            $data['csspath'] .= '../';
+        }
+        $dataGenrate['title']   = $data['title'];
+        $dataGenrate['csspath'] = $data['csspath'];
+        
+        $dataGenrate['content'] = $this->_render('review', $data);
+
+        $this->_generateView($dataGenrate, 'proxy.php.html');
+        
+    }
+    
+    
+    private function _grenerateJSCode($issueList)
+    {
+        $jsCode = '';
+
+        foreach ($issueList as $num=>$lineIssues) {
+            
+            $htmlMessages[$num] = '';
+            
+            foreach ($lineIssues as $issue) {
+                
+                $htmlMessages[$num] .= addcslashes("<span class=\"title ".$issue->fileName."\">".
+                                      $issue->fileName . "</span>&nbsp;<span class=\"message\">".
+                                      (string)$issue->description."</span>", "\"\'\0..\37!@\177..\377");
+            }
+            
+            $jsCode .= "if ($('line_".$num."')) {
+                        new Tip('line_".$num."', 
+                              '".$htmlMessages[$num]."', 
+                              { className: 'tooltip', delay: 0.1 });\n}";
+            
+        }
+        
+        return $jsCode;
+        
+    }
+    
+    /**
+     * 
+     * @param unknown_type $sourceCode
+     * @param unknown_type $outputIssues
+     */
+    private function _formatSourceCode($sourceCode, $outputIssues)
+    {
+        
+        $formattedCode = highlight_string($sourceCode, true);
+        
+        $sourceDom = new DOMDocument();
+        
+        $sourceDom->loadHTML(utf8_encode($formattedCode));
+
+        //fetch <code>-><span>->children from php generated html
+        $sourceElements = $sourceDom->getElementsByTagname('code')->item(0)->childNodes->item(0)->childNodes;
+        
+        //create target dom
+        $targetDom = new DOMDocument();
+        
+        $targetNode = $targetDom->createElement('ol');
+        $targetNode->setAttribute('class', 'code');
+        
+        $targetParent = $targetDom->createElement('div');
+        $targetParent->setAttribute('class', 'codebrowser');
+        $targetParent->appendChild($targetNode);
+        
+        $targetDom->appendChild($targetParent);
+        
+        $lineNumber = 1;
+        
+        //create first li element wih its anchor
+        $li = $targetDom->createElement('li');
+        $anchor = $targetDom->createElement('a');
+        $anchor->setAttribute('name', 'line-' . $lineNumber);
+        $li->appendChild($anchor);
+        
+        //iterate all <span> elements 
+        foreach ($sourceElements as $sourceElement) {
+            
+            if ($sourceElement instanceof DOMElement) {
+                
+                $elementStyle = $sourceElement->getAttribute('style');
+                
+                foreach ($sourceElement->childNodes as $sourceChildElement) {
+                    
+                    if ($sourceChildElement instanceof DOMElement && 'br' === $sourceChildElement->tagName) {
+                        
+                        //write last line
+                        $targetNode->appendChild($li);
+                        
+                        // create new li and new line
+                        $li = $targetDom->createElement('li');
+                        $li->setAttribute('id', 'line_' . $lineNumber);
+                        //create anchor for the new line
+                        $anchor = $targetDom->createElement('a');
+                        $anchor->setAttribute('name', 'line_' . $lineNumber);
+                        
+                        $li->appendChild($anchor);
+                        
+                        // set li css class depending on line errors
+                        if (isset($outputIssues[$lineNumber])) {
+                            
+                            if (1 === count($outputIssues[$lineNumber])) {
+                                $li->setAttribute('class', $outputIssues[$lineNumber][0]->foundBy);
+                            } else if(1 <= count($outputIssues[$lineNumber])) {
+                                $li->setAttribute('class', 'moreErrors');
+                            }
+                            
+                        } else {
+                            
+                            if (0 === $lineNumber % 2) {
+                               $li->setAttribute('class', 'white'); 
+                            } else {
+                                $li->setAttribute('class', 'even');
+                            }
+                            
+                        }
+                        
+                        //increment line number
+                        $lineNumber++;
+                    } else {
+                        // apend content to urrent li element
+                        $span = $targetDom->createElement('span');
+                        $span->nodeValue = htmlspecialchars($sourceChildElement->wholeText);
+                        $span->setAttribute('style', $elementStyle );
+                        $li->appendChild($span);
+                    }
+                    
+                }
+                
+                
+            }
+        }
+        return $targetDom->saveHTML();
+        
+    }
+    
+    private function _formatIssues($issueList)
+    {
+        
+        $outputIssues = array(); 
+        
+        foreach ($issueList as $issues) {
+            
+            foreach ($issues as $error) {
+                
+                for ($i = $error->lineStart; $i <= $error->lineEnd; $i++) {
+                    
+                    $outputIssues[$i][] = $error;
+                    
+                }
+                
+            }
+            
+        }
+        
+//        echo '<pre>';
+//        var_dump($outputIssues);die();
+        
+        return $outputIssues;
+    }
+    
+}
