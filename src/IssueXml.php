@@ -73,7 +73,7 @@ class CbIssueXml extends DOMDocument
     /**
      * Constructor
      *
-     * @param CbFDHandler $cbFDHandler File handler object
+     * @param CbIOHelper $cbIOHelper File handler object
      */
     public function __construct($version = '1.0', $encoding = 'UTF-8')
     {

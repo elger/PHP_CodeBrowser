@@ -1,6 +1,6 @@
 <?php
 /**
- * File and directory handler
+ * Input and output helper
  *
  * PHP Version 5.2.6
  *
@@ -47,7 +47,10 @@
  */
 
 /**
- * CbFDHandler
+ * CbIOHelper
+ * 
+ * Input output helper class provides several mehtods for writing and reading files,
+ * or directories.
  *
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
@@ -59,7 +62,7 @@
  * @link      http://www.phpunit.de/
  * @since     Class available since 1.0
  */
-class CbFDHandler
+class CbIOHelper
 {
 
     /**

@@ -213,12 +213,12 @@ class CbCLIController
     public function run()
     {
         // init needed classes
-        $cbFDHandler    = new CbFDHandler();
+        $cbIOHelper    = new CbIOHelper();
         $cbIssueXml     = new CbIssueXml();
 
         // clear and create output directory
-        $cbFDHandler->deleteDirectory($this->_htmlOutputDir);
-        $cbFDHandler->createDirectory($this->_htmlOutputDir);
+        $cbIOHelper->deleteDirectory($this->_htmlOutputDir);
+        $cbIOHelper->createDirectory($this->_htmlOutputDir);
 
         // merge xml files
         $cbIssueXml->addDirectory($this->_logDir);
@@ -252,7 +252,7 @@ return;
         }
 
         $html   = new CbHTMLGenerator(
-            $cbFDHandler, $issueHandler, $cbJSGenerator
+            $cbIOHelper, $issueHandler, $cbJSGenerator
         );
         $html->setTemplateDir(PHPCB_TEMPLATE_DIR);
         $html->setOutputDir($this->_htmlOutputDir);
