@@ -85,9 +85,9 @@ class CbHTMLGenerator
     /**
      * File handler object
      *
-     * @var cbFDHandler
+     * @var cbIOHelper
      */
-    private $_cbFDHandler;
+    private $_cbIOHelper;
 
     /**
      * Error handler object
@@ -106,13 +106,13 @@ class CbHTMLGenerator
     /**
      * Constructor
      *
-     * @param CbFDHandler    $cbFDHandler    File handler object
+     * @param CbIOHelper    $cbIOHelper    File handler object
      * @param CbIssueHandler $cbIssueHandler Error handler object
      * @param CbJsGenerator  $cbJSGenerator  JS / HTML generator object
      */
-    public function __construct(CbFDHandler $cbFDHandler, CbIssueHandler $cbIssueHandler, CbJSGenerator $cbJSGenerator)
+    public function __construct(CbIOHelper $cbIOHelper, CbIssueHandler $cbIssueHandler, CbJSGenerator $cbJSGenerator)
     {
-        $this->_cbFDHandler    = $cbFDHandler;
+        $this->_cbIOHelper    = $cbIOHelper;
         $this->_cbIssueHandler = $cbIssueHandler;
         $this->_cbJSGenerator  = $cbJSGenerator;
     }
@@ -244,7 +244,7 @@ class CbHTMLGenerator
      *
      * @return void
      * @throws Exception
-     * @see cbFDHandler::copyFile
+     * @see cbIOHelper::copyFile
      */
     public function copyRessourceFolders($hasErrors = true)
     {
@@ -253,7 +253,7 @@ class CbHTMLGenerator
         }
 
         foreach ($this->_ressourceFolders as $folder) {
-            $this->_cbFDHandler->copyDirectory(
+            $this->_cbIOHelper->copyDirectory(
                 $this->_templateDir . DIRECTORY_SEPARATOR . $folder,
                 $this->_outputDir . DIRECTORY_SEPARATOR . $folder
             );
@@ -261,10 +261,10 @@ class CbHTMLGenerator
 
         $template = ($hasErrors) ?  'index.tpl' : 'noErrors.tpl';
 
-        $content = $this->_cbFDHandler->loadFile(
+        $content = $this->_cbIOHelper->loadFile(
             $this->_templateDir . DIRECTORY_SEPARATOR . $template
         );
-        $this->_cbFDHandler->createFile(
+        $this->_cbIOHelper->createFile(
             $this->_outputDir . DIRECTORY_SEPARATOR . 'index.html', $content
         );
     }
@@ -306,11 +306,11 @@ class CbHTMLGenerator
      * @param string $fileName The filename of analyzed file
      *
      * @return void
-     * @see cbFDHandler::createFile
+     * @see cbIOHelper::createFile
      */
     private function _generateView($data, $fileName)
     {
-        $this->_cbFDHandler->createFile(
+        $this->_cbIOHelper->createFile(
             $this->_outputDir
             . DIRECTORY_SEPARATOR
             . $fileName,

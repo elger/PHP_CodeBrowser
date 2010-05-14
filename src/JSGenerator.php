@@ -64,18 +64,18 @@ class CbJSGenerator
     /**
      * File handler object
      *
-     * @var CbFDHandler
+     * @var CbIOHelper
      */
-    private $_cbFDHandler;
+    private $_cbIOHelper;
 
     /**
      * Constructor
      *
-     * @param CbFDHandler $cbFDHandler File handler object
+     * @param CbIOHelper $cbIOHelper File handler object
      */
-    public function __construct(CbFDHandler $cbFDHandler)
+    public function __construct(CbIOHelper $cbIOHelper)
     {
-        $this->_cbFDHandler = $cbFDHandler;
+        $this->_cbIOHelper = $cbIOHelper;
     }
 
     /**
@@ -110,13 +110,13 @@ class CbJSGenerator
      * @param string $projectSource Path to project source directory
      *
      * @return string
-     * @see cbFDHandler::loadFile
+     * @see cbIOHelper::loadFile
      */
     public function getHighlightedSource($fileName, $errors, $projectSource)
     {
         ob_start();
 
-        $code = $this->_cbFDHandler->loadFile(
+        $code = $this->_cbIOHelper->loadFile(
             $projectSource . DIRECTORY_SEPARATOR . $fileName
         );
         ini_set('highlight.comment', 'comment');
