@@ -237,18 +237,24 @@ class CbCLIController
         $list = array();
         CbLogger::log('Found '.count($files).' files with issues');
 
-        foreach($files as $file) {
-            CbLogger::log('Get issues for "'.$file.'"', CbLogger::PRIORITY_DEBUG);
-            $issues = $issueHandler->getIssuesByFile($file);
+        if (isset($this->_projectSourceDir)) {
+            $fileIterator = new CbSourceIterator($this->_projectSourceDir);
+        } else {
+            $fileIterator = new ArrayIterator($files);
         }
 
-        CbLogger::log('Parse source directory');
-        // parse directory defined by --source parameter
-        $errors = $issueHandler->parseSourceDirectory(
-            $this->_projectSourceDir,
-            $errors
-        );
-        sort($errors);
+        foreach($fileIterator as $file) {
+            if (in_array($file, $files)) {
+                CbLogger::log(
+                    'Get issues for "'.$file.'"',
+                    CbLogger::PRIORITY_DEBUG
+                );
+                $issues = $issueHandler->getIssuesByFile($file);
+            } else {
+                $issues = array();
+            }
+        }
+return;
 
         // set project source dir from error list
         if (!isset($this->_projectSourceDir)) {
