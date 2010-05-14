@@ -72,6 +72,7 @@ require_once 'PHP/Timer.php';
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
  * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
+ * @author    Michel Hartmann <michel.hartmann@mayflower.de>
  * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   Release: @package_version@
@@ -220,9 +221,11 @@ class CbCLIController
         $cbIOHelper->deleteDirectory($this->_htmlOutputDir);
         $cbIOHelper->createDirectory($this->_htmlOutputDir);
 
+        CbLogger::log('Load XML files', CbLogger::PRIORITY_DEBUG);
         // merge xml files
         $cbIssueXml->addDirectory($this->_logDir);
-print "\nAdded directory: " . PHP_Timer::resourceUsage() . "\n";
+
+        CbLogger::log('Load Plugins', CbLogger::PRIORITY_DEBUG);
         // conversion of XML file cc to cb format
         $plugins = array();
         foreach ($this->_registeredErrorPlugins as $className) {
@@ -232,25 +235,20 @@ print "\nAdded directory: " . PHP_Timer::resourceUsage() . "\n";
         $issueHandler = new CbIssueHandler($cbIssueXml, $plugins);
         $files = $issueHandler->getFilesWithIssues();
         $list = array();
-        
-        $commonPathPrefix = '';
-        
-print "\nRetrieved file list (".count($files)."): " . PHP_Timer::resourceUsage() . "\n";
+
+        CbLogger::log('Found '.count($files).' files with issues');
+		$commonPathPrefix = '';
         foreach($files as $file) {
-        	
-        	$commonPathPrefix = CbIOHelper::getCommonPathPrefix($file, $commonPathPrefix);
-        	
+            CbLogger::log('Get issues for "'.$file.'"', CbLogger::PRIORITY_DEBUG);
+
+            $commonPathPrefix = CbIOHelper::getCommonPathPrefix($file, $commonPathPrefix);
             $issues = $issueHandler->getIssuesByFile($file);
             
             // generate html review files
             
         }
-        
-        // generate tree view, and other files
-        
-        
-       
-        
+
+        CbLogger::log('Parse source directory');
 
         // parse directory defined by --source parameter
 //        $errors = $issueHandler->parseSourceDirectory(
@@ -321,6 +319,8 @@ print "\nRetrieved file list (".count($files)."): " . PHP_Timer::resourceUsage()
             case '--version':
                 self::printVersion();
                 break;
+            case '--logfile':
+                CbLogger::setLogFile($argv[$key + 1]);
             }
         }
 
@@ -341,8 +341,9 @@ print "\nRetrieved file list (".count($files)."): " . PHP_Timer::resourceUsage()
             );
             self::printHelp();
         }
+        CbLogger::setLogLevel(CbLogger::PRIORITY_DEBUG);
 
-        printf("Generating PHP_CodeBrowser files\n");
+        CbLogger::log('Generating PHP_CodeBrowser files');
 
         // init new CLIController
         $controller = new CbCLIController(
@@ -352,17 +353,18 @@ print "\nRetrieved file list (".count($files)."): " . PHP_Timer::resourceUsage()
             $htmlOutput . '/' . $xmlFileName
         );
         $controller->addErrorPlugins(
-            array( 'CbErrorCheckstyle','CbErrorCPD', 'CbErrorPadawan', 'CbErrorPMD')
-            // array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan')
+            array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan')
         );
 
         try {
             $controller->run();
         } catch (Exception $e) {
-            printf("PHP-CodeBrowser Error: \n%s\n", $e->getMessage());
+            CbLogger::log(
+                sprintf("PHP-CodeBrowser Error: \n%s\n", $e->getMessage())
+            );
         }
 
-        print "\n" . PHP_Timer::resourceUsage() . "\n";
+        CbLogger::log(PHP_Timer::resourceUsage());
     }
 
     /**
@@ -373,13 +375,14 @@ print "\nRetrieved file list (".count($files)."): " . PHP_Timer::resourceUsage()
     public static function printHelp()
     {
         $help = sprintf(
-            "Usage: phpcb --log <dir> --output <dir> [--source <dir>]
+            "Usage: phpcb --log <dir> --output <dir> [--source <dir>] [--logfile <dir>]
 
             PHP_CodeBrowser arguments:
             \t--log <dir>      \t\tThe path to the xml log files, e.g. generated from phpunit.
             \t--output <dir>   \t\tPath to the output folder where generated files should be stored.
             \t--source <dir> (opt)   \tPath to the project source code. Parse complete source directory
                                 \t\t\t\tif is set, else only files from logs.
+            \t--logfile <dir>  \t\tPath of the file to use for logging the output.
 
             General arguments:
             \t--help           \t\t\tPrint this help.\n\n"
