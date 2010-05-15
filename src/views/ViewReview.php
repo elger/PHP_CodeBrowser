@@ -92,7 +92,7 @@ class CbViewReview extends CbViewAbstract
                                 $issue->foundBy . '</div><span class="text">' .
                                 $issue->description . '</span>';
                 }
-                $line->setAttribute('title', $message);
+                $line->setAttribute('title', utf8_encode($message));
             }
 
 

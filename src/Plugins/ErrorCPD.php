@@ -76,10 +76,8 @@ class CbErrorCPD extends CbPluginsAbstract
     public function mapIssues(DOMNode $element, $filename)
     {
         $parentNode = $element->parentNode;
-
-        $files = $this->issueXml->query('file[@path="'.$filename.'"]', $parentNode);
-
-        $lineCount = (int)$parentNode->getAttribute('lines');
+        $files      = $this->issueXml->query('file[@path="'.$filename.'"]', $parentNode);
+        $lineCount  = (int)$parentNode->getAttribute('lines');
 
         $result = array();
         foreach ($files as $file) {
@@ -87,7 +85,7 @@ class CbErrorCPD extends CbPluginsAbstract
                 $file->getAttribute('path'),
                 (int) $file->getAttribute('line'),
                 (int) $file->getAttribute('line') + $lineCount,
-                $this->pluginName,
+                'Duplication',
                 htmlentities(
                     $this->getDescription($parentNode->childNodes, $file)
                 ),
@@ -106,6 +104,19 @@ class CbErrorCPD extends CbPluginsAbstract
         }
 
         return array_unique($filenames);
+    }
+    
+    /**
+     * Get all DOMNodes that represent issues for a specific file.
+     *
+     * @param String $filename Name of the file to get nodes for.
+     * @return DOMNodeList
+     */
+    protected function getIssueNodes($filename)
+    {
+        return $this->issueXml->query(
+            '/*/'.$this->pluginName.'/*/file[@path="'.$filename.'"]'
+        );
     }
 
     protected function getDescription(DOMNodeList $allNodes, DOMNode $currentNode)
