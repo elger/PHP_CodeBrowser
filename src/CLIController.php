@@ -328,7 +328,7 @@ class CbCLIController
             );
             self::printHelp();
         }
-        CbLogger::setLogLevel(CbLogger::PRIORITY_DEFAULT);
+        CbLogger::setLogLevel(CbLogger::PRIORITY_DEBUG);
 
         CbLogger::log('Generating PHP_CodeBrowser files');
 
@@ -340,7 +340,7 @@ class CbCLIController
             $htmlOutput . '/' . $xmlFileName
         );
         $controller->addErrorPlugins(
-            array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan')
+            array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan', 'CbErrorCoverage')
         );
 
         try {
