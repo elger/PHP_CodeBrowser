@@ -255,33 +255,18 @@ class CbCLIController
                     'Get issues for "'.$file.'"',
                     CbLogger::PRIORITY_DEBUG
                 );
+                
                 $issues = $issueHandler->getIssuesByFile($file);
             } else {
                 $issues = array();
             }
-            // generate html review files
+            
+            //PHP_Timer::start();
             $cbViewReview->generate($issues, $file, $commonPathPrefix);
+            //CbLogger::log($file . ": " . PHP_Timer::stop());
+            
         }
         $cbViewReview->copyRessourceFolders(true);
-
-
-
-//        $html = new CbHTMLGenerator(
-//            $cbIOHelper, $issueHandler, $cbJSGenerator
-//        );
-//
-//        $html->setTemplateDir(PHPCB_TEMPLATE_DIR);
-//        $html->setOutputDir($this->_htmlOutputDir);
-
-//        if (!empty($errors)) {
-//            $html->generateViewFlat($errors);
-//            $html->generateViewTree($errors);
-//            $html->generateViewReview(
-//                $errors, $this->_xmlFile, $this->_projectSourceDir
-//            );
-//        }
-        // copy needed resources like css, js, images
-//        $html->copyRessourceFolders(!empty($errors));
     }
 
 
@@ -292,6 +277,7 @@ class CbCLIController
      */
     public static function main()
     {
+    	PHP_Timer::start();
         $xmlLogDir    = null;
         $sourceFolder = null;
         $htmlOutput   = null;
@@ -354,7 +340,7 @@ class CbCLIController
             $htmlOutput . '/' . $xmlFileName
         );
         $controller->addErrorPlugins(
-            array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan')
+            array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan', 'CbErrorCoverage')
         );
 
         try {
@@ -365,7 +351,8 @@ class CbCLIController
             );
         }
 
-        CbLogger::log(PHP_Timer::resourceUsage());
+        CbLogger::log(PHP_Timer::stop(), CbLogger::PRIORITY_DEFAULT);
+        CbLogger::log(PHP_Timer::resourceUsage(), CbLogger::PRIORITY_DEFAULT);
     }
 
     /**
