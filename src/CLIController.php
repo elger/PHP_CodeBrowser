@@ -251,20 +251,21 @@ class CbCLIController
 
         foreach($fileIterator as $file) {
             if (in_array($file, $files)) {
+                $fileShort = substr($file, strlen($commonPathPrefix));
                 CbLogger::log(
-                    'Get issues for "'.$file.'"',
+                    'Get issues for "...'.$fileShort.'"',
                     CbLogger::PRIORITY_DEBUG
                 );
-                
+
                 $issues = $issueHandler->getIssuesByFile($file);
             } else {
                 $issues = array();
             }
-            
+
             //PHP_Timer::start();
             $cbViewReview->generate($issues, $file, $commonPathPrefix);
             //CbLogger::log($file . ": " . PHP_Timer::stop());
-            
+
         }
         $cbViewReview->copyRessourceFolders(true);
     }
@@ -277,7 +278,7 @@ class CbCLIController
      */
     public static function main()
     {
-    	PHP_Timer::start();
+        PHP_Timer::start();
         $xmlLogDir    = null;
         $sourceFolder = null;
         $htmlOutput   = null;
