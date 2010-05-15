@@ -1,4 +1,8 @@
 <?php
+
+include_once 'Text/Highlighter.php';
+include_once 'Text/Highlighter/Renderer/Html.php';
+
 class CbViewReview extends CbViewAbstract
 {
 
@@ -13,8 +17,6 @@ class CbViewReview extends CbViewAbstract
             throw new Exception('Wrong data format for errorlist!');
         }
 
-        $sourceCode  = $this->_cbIOHelper->loadFile($fileName);
-
         $issues = $this->_formatIssues($issueList);
 
         $shortFilename = substr($fileName, strlen($commonPathPrefix));
@@ -23,7 +25,7 @@ class CbViewReview extends CbViewAbstract
         $data['title']    = 'Code Browser - ViewReview View';
         $data['filepath'] = $shortFilename;
         $data['csspath']  = '';
-        $data['source']   = $this->_formatSourceCode($sourceCode, $issues);
+        $data['source']   = $this->_formatSourceCode($fileName, $issues);
         $data['jsCode']   = $this->_grenerateJSCode($issues);
 
         $depth = substr_count($shortFilename, DIRECTORY_SEPARATOR);
@@ -66,17 +68,14 @@ class CbViewReview extends CbViewAbstract
 
     /**
      *
-     * @param unknown_type $sourceCode
+     * @param unknown_type $filename
      * @param unknown_type $outputIssues
      */
-    private function _formatSourceCode($sourceCode, $outputIssues)
+    private function _formatSourceCode($filename, $outputIssues)
     {
+        $sourceDom = $this->_highlightCode($filename);
 
-        $formattedCode = trim(highlight_string($sourceCode, true));
-
-        $sourceDom = new DOMDocument();
-
-        $sourceDom->loadHTML(utf8_encode($formattedCode));
+        return $sourceDom->saveHtml();
 
         //fetch <code>-><span>->children from php generated html
         $sourceElements = $sourceDom->getElementsByTagname('code')->item(0)->childNodes->item(0)->childNodes;
@@ -183,6 +182,74 @@ class CbViewReview extends CbViewAbstract
 
         }
         return $targetDom->saveHTML();
+    }
+
+    protected function _highlightPhpCode($sourceCode)
+    {
+        $code = highlight_string($sourceCode, true);
+
+        $doc = new DOMDocument();
+        $doc->loadHTML($code);
+
+        return $doc;
+    }
+
+    protected function _highlightCode($file)
+    {
+        $highlightmap = array(
+//            '.js' => 'JAVASCRIPT',
+//            '.html' => 'HTML',
+//            '.css' => 'CSS',
+        );
+
+        $extenstion = strrchr($file, '.');
+        $sourceCode = $this->_cbIOHelper->loadFile($file);
+
+        if ('.php' === $extenstion) {
+            return $this->_highlightPhpCode($sourceCode);
+        } else if (
+            class_exists('Text_Highlighter', false)
+            && isset($highlightmap[$extenstion])
+        ) {
+            $renderer = new Text_Highlighter_Renderer_Html(array(
+                'numbers' => HL_NUMBERS_LI,
+                'tabsize' => 4,
+                'class_map' => array(
+                    'comment'    => 'comment',
+                    'main'       => 'main',
+                    'table'      => 'table',
+                    'gutter'     => 'gutter',
+                    'brackets'   => 'brackets',
+                    'builtin'    => 'builtin',
+                    'code'       => 'code',
+                    'default'    => 'default',
+                    'identifier' => 'identifier',
+                    'inlinedoc'  => 'inlinedoc',
+                    'inlinetags' => 'inlinetags',
+                    'mlcomment'  => 'mlcomment',
+                    'number'     => 'number',
+                    'quotes'     => 'quotes',
+                    'reserved'   => 'reserved',
+                    'special'    => 'special',
+                    'string'     => 'string',
+                    'url'        => 'url',
+                    'var'        => 'var',
+                )
+            ));
+            $highlighter = Text_Highlighter::factory($highlightmap[$extenstion]);
+            $highlighter->setRenderer($renderer);
+
+            $doc = new DOMDocument();
+            $doc->loadHTML($highlighter->highlight($sourceCode));
+            return $doc;
+        } else {
+            $sourceCode = preg_replace('/.*/', '<li>$0</li>', $sourceCode);
+            $sourceCode = '<div class="code"><ol class="code">'.$sourceCode.'</ol></div>';
+
+            $doc = new DOMDocument();
+            $doc->loadHTML($sourceCode);
+            return $doc;
+        }
     }
 
     private function _formatIssues($issueList)
