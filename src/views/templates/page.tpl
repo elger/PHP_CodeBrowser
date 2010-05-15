@@ -5,12 +5,18 @@
 		<title>
 			Mayflower Code Browser
 		</title>
-		<script type="text/javascript" src="./<?php print $csspath; ?>js/prototype.js"></script>
-		<script type="text/javascript" src="./<?php print $csspath; ?>js/effects.js"></script>
-		<script type="text/javascript" src="./<?php print $csspath; ?>js/prototip.js"></script>
-		<script type="text/javascript" src="./<?php print $csspath; ?>js/dtree.js"></script>
-		<script type="text/javascript" src="./<?php print $csspath; ?>js/side-bar.js"></script>
-		<link href="./<?php print $csspath; ?>css/cruisecontrol.css" rel="stylesheet" type="text/css" />
+		<link rel="stylesheet" type="text/css" href="./<?php print $csspath; ?>js/jquery.sidebar/css/codebrowser/sidebar.css" />
+		<link rel="stylesheet" type="text/css" href="./<?php print $csspath; ?>css/cruisecontrol.css" />
+		<link rel="stylesheet" type="text/css" href="./<?php print $csspath; ?>css/review.css" />
+        
+        <script type="text/javascript" src="./<?php print $csspath; ?>js/review.js"></script>
+		<script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.sidebar/jquery-1.4.min.js"></script>
+        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.sidebar/jquery-ui-1.7.2.custom.min.js"></script>
+        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.sidebar/jquery.sidebar.js"></script>
+        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.cluetip/lib/jquery.hoverIntent.js"></script>
+        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.cluetip/lib/jquery.bgiframe.min.js"></script>
+        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.cluetip/jquery.cluetip.js"></script>
+		
 	</head>
 	<body class="codebrowser">
 			<?php print $content; ?>

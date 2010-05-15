@@ -1,0 +1,205 @@
+
+.review ol {
+    width: 99%;
+    margin: 15px;
+    padding: 0;
+    font-size: 12px;
+    line-height: 20px;
+    color: #939399;
+    text-align: left;
+    border: 1px solid #d3d3d0;
+    height: 99%;
+    list-style: none;
+    background-color:red;
+}
+
+.review ol li {
+    white-space: nowrap;
+    margin: 0;
+    padding: 0 0 0 1%;
+    color: #4E4E4E;
+}
+
+.review ol li.even {
+    background: #F9F9F9;
+    border-top: 1px solid #E7E7E7;
+}
+
+.review ol li.white {
+    background: #FFFFFF;
+    border-top: 1px solid #E7E7E7;
+}
+
+.review .CodeCoverage {
+    background-color: #BFE4FF;
+}
+
+.Duplication {
+    background-color: #FFBFDC;
+}
+
+.moreErrors {
+    background-color: #FFB380;
+}
+
+.ZendCodeAnalyzer {
+    background-color: #D5BFFF;
+}
+
+.EfferentCoupling {
+    background-color: #CCFF99;
+}
+
+.CyclomaticComplexity {
+    background-color: #FFCC80;
+}
+
+.ExcessiveMethodLength {
+    background-color: #F2FFBF;
+}
+
+.ExcessiveClassLength {
+    background-color: #FF6666;
+}
+
+.Checkstyle {
+    background-color: #FFF2BF;
+}
+
+.NPathComplexity {
+    background-color: #E6FF80;
+}
+.Padawan {
+    background-color: #E6FF80;
+}
+.CRAP {
+    background-color: #FFBFEF;
+}
+
+/**
+ * tooltips
+ */
+/* global */
+#cluetip{
+    background-color:#F9F9F9;
+    filter: alpha(opacity=87);
+    -moz-opacity:0.87;
+    opacity:0.87;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-box-shadow:0px 0px 20px #000;
+    -webkit-box-shadow:0px 0px 20px #000; 
+    box-shadow:0px 0px 20px #000;
+    padding: 10px;
+}
+#cluetip-close img {
+  border: 0;
+}
+#cluetip-title {
+  overflow: hidden;
+  display: none;
+  height: 0px;
+}
+#cluetip-title #cluetip-close {
+  float: right;
+  position: relative;
+}
+#cluetip-waitimage {
+  width: 43px;
+  height: 11px;
+  position: absolute;
+  background-image: url(images/wait.gif);
+}
+.cluetip-arrows {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: -11px;
+  height: 22px;
+  width: 11px;
+  background-repeat: no-repeat;
+  background-position: 0 0;
+}
+#cluetip-extra {
+  display: none;
+}
+
+#cluetip-inner{
+	background-color: #F9F9F9;
+}
+/***************************************
+   =cluetipClass: 'default' 
+-------------------------------------- */
+
+.cluetip-default {
+  background-color: #d9d9c2;
+}
+.cluetip-default #cluetip-outer {
+  position: relative;
+  margin: 0;
+  background-color: #d9d9c2;
+}
+.cluetip-default h3#cluetip-title {
+  display: none;
+}
+.cluetip-default #cluetip-title a {
+  color: #d9d9c2;
+  font-size: 0.95em;
+}  
+.cluetip-default #cluetip-inner {
+  padding: 0px;
+}
+.cluetip-default div#cluetip-close { 
+  text-align: right;
+  margin: 0 5px 5px;
+  color: #900;
+}
+
+.tooltip .title{
+	font-size: medium;
+    height: 20px;
+    line-height: 20px;
+    vertical-align: middle;
+    width: 100%;
+
+}
+.tooltip .text{
+    padding: 2px;
+    border-bottom: 1px solid #E7E7E7;
+}
+
+/**
+ * Sidebar
+ */
+
+#sidebar {
+    width: 560px;
+    height: 360px;
+    overflow:auto;
+}
+#sidebar table {
+    background-color:#E7E7E7;
+    border-spacing:1px;
+    color:#666666;
+}
+
+#sidebar table td {
+    vertical-align: top;
+}
+
+#sidebar table tr.head td {
+    background-color: #fff;
+    height: 25px;
+    border-bottom: solid 1px #BABDB6;
+    color:black;
+}
+
+#sidebar table tr {
+    text-align:left;
+}
+
+#sidebar table tr.odd {
+    border-top:1px solid #FFFFFF;
+}
