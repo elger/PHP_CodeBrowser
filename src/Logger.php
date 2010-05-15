@@ -37,7 +37,7 @@ class CbLogger
         }
         $message = sprintf(
             '%s - %s: %s',
-            date('c'),
+            date('Y-m-d h:i:s'),
             self::$priorities[$priority],
             $message
         );
