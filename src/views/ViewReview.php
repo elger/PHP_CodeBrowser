@@ -27,7 +27,7 @@ class CbViewReview extends CbViewAbstract
         $data['jsCode']   = $this->_grenerateJSCode($issues);
 
         $depth = substr_count($shortFilename, DIRECTORY_SEPARATOR);
-        $data['csspath'] = str_repeat('../', $depth-1);
+        $data['csspath'] = str_repeat('../', $depth-1 >= 0 ? $depth -1: 0);
 
         $dataGenerate['title']   = $data['title'];
         $dataGenerate['csspath'] = $data['csspath'];
@@ -53,10 +53,7 @@ class CbViewReview extends CbViewAbstract
                                       (string)$issue->description."</span>", "\"\'\0..\37!@\177..\377");
             }
 
-            $jsCode .= "if ($('line_".$num."')) {
-                        new Tip('line_".$num."',
-                              '".$htmlMessages[$num]."',
-                              { className: 'tooltip', delay: 0.1 });\n}";
+            $jsCode .= "$('#line_".$num."').cluetip({splitTitle: '|', activation: 'click', tracking: true, cluetipClass: 'default'});";
 
         }
 
@@ -87,11 +84,7 @@ class CbViewReview extends CbViewAbstract
         $targetNode = $targetDom->createElement('ol');
         $targetNode->setAttribute('class', 'code');
 
-        $targetParent = $targetDom->createElement('div');
-        $targetParent->setAttribute('class', 'codebrowser');
-        $targetParent->appendChild($targetNode);
-
-        $targetDom->appendChild($targetParent);
+        $targetDom->appendChild($targetNode);
 
         $lineNumber = 1;
 
@@ -125,9 +118,6 @@ class CbViewReview extends CbViewAbstract
 
             if ($sourceElement instanceof DOMElement) {
 
-
-                //echo $sourceElement->childNodes->item(0)->wholeText . '<hr>';
-
                 $elementStyle = $sourceElement->getAttribute('style');
 
                 foreach ($sourceElement->childNodes as $sourceChildElement) {
@@ -140,6 +130,20 @@ class CbViewReview extends CbViewAbstract
                         // create new li and new line
                         $li = $targetDom->createElement('li');
                         $li->setAttribute('id', 'line_' . $lineNumber);
+                        
+                        if (isset($outputIssues[$lineNumber])) {
+                            
+                            $message = '|';
+                            
+                            foreach ($outputIssues[$lineNumber] as $issue) {
+                                $message .= '<span class="tooltip"><div class="title ' . $issue->foundBy . '">' . 
+                                            $issue->foundBy . '</div><span class="text">' . 
+                                            $issue->description . '</span>';
+                            }
+                            $li->setAttribute('title', $message);
+                        }
+                        
+                        
                         //create anchor for the new line
                         $anchor = $targetDom->createElement('a');
                         $anchor->setAttribute('name', 'line_' . $lineNumber);
@@ -168,13 +172,9 @@ class CbViewReview extends CbViewAbstract
                         //increment line number
                         $lineNumber++;
                     } else {
-<<<<<<< HEAD:src/views/ViewReview.php
                         
                         // apend content to current li element
-=======
-//                        echo $lineNumber . ' - ' . htmlspecialchars($sourceChildElement->wholeText) . '<hr>';
                         // apend content to urrent li element
->>>>>>> 6f8f2c7917c3797d3b25e38196a726169dc58a38:src/views/ViewReview.php
                         $span = $targetDom->createElement('span');
                         $span->nodeValue = htmlspecialchars($sourceChildElement->wholeText);
                         $span->setAttribute('style', $elementStyle );
