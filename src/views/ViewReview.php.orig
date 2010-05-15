@@ -1,8 +1,4 @@
 <?php
-
-include_once 'Text/Highlighter.php';
-include_once 'Text/Highlighter/Renderer/Html.php';
-
 class CbViewReview extends CbViewAbstract
 {
 
@@ -17,6 +13,8 @@ class CbViewReview extends CbViewAbstract
             throw new Exception('Wrong data format for errorlist!');
         }
 
+        $sourceCode  = $this->_cbIOHelper->loadFile($fileName);
+
         $issues = $this->_formatIssues($issueList);
 
         $shortFilename = substr($fileName, strlen($commonPathPrefix));
@@ -25,11 +23,11 @@ class CbViewReview extends CbViewAbstract
         $data['title']    = 'Code Browser - ViewReview View';
         $data['filepath'] = $shortFilename;
         $data['csspath']  = '';
-        $data['source']   = $this->_formatSourceCode($fileName, $issues);
+        $data['source']   = $this->_formatSourceCode($sourceCode, $issues);
         $data['jsCode']   = $this->_grenerateJSCode($issues);
 
         $depth = substr_count($shortFilename, DIRECTORY_SEPARATOR);
-        $data['csspath'] = str_repeat('../', $depth-1 >= 0 ? $depth -1: 0);
+        $data['csspath'] = str_repeat('../', $depth-1);
 
         $dataGenerate['title']   = $data['title'];
         $dataGenerate['csspath'] = $data['csspath'];
@@ -55,7 +53,10 @@ class CbViewReview extends CbViewAbstract
                                       (string)$issue->description."</span>", "\"\'\0..\37!@\177..\377");
             }
 
-            $jsCode .= "$('#line_".$num."').cluetip({splitTitle: '|', activation: 'click', tracking: true, cluetipClass: 'default'});";
+            $jsCode .= "if ($('line_".$num."')) {
+                        new Tip('line_".$num."',
+                              '".$htmlMessages[$num]."',
+                              { className: 'tooltip', delay: 0.1 });\n}";
 
         }
 
@@ -65,14 +66,17 @@ class CbViewReview extends CbViewAbstract
 
     /**
      *
-     * @param unknown_type $filename
+     * @param unknown_type $sourceCode
      * @param unknown_type $outputIssues
      */
-    private function _formatSourceCode($filename, $outputIssues)
+    private function _formatSourceCode($sourceCode, $outputIssues)
     {
-        $sourceDom = $this->_highlightCode($filename);
 
-        return $sourceDom->saveHtml();
+        $formattedCode = trim(highlight_string($sourceCode, true));
+
+        $sourceDom = new DOMDocument();
+
+        $sourceDom->loadHTML(utf8_encode($formattedCode));
 
         //fetch <code>-><span>->children from php generated html
         $sourceElements = $sourceDom->getElementsByTagname('code')->item(0)->childNodes->item(0)->childNodes;
@@ -83,7 +87,11 @@ class CbViewReview extends CbViewAbstract
         $targetNode = $targetDom->createElement('ol');
         $targetNode->setAttribute('class', 'code');
 
-        $targetDom->appendChild($targetNode);
+        $targetParent = $targetDom->createElement('div');
+        $targetParent->setAttribute('class', 'codebrowser');
+        $targetParent->appendChild($targetNode);
+
+        $targetDom->appendChild($targetParent);
 
         $lineNumber = 1;
 
@@ -117,6 +125,9 @@ class CbViewReview extends CbViewAbstract
 
             if ($sourceElement instanceof DOMElement) {
 
+
+                //echo $sourceElement->childNodes->item(0)->wholeText . '<hr>';
+
                 $elementStyle = $sourceElement->getAttribute('style');
 
                 foreach ($sourceElement->childNodes as $sourceChildElement) {
@@ -129,20 +140,6 @@ class CbViewReview extends CbViewAbstract
                         // create new li and new line
                         $li = $targetDom->createElement('li');
                         $li->setAttribute('id', 'line_' . $lineNumber);
-                        
-                        if (isset($outputIssues[$lineNumber])) {
-                            
-                            $message = '|';
-                            
-                            foreach ($outputIssues[$lineNumber] as $issue) {
-                                $message .= '<span class="tooltip"><div class="title ' . $issue->foundBy . '">' . 
-                                            $issue->foundBy . '</div><span class="text">' . 
-                                            $issue->description . '</span>';
-                            }
-                            $li->setAttribute('title', $message);
-                        }
-                        
-                        
                         //create anchor for the new line
                         $anchor = $targetDom->createElement('a');
                         $anchor->setAttribute('name', 'line_' . $lineNumber);
@@ -171,9 +168,13 @@ class CbViewReview extends CbViewAbstract
                         //increment line number
                         $lineNumber++;
                     } else {
+<<<<<<< HEAD:src/views/ViewReview.php
                         
                         // apend content to current li element
+=======
+//                        echo $lineNumber . ' - ' . htmlspecialchars($sourceChildElement->wholeText) . '<hr>';
                         // apend content to urrent li element
+>>>>>>> 6f8f2c7917c3797d3b25e38196a726169dc58a38:src/views/ViewReview.php
                         $span = $targetDom->createElement('span');
                         $span->nodeValue = htmlspecialchars($sourceChildElement->wholeText);
                         $span->setAttribute('style', $elementStyle );
@@ -187,74 +188,6 @@ class CbViewReview extends CbViewAbstract
 
         }
         return $targetDom->saveHTML();
-    }
-
-    protected function _highlightPhpCode($sourceCode)
-    {
-        $code = highlight_string($sourceCode, true);
-
-        $doc = new DOMDocument();
-        $doc->loadHTML($code);
-
-        return $doc;
-    }
-
-    protected function _highlightCode($file)
-    {
-        $highlightmap = array(
-//            '.js' => 'JAVASCRIPT',
-//            '.html' => 'HTML',
-//            '.css' => 'CSS',
-        );
-
-        $extenstion = strrchr($file, '.');
-        $sourceCode = $this->_cbIOHelper->loadFile($file);
-
-        if ('.php' === $extenstion) {
-            return $this->_highlightPhpCode($sourceCode);
-        } else if (
-            class_exists('Text_Highlighter', false)
-            && isset($highlightmap[$extenstion])
-        ) {
-            $renderer = new Text_Highlighter_Renderer_Html(array(
-                'numbers' => HL_NUMBERS_LI,
-                'tabsize' => 4,
-                'class_map' => array(
-                    'comment'    => 'comment',
-                    'main'       => 'main',
-                    'table'      => 'table',
-                    'gutter'     => 'gutter',
-                    'brackets'   => 'brackets',
-                    'builtin'    => 'builtin',
-                    'code'       => 'code',
-                    'default'    => 'default',
-                    'identifier' => 'identifier',
-                    'inlinedoc'  => 'inlinedoc',
-                    'inlinetags' => 'inlinetags',
-                    'mlcomment'  => 'mlcomment',
-                    'number'     => 'number',
-                    'quotes'     => 'quotes',
-                    'reserved'   => 'reserved',
-                    'special'    => 'special',
-                    'string'     => 'string',
-                    'url'        => 'url',
-                    'var'        => 'var',
-                )
-            ));
-            $highlighter = Text_Highlighter::factory($highlightmap[$extenstion]);
-            $highlighter->setRenderer($renderer);
-
-            $doc = new DOMDocument();
-            $doc->loadHTML($highlighter->highlight($sourceCode));
-            return $doc;
-        } else {
-            $sourceCode = preg_replace('/.*/', '<li>$0</li>', $sourceCode);
-            $sourceCode = '<div class="code"><ol class="code">'.$sourceCode.'</ol></div>';
-
-            $doc = new DOMDocument();
-            $doc->loadHTML($sourceCode);
-            return $doc;
-        }
     }
 
     private function _formatIssues($issueList)
