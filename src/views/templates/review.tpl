@@ -41,13 +41,11 @@
                         <?php print $notice->lineStart; ?></a>
                     </td>
                     <td align="center">
-                        <a href="#line_<?php print $notice->lineEnd;?>"
-                            onclick="new Effect.Highlight('line_<?php print $notice->lineStart."-".$notice->lineEnd; ?>', {duration: 1.5}); return false">
+                        <a href="#line_<?php print $notice->lineStart;?>" onClick="switchLine('line_<?php print $notice->lineStart;?>')">
                         <?php print $notice->lineEnd;?></a>
                     </td>
                     <td>
-                        <a href="#line_<?php print $notice->lineStart; ?>"
-                            onclick="new Effect.Highlight('line_<?php print $notice->lineStart."-".$notice->lineEnd; ?>', {duration: 1.5}); return false">
+                        <a href="#line_<?php print $notice->lineStart;?>" onClick="switchLine('line_<?php print $notice->lineStart;?>')">
                         <?php print (string)$notice->description;?></a>
                     </td>
                     <td>
