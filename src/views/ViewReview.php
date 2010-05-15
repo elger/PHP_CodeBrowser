@@ -46,16 +46,8 @@ class CbViewReview extends CbViewAbstract
 
         foreach ($issueList as $num=>$lineIssues) {
 
-            $htmlMessages[$num] = '';
-
-            foreach ($lineIssues as $issue) {
-
-                $htmlMessages[$num] .= addcslashes("<span class=\"title ".$issue->foundBy."\">".
-                                      $issue->foundBy . "</span><span class=\"message\">".
-                                      (string)$issue->description."</span>", "\"\'\0..\37!@\177..\377");
-            }
-
-            $jsCode .= "$('#line_".$num."').cluetip({splitTitle: '|', activation: 'click', tracking: true, cluetipClass: 'default'});";
+            $jsCode .= "$('#line_".$num."').cluetip({splitTitle: '|', activation: 'hover', 
+                                                     dropShadow: false, tracking: true, cluetipClass: 'default'});";
 
         }
 
