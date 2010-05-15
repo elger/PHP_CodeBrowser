@@ -72,10 +72,53 @@ class CbViewReview extends CbViewAbstract
     {
         $sourceDom = $this->_highlightCode($filename);
 
-        return $sourceDom->saveHtml();
+        $xpath = new DOMXPath($sourceDom);
+        $lines = $xpath->query('li');
+        $lineNumber = 0;
+        foreach ($lines as $line) {
+            ++$lineNumber;
+            $line->setAttribute('id', 'line_' . $lineNumber);
+
+            if (isset($outputIssues[$lineNumber])) {
+                $message = '|';
+                foreach ($outputIssues[$lineNumber] as $issue) {
+                    $message .= '<span class="tooltip"><div class="title ' . $issue->foundBy . '">' .
+                                $issue->foundBy . '</div><span class="text">' .
+                                $issue->description . '</span>';
+                }
+                $line->setAttribute('title', $message);
+            }
+
+
+            //create anchor for the new line
+            $anchor = $sourceDom->createElement('a');
+            $anchor->setAttribute('name', 'line_' . $lineNumber);
+            $line->appendChild($anchor);
+
+            $line->setAttribute('class', $lineNumber % 2 ? 'white' : 'even');
+
+            // set li css class depending on line errors
+            if (isset($outputIssues[$lineNumber])) {
+                if (1 === count($outputIssues[$lineNumber])) {
+                    $line->setAttribute('class', $outputIssues[$lineNumber][0]->foundBy);
+                } else if(1 <= count($outputIssues[$lineNumber])) {
+                    $line->setAttribute('class', 'moreErrors');
+                }
+            }
+        }
+        return $sourceDom->saveHTML();
+    }
+
+    protected function _highlightPhpCode($sourceCode)
+    {
+        $code = highlight_string($sourceCode, true);
+
+        $sourceDom = new DOMDocument();
+        $sourceDom->loadHTML($code);
 
         //fetch <code>-><span>->children from php generated html
-        $sourceElements = $sourceDom->getElementsByTagname('code')->item(0)->childNodes->item(0)->childNodes;
+        $sourceElements = $sourceDom->getElementsByTagname('code')->item(0)
+                                    ->childNodes->item(0)->childNodes;
 
         //create target dom
         $targetDom = new DOMDocument();
@@ -85,118 +128,47 @@ class CbViewReview extends CbViewAbstract
 
         $targetDom->appendChild($targetNode);
 
-        $lineNumber = 1;
-
-        //create first li element wih its anchor
         $li = $targetDom->createElement('li');
-        $anchor = $targetDom->createElement('a');
-        $anchor->setAttribute('name', 'line_0');
-        $li->appendChild($anchor);
-        $li->setAttribute('id', 'line_0');
-
-
-        //  set li css class depending on line errors
-        if (isset($outputIssues[0])) {
-
-            if (1 === count($outputIssues[0])) {
-                $li->setAttribute('class', $outputIssues[0][0]->foundBy);
-            } else if(1 <= count($outputIssues[0])) {
-                $li->setAttribute('class', 'moreErrors');
-            }
-
-        } else {
-
-            $li->setAttribute('class', 'white');
-
-        }
-
-
-
-        //iterate through all <span> elements
+        $targetNode->appendChild($li);
+        // iterate through all <span> elements
         foreach ($sourceElements as $sourceElement) {
+            if (!$sourceElement instanceof DOMElement) {
+                $span = $targetDom->createElement('span');
+                $span->nodeValue = htmlspecialchars($sourceElement->wholeText);
+                $li->appendChild($span);
 
-            if ($sourceElement instanceof DOMElement) {
-
-                $elementStyle = $sourceElement->getAttribute('style');
-
-                foreach ($sourceElement->childNodes as $sourceChildElement) {
-
-                    if ($sourceChildElement instanceof DOMElement && 'br' === $sourceChildElement->tagName) {
-
-                        //write last line
-                        $targetNode->appendChild($li);
-
-                        // create new li and new line
-                        $li = $targetDom->createElement('li');
-                        $li->setAttribute('id', 'line_' . $lineNumber);
-                        
-                        if (isset($outputIssues[$lineNumber])) {
-                            
-                            $message = '|';
-                            
-                            foreach ($outputIssues[$lineNumber] as $issue) {
-                                $message .= '<span class="tooltip"><div class="title ' . $issue->foundBy . '">' . 
-                                            $issue->foundBy . '</div><span class="text">' . 
-                                            $issue->description . '</span>';
-                            }
-                            $li->setAttribute('title', $message);
-                        }
-                        
-                        
-                        //create anchor for the new line
-                        $anchor = $targetDom->createElement('a');
-                        $anchor->setAttribute('name', 'line_' . $lineNumber);
-
-                        $li->appendChild($anchor);
-
-                        // set li css class depending on line errors
-                        if (isset($outputIssues[$lineNumber])) {
-
-                            if (1 === count($outputIssues[$lineNumber])) {
-                                $li->setAttribute('class', $outputIssues[$lineNumber][0]->foundBy);
-                            } else if(1 <= count($outputIssues[$lineNumber])) {
-                                $li->setAttribute('class', 'moreErrors');
-                            }
-
-                        } else {
-
-                            if (0 === $lineNumber % 2) {
-                               $li->setAttribute('class', 'white');
-                            } else {
-                                $li->setAttribute('class', 'even');
-                            }
-
-                        }
-
-                        //increment line number
-                        $lineNumber++;
-                    } else {
-                        
-                        // apend content to current li element
-                        // apend content to urrent li element
-                        $span = $targetDom->createElement('span');
-                        $span->nodeValue = htmlspecialchars($sourceChildElement->wholeText);
-                        $span->setAttribute('style', $elementStyle );
-                        $li->appendChild($span);
-                    }
-
-                }
-
-
+                continue;
             }
 
+            if ('br' === $sourceElement->tagName) {
+                // create new li and new line
+                $li = $targetDom->createElement('li');
+                $targetNode->appendChild($li);
+                continue;
+            }
+
+            $elementStyle = $sourceElement->getAttribute('style');
+
+            foreach ($sourceElement->childNodes as $sourceChildElement) {
+                if (
+                    $sourceChildElement instanceof DOMElement
+                    && 'br' === $sourceChildElement->tagName
+                ) {
+                    // create new li and new line
+                    $li = $targetDom->createElement('li');
+                    $targetNode->appendChild($li);
+                } else {
+                    // apend content to current li element
+                    // apend content to urrent li element
+                    $span = $targetDom->createElement('span');
+                    $span->nodeValue = htmlspecialchars($sourceChildElement->wholeText);
+                    $span->setAttribute('style', $elementStyle);
+                    $li->appendChild($span);
+                }
+            }
         }
-        return $targetDom->saveHTML();
-    }
 
-    protected function _highlightPhpCode($sourceCode)
-    {
-        $code = highlight_string($sourceCode, true);
-
-        $doc = new DOMDocument();
-        $doc->loadHTML($code);
-
-        return $doc;
+        return $targetDom;
     }
 
     protected function _highlightCode($file)
