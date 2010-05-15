@@ -73,7 +73,7 @@ class CbViewReview extends CbViewAbstract
         $sourceDom = $this->_highlightCode($filename);
 
         $xpath = new DOMXPath($sourceDom);
-        $lines = $xpath->query('li');
+        $lines = $xpath->query('//ol/li');
         $lineNumber = 0;
         foreach ($lines as $line) {
             ++$lineNumber;
