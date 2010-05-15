@@ -46,7 +46,7 @@ class CbViewReview extends CbViewAbstract
 
         foreach ($issueList as $num=>$lineIssues) {
 
-            $jsCode .= "$('#line_".$num."').cluetip({splitTitle: '|', activation: 'hover', 
+            $jsCode .= "$('#line_".$num."').cluetip({splitTitle: '|', activation: 'hover',
                                                      dropShadow: false, tracking: true, cluetipClass: 'default'});";
 
         }
@@ -87,16 +87,20 @@ class CbViewReview extends CbViewAbstract
             $anchor->setAttribute('name', 'line_' . $lineNumber);
             $line->appendChild($anchor);
 
-            $line->setAttribute('class', $lineNumber % 2 ? 'white' : 'even');
+            $lineClasses = array(
+                $line->getAttribute('class'),
+                $lineNumber % 2 ? 'white' : 'even'
+            );
 
             // set li css class depending on line errors
             if (isset($outputIssues[$lineNumber])) {
                 if (1 === count($outputIssues[$lineNumber])) {
-                    $line->setAttribute('class', $outputIssues[$lineNumber][0]->foundBy);
+                    $lineClasses[] = $outputIssues[$lineNumber][0]->foundBy;
                 } else if(1 <= count($outputIssues[$lineNumber])) {
-                    $line->setAttribute('class', 'moreErrors');
+                    $lineClasses[] = 'moreErrors';
                 }
             }
+            $line->setAttribute('class', implode(' ', $lineClasses));
         }
         return $sourceDom->saveHTML();
     }
@@ -139,7 +143,9 @@ class CbViewReview extends CbViewAbstract
                 continue;
             }
 
-            $elementStyle = $sourceElement->getAttribute('style');
+            $elementClass = $this->_mapPhpStyles(
+                $sourceElement->getAttribute('style')
+            );
 
             foreach ($sourceElement->childNodes as $sourceChildElement) {
                 if (
@@ -154,13 +160,28 @@ class CbViewReview extends CbViewAbstract
                     // apend content to urrent li element
                     $span = $targetDom->createElement('span');
                     $span->nodeValue = htmlspecialchars($sourceChildElement->wholeText);
-                    $span->setAttribute('style', $elementStyle);
+                    $span->setAttribute('class', $elementClass);
                     $li->appendChild($span);
                 }
             }
         }
 
         return $targetDom;
+    }
+
+    protected function _mapPhpStyles($style)
+    {
+        $colorMap = array(
+            ini_get('highlight.string') => 'string',
+            ini_get('highlight.comment') => 'comment',
+            ini_get('highlight.keyword') => 'keyword',
+            ini_get('highlight.default') => 'default',
+            ini_get('highlight.html') => 'html',
+        );
+
+        preg_match('/color: (.*)/', $style, $matches);
+        $color = $matches[1];
+        return isset($colorMap[$color]) ? $colorMap[$color] : null;
     }
 
     protected function _highlightCode($file)
