@@ -99,6 +99,8 @@ class CbAutoloader
      */
     public function autoload ($className)
     {
-        include_once $this->_classes[$className];
+        if (isset($this->_classes[$className])) {
+            include_once $this->_classes[$className];
+        }
     }
 }
