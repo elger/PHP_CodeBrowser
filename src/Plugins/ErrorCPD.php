@@ -105,7 +105,7 @@ class CbErrorCPD extends CbPluginsAbstract
     {
         $filenames = array();
 
-        foreach ($this->_cbIssueXml->query('/cruisecontrol/'.$this->pluginName.'/*/file[@path]') as $node) {
+        foreach ($this->issueXml->query('/*/'.$this->pluginName.'/*/file[@path]') as $node) {
             $filenames[] = $node->getAttribute('path');
         }
 
