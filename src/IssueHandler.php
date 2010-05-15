@@ -91,54 +91,6 @@ class CbIssueHandler
     }
 
     /**
-     * Get the path all errors have in common.
-     *
-     * @param array $errors List of all errors and its attributes
-     *
-     * @return string
-     */
-    public function getCommonSourcePath($errors)
-    {
-        $path = '';
-        foreach ($errors as $error) {
-            $path = $this->_getCommonErrorPath($error['path'], $path);
-        }
-        return $path;
-    }
-
-    /**
-     * Substitude the path all errors have in common.
-     *
-     * @param array $errors The error list
-     *
-     * @return array
-     */
-    public function replaceCommonSourcePath($errors)
-    {
-        $commonSourcePath = $this->getCommonSourcePath($errors);
-
-        if (!strlen($commonSourcePath)) {
-            return $errors;
-        }
-
-        foreach ($errors as $key => &$error) {
-            $error['complete'] = preg_replace(
-                array(
-                    sprintf(
-                        '(.*%s\%s)',
-                        $commonSourcePath,
-                        DIRECTORY_SEPARATOR
-                    )
-                ),
-                '',
-                $error['complete']
-            );
-            $error['path'] = $commonSourcePath;
-        }
-        return $errors;
-    }
-
-    /**
      * Get the related error elements for given $fileName.
      *
      * @param string $fileName  The $fileName to search for, could be a mixe of

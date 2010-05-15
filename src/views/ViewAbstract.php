@@ -1,7 +1,7 @@
 <?php
 class CbViewAbstract
 {
-    
+
     /**
      * Template directory
      *
@@ -29,9 +29,9 @@ class CbViewAbstract
      * @var cbIOHelper
      */
     protected $_cbIOHelper;
-    
-    
-    
+
+
+
     /**
      * Constructor
      *
@@ -41,7 +41,7 @@ class CbViewAbstract
     {
         $this->_cbIOHelper = $cbIOHelper;
     }
-    
+
     /**
      * Setter method
      *
@@ -51,7 +51,7 @@ class CbViewAbstract
      */
     public function setTemplateDir ($templateDir)
     {
-        $this->_templateDir = $templateDir;
+        $this->_templateDir = realpath($templateDir);
     }
 
     /**
@@ -66,8 +66,8 @@ class CbViewAbstract
     {
         $this->_outputDir = $outputDir;
     }
-    
-    
+
+
     /**
      * Copy needed resources to output directory
      *
@@ -99,7 +99,7 @@ class CbViewAbstract
             $this->_outputDir . DIRECTORY_SEPARATOR . 'index.html', $content
         );
     }
-    
+
     /**
      * Render different template types
      *
@@ -110,7 +110,7 @@ class CbViewAbstract
      */
     protected function _render($templateName, $data)
     {
-        $filePath = realpath($this->_templateDir)
+        $filePath = $this->_templateDir
             . DIRECTORY_SEPARATOR
             . $templateName
             . '.tpl';
@@ -121,10 +121,7 @@ class CbViewAbstract
 
         extract($data, EXTR_SKIP);
         ob_start();
-        include realpath($this->_templateDir)
-            . DIRECTORY_SEPARATOR
-            . $templateName
-            . '.tpl';
+        include($filePath);
         $contents = ob_get_contents();
         ob_end_clean();
         return $contents;
@@ -148,7 +145,7 @@ class CbViewAbstract
             $this->_render('page', $data)
         );
     }
-    
-    
-    
+
+
+
 }

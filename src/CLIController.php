@@ -51,14 +51,14 @@ if (strpos('@php_dir@', '@php_dir') === false) {
         define('PHPCB_ROOT_DIR', '@php_dir@/PHP_CodeBrowser');
     }
     if (!defined('PHPCB_TEMPLATE_DIR')) {
-        define('PHPCB_TEMPLATE_DIR', '@data_dir@/PHP_CodeBrowser/templates');
+        define('PHPCB_TEMPLATE_DIR', '@data_dir@/PHP_CodeBrowser/views/templates');
     }
 } else {
     if (!defined('PHPCB_ROOT_DIR')) {
         define('PHPCB_ROOT_DIR', dirname(__FILE__) . '/../');
     }
     if (!defined('PHPCB_TEMPLATE_DIR')) {
-        define('PHPCB_TEMPLATE_DIR', dirname(__FILE__) . '/../templates');
+        define('PHPCB_TEMPLATE_DIR', dirname(__FILE__) . '/../src/views/templates');
     }
 }
 
@@ -218,6 +218,9 @@ class CbCLIController
         $cbIssueXml    = new CbIssueXml();
         $cbViewReview  = new CbViewReview($cbIOHelper);
 
+        $cbViewReview->setOutputDir($this->_htmlOutputDir);
+        $cbViewReview->setTemplateDir(PHPCB_TEMPLATE_DIR);
+
         // clear and create output directory
         $cbIOHelper->deleteDirectory($this->_htmlOutputDir);
         $cbIOHelper->createDirectory($this->_htmlOutputDir);
@@ -237,16 +240,14 @@ class CbCLIController
         $files = $issueHandler->getFilesWithIssues();
         CbLogger::log('Found '.count($files).' files with issues');
 
+
         if (isset($this->_projectSourceDir)) {
             $fileIterator = new CbSourceIterator($this->_projectSourceDir);
         } else {
             $fileIterator = new ArrayIterator($files);
         }
 
-        $commonPathPrefix = '';
-        foreach($files as $file) {
-            $commonPathPrefix = CbIOHelper::getCommonPathPrefix($file, $commonPathPrefix);
-        }
+        $commonPathPrefix = CbIOHelper::getCommonPathPrefix($files);
 
         foreach($fileIterator as $file) {
             if (in_array($file, $files)) {
@@ -259,17 +260,11 @@ class CbCLIController
                 $issues = array();
             }
             // generate html review files
-         //   $cbViewReview->generate($issues, $file);
+            $cbViewReview->generate($issues, $file, $commonPathPrefix);
         }
-return;
+        $cbViewReview->copyRessourceFolders(true);
 
-        // set project source dir from error list
-//        if (!isset($this->_projectSourceDir)) {
-//            $this->setProjectSourceDir(
-//                //$issueHandler->getCommonSourcePath($errors)
-//                $commonPathPrefix
-//            );
-//        }
+
 
 //        $html = new CbHTMLGenerator(
 //            $cbIOHelper, $issueHandler, $cbJSGenerator
