@@ -6,6 +6,20 @@
 class CbViewReview extends CbViewAbstract
 {
 
+    protected $phpHighlightColorMap;
+
+    public function __construct($cbIOHelper)
+    {
+        $this->phpHighlightColorMap = array(
+            ini_get('highlight.string') => 'string',
+            ini_get('highlight.comment') => 'comment',
+            ini_get('highlight.keyword') => 'keyword',
+            ini_get('highlight.default') => 'default',
+            ini_get('highlight.html') => 'html',
+        );
+        parent::__construct($cbIOHelper);
+    }
+
     /**
      *
      * @param array  $issueList
@@ -88,7 +102,6 @@ class CbViewReview extends CbViewAbstract
             $line->appendChild($anchor);
 
             $lineClasses = array(
-                $line->getAttribute('class'),
                 $lineNumber % 2 ? 'white' : 'even'
             );
 
@@ -143,7 +156,7 @@ class CbViewReview extends CbViewAbstract
                 continue;
             }
 
-            $elementClass = $this->_mapPhpStyles(
+            $elementClass = $this->_mapPhpColors(
                 $sourceElement->getAttribute('style')
             );
 
@@ -169,19 +182,10 @@ class CbViewReview extends CbViewAbstract
         return $targetDom;
     }
 
-    protected function _mapPhpStyles($style)
+    protected function _mapPhpColors($style)
     {
-        $colorMap = array(
-            ini_get('highlight.string') => 'string',
-            ini_get('highlight.comment') => 'comment',
-            ini_get('highlight.keyword') => 'keyword',
-            ini_get('highlight.default') => 'default',
-            ini_get('highlight.html') => 'html',
-        );
-
-        preg_match('/color: (.*)/', $style, $matches);
-        $color = $matches[1];
-        return isset($colorMap[$color]) ? $colorMap[$color] : null;
+        $color = substr($style, 7);
+        return $this->phpHighlightColorMap[$color];
     }
 
     protected function _highlightCode($file)
