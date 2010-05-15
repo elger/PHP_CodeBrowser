@@ -6,6 +6,20 @@
 class CbViewReview extends CbViewAbstract
 {
 
+    protected $phpHighlightColorMap;
+
+    public function __construct($cbIOHelper)
+    {
+        $this->phpHighlightColorMap = array(
+            ini_get('highlight.string') => 'string',
+            ini_get('highlight.comment') => 'comment',
+            ini_get('highlight.keyword') => 'keyword',
+            ini_get('highlight.default') => 'default',
+            ini_get('highlight.html') => 'html',
+        );
+        parent::__construct($cbIOHelper);
+    }
+
     /**
      *
      * @param array  $issueList
@@ -46,7 +60,7 @@ class CbViewReview extends CbViewAbstract
 
         foreach ($issueList as $num=>$lineIssues) {
 
-            $jsCode .= "$('#line_".$num."').cluetip({splitTitle: '|', activation: 'hover', 
+            $jsCode .= "$('#line_".$num."').cluetip({splitTitle: '|', activation: 'hover',
                                                      dropShadow: false, tracking: true, cluetipClass: 'default'});";
 
         }
@@ -78,7 +92,7 @@ class CbViewReview extends CbViewAbstract
                                 $issue->foundBy . '</div><span class="text">' .
                                 $issue->description . '</span>';
                 }
-                $line->setAttribute('title', $message);
+                $line->setAttribute('title', utf8_encode($message));
             }
 
 
@@ -87,16 +101,19 @@ class CbViewReview extends CbViewAbstract
             $anchor->setAttribute('name', 'line_' . $lineNumber);
             $line->appendChild($anchor);
 
-            $line->setAttribute('class', $lineNumber % 2 ? 'white' : 'even');
+            $lineClasses = array(
+                $lineNumber % 2 ? 'white' : 'even'
+            );
 
             // set li css class depending on line errors
             if (isset($outputIssues[$lineNumber])) {
                 if (1 === count($outputIssues[$lineNumber])) {
-                    $line->setAttribute('class', $outputIssues[$lineNumber][0]->foundBy);
+                    $lineClasses[] = $outputIssues[$lineNumber][0]->foundBy;
                 } else if(1 <= count($outputIssues[$lineNumber])) {
-                    $line->setAttribute('class', 'moreErrors');
+                    $lineClasses[] = 'moreErrors';
                 }
             }
+            $line->setAttribute('class', implode(' ', $lineClasses));
         }
         return $sourceDom->saveHTML();
     }
@@ -139,7 +156,9 @@ class CbViewReview extends CbViewAbstract
                 continue;
             }
 
-            $elementStyle = $sourceElement->getAttribute('style');
+            $elementClass = $this->_mapPhpColors(
+                $sourceElement->getAttribute('style')
+            );
 
             foreach ($sourceElement->childNodes as $sourceChildElement) {
                 if (
@@ -154,13 +173,19 @@ class CbViewReview extends CbViewAbstract
                     // apend content to urrent li element
                     $span = $targetDom->createElement('span');
                     $span->nodeValue = htmlspecialchars($sourceChildElement->wholeText);
-                    $span->setAttribute('style', $elementStyle);
+                    $span->setAttribute('class', $elementClass);
                     $li->appendChild($span);
                 }
             }
         }
 
         return $targetDom;
+    }
+
+    protected function _mapPhpColors($style)
+    {
+        $color = substr($style, 7);
+        return $this->phpHighlightColorMap[$color];
     }
 
     protected function _highlightCode($file)
@@ -189,16 +214,16 @@ class CbViewReview extends CbViewAbstract
                     'table'      => 'table',
                     'gutter'     => 'gutter',
                     'brackets'   => 'brackets',
-                    'builtin'    => 'builtin',
+                    'builtin'    => 'keyword',
                     'code'       => 'code',
                     'default'    => 'default',
-                    'identifier' => 'identifier',
+                    'identifier' => 'default',
                     'inlinedoc'  => 'inlinedoc',
                     'inlinetags' => 'inlinetags',
                     'mlcomment'  => 'mlcomment',
                     'number'     => 'number',
-                    'quotes'     => 'quotes',
-                    'reserved'   => 'reserved',
+                    'quotes'     => 'string',
+                    'reserved'   => 'keyword',
                     'special'    => 'special',
                     'string'     => 'string',
                     'url'        => 'url',
