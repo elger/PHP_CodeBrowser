@@ -21,58 +21,60 @@
 }
 
 .review ol li.even {
-    background: #F9F9F9;
+    background-color: #F9F9F9;
     border-top: 1px solid #E7E7E7;
 }
 
 .review ol li.white {
-    background: #FFFFFF;
+    background-color: #FFFFFF;
     border-top: 1px solid #E7E7E7;
 }
 
-.review .CodeCoverage {
+.review ol li.CodeCoverage {
     background-color: #BFE4FF;
 }
 
-.Duplication {
+.review ol li.Duplication {
     background-color: #FFBFDC;
 }
 
-.moreErrors {
+.review ol li.moreErrors {
     background-color: #FFB380;
 }
 
-.ZendCodeAnalyzer {
+.review ol li.ZendCodeAnalyzer {
     background-color: #D5BFFF;
 }
 
-.EfferentCoupling {
+.review ol li.EfferentCoupling {
     background-color: #CCFF99;
 }
 
-.CyclomaticComplexity {
+.review ol li.CyclomaticComplexity {
     background-color: #FFCC80;
 }
 
-.ExcessiveMethodLength {
+.review ol li.ExcessiveMethodLength {
     background-color: #F2FFBF;
 }
 
-.ExcessiveClassLength {
+.review ol li.ExcessiveClassLength {
     background-color: #FF6666;
 }
 
-.Checkstyle {
+.review ol li.Checkstyle {
     background-color: #FFF2BF;
 }
 
-.NPathComplexity {
+.review ol li.NPathComplexity {
     background-color: #E6FF80;
 }
-.Padawan {
+
+.review ol li.Padawan {
     background-color: #E6FF80;
 }
-.CRAP {
+
+.review ol li.CRAP {
     background-color: #FFBFEF;
 }
 
@@ -90,7 +92,7 @@
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     -moz-box-shadow:0px 0px 20px #000;
-    -webkit-box-shadow:0px 0px 20px #000; 
+    -webkit-box-shadow:0px 0px 20px #000;
     box-shadow:0px 0px 20px #000;
     padding: 10px;
 }
@@ -127,10 +129,10 @@
 }
 
 #cluetip-inner{
-	background-color: #F9F9F9;
+    background-color: #F9F9F9;
 }
 /***************************************
-   =cluetipClass: 'default' 
+   =cluetipClass: 'default'
 -------------------------------------- */
 
 .cluetip-default {
@@ -147,18 +149,18 @@
 .cluetip-default #cluetip-title a {
   color: #d9d9c2;
   font-size: 0.95em;
-}  
+}
 .cluetip-default #cluetip-inner {
   padding: 0px;
 }
-.cluetip-default div#cluetip-close { 
+.cluetip-default div#cluetip-close {
   text-align: right;
   margin: 0 5px 5px;
   color: #900;
 }
 
 .tooltip .title{
-	font-size: medium;
+    font-size: medium;
     height: 20px;
     line-height: 20px;
     vertical-align: middle;
