@@ -1,7 +1,7 @@
 <?php
 
-include_once 'Text/Highlighter.php';
-include_once 'Text/Highlighter/Renderer/Html.php';
+@include_once 'Text/Highlighter.php';
+@include_once 'Text/Highlighter/Renderer/Html.php';
 
 class CbViewReview extends CbViewAbstract
 {
@@ -248,11 +248,12 @@ class CbViewReview extends CbViewAbstract
             $doc->loadHTML($highlighter->highlight($sourceCode));
             return $doc;
         } else {
-            $sourceCode = preg_replace('/.*/', '<li>$0</li>', $sourceCode);
+            $sourceCode = preg_replace('/.*/', '<li>$0</li>', htmlentities($sourceCode));
             $sourceCode = '<div class="code"><ol class="code">'.$sourceCode.'</ol></div>';
-
+            
             $doc = new DOMDocument();
             $doc->loadHTML($sourceCode);
+            
             return $doc;
         }
     }

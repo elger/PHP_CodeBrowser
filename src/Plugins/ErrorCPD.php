@@ -40,7 +40,8 @@
  * @package    PHP_CodeBrowser
  * @subpackage Plugins
  * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
+ * @author     Michel Hartmann <michel.hartmann@mayflower.de>
+ * @copyright  2007-2010 Mayflower GmbH
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id$
  * @link       http://www.phpunit.de/
@@ -54,8 +55,8 @@
  * @package    PHP_CodeBrowser
  * @subpackage Plugins
  * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @author     Christopher Weckerle <christopher.weckerle@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
+ * @author     Michel Hartmann <michel.hartmann@mayflower.de>
+ * @copyright  2007-2010 Mayflower GmbH
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
@@ -64,11 +65,6 @@
 class CbErrorCPD extends CbPluginsAbstract
 {
     public $pluginName = 'pmd-cpd';
-
-    protected function getIssues($file)
-    {
-        return $this->_cbIssueXml->query('/cruisecontrol/'.$this->pluginName.'/*/file[@path="'.$file.'"]');
-    }
 
     /**
      * Mapper method for this plugin.
@@ -81,7 +77,7 @@ class CbErrorCPD extends CbPluginsAbstract
     {
         $parentNode = $element->parentNode;
 
-        $files = $this->_cbIssueXml->query('file[@path="'.$filename.'"]', $parentNode);
+        $files = $this->issueXml->query('file[@path="'.$filename.'"]', $parentNode);
 
         $lineCount = (int)$parentNode->getAttribute('lines');
 
