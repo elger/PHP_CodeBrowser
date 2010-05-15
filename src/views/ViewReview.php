@@ -174,9 +174,9 @@ class CbViewReview extends CbViewAbstract
     protected function _highlightCode($file)
     {
         $highlightmap = array(
-//            '.js' => 'JAVASCRIPT',
-//            '.html' => 'HTML',
-//            '.css' => 'CSS',
+            '.js' => 'JAVASCRIPT',
+            '.html' => 'HTML',
+            '.css' => 'CSS',
         );
 
         $extenstion = strrchr($file, '.');
@@ -193,7 +193,7 @@ class CbViewReview extends CbViewAbstract
                 'tabsize' => 4,
                 'class_map' => array(
                     'comment'    => 'comment',
-                    'main'       => 'main',
+                    'main'       => 'code',
                     'table'      => 'table',
                     'gutter'     => 'gutter',
                     'brackets'   => 'brackets',
@@ -222,10 +222,10 @@ class CbViewReview extends CbViewAbstract
         } else {
             $sourceCode = preg_replace('/.*/', '<li>$0</li>', htmlentities($sourceCode));
             $sourceCode = '<div class="code"><ol class="code">'.$sourceCode.'</ol></div>';
-            
+
             $doc = new DOMDocument();
             $doc->loadHTML($sourceCode);
-            
+
             return $doc;
         }
     }
