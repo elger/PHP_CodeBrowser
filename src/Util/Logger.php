@@ -6,14 +6,12 @@ class CbLogger
     const PRIORITY_INFO   = 2;
     const PRIORITY_WARN   = 3;
     const PRIORITY_ERROR  = 4;
-    const PRIORITY_DEFAULT  = 99;
 
     protected static $priorities = array(
         self::PRIORITY_DEBUG => 'DEBUG',
         self::PRIORITY_INFO => 'INFO',
         self::PRIORITY_WARN => 'WARN',
         self::PRIORITY_ERROR => 'ERROR',
-        self::PRIORITY_DEFAULT => 'DEFAULT'
     );
 
     protected static $logLevel = -1;

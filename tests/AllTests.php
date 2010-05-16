@@ -45,9 +45,9 @@
  * @since      File available since 1.0
  */
 
-if (!defined('PHPCB_ROOT_DIR')) define('PHPCB_ROOT_DIR',    dirname( __FILE__ ) . '/../');
-if (!defined('PHPCB_SOURCE')) define('PHPCB_SOURCE',      realpath(PHPCB_ROOT_DIR) . '/src');
-if (!defined('PHPCB_TEST_DIR')) define('PHPCB_TEST_DIR',    realpath(PHPCB_ROOT_DIR) . '/tests/testData');
+if (!defined('PHPCB_ROOT_DIR')) define('PHPCB_ROOT_DIR', dirname( __FILE__ ) . '/../');
+if (!defined('PHPCB_SOURCE')) define('PHPCB_SOURCE', realpath(PHPCB_ROOT_DIR) . '/src');
+if (!defined('PHPCB_TEST_DIR')) define('PHPCB_TEST_DIR', realpath(PHPCB_ROOT_DIR) . '/tests/testData');
 if (!defined('PHPCB_TEST_OUTPUT')) define('PHPCB_TEST_OUTPUT', PHPCB_TEST_DIR . '/output');
 
 require_once PHPCB_SOURCE . '/Util/Autoloader.php';
