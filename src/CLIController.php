@@ -352,8 +352,8 @@ class CbCLIController
             );
         }
 
-        CbLogger::log(PHP_Timer::stop(), CbLogger::PRIORITY_DEFAULT);
-        CbLogger::log(PHP_Timer::resourceUsage(), CbLogger::PRIORITY_DEFAULT);
+        CbLogger::log(PHP_Timer::stop(), CbLogger::PRIORITY_INFO);
+        CbLogger::log(PHP_Timer::resourceUsage(), CbLogger::PRIORITY_INFO);
     }
 
     /**
