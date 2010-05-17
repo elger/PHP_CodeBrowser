@@ -2,7 +2,7 @@
 /**
  * Cli controller
  *
- * PHP Version 5.2
+ * PHP Version 5.3.2
  *
  * Copyright (c) 2007-2010, Mayflower GmbH
  * All rights reserved.
@@ -71,7 +71,6 @@ require_once 'PHP/Timer.php';
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
- * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
  * @author    Michel Hartmann <michel.hartmann@mayflower.de>
  * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -125,12 +124,10 @@ class CbCLIController
      * @param string $projectSourceDir The project source directory
      * @param string $htmlOutputDir    The html output dir, where new files will
      *                                 be created
-     * @param string $cbXMLFile        The (path-to) PHP_CodeBrowser XML file
      */
-    public function __construct($logPath, $projectSourceDir, $htmlOutputDir, $cbXMLFile)
+    public function __construct($logPath, $projectSourceDir, $htmlOutputDir)
     {
         $this->setXMLLogDir($logPath);
-        $this->setXMLFile($cbXMLFile);
         $this->setProjectSourceDir($projectSourceDir);
         $this->setHtmlOutputDir($htmlOutputDir);
     }
@@ -145,18 +142,6 @@ class CbCLIController
     public function setXMLLogDir($directory)
     {
         $this->_logDir = $directory;
-    }
-
-    /**
-     * Setter method for the (path-to) XML files
-     *
-     * @param string $fileName The (path-to) XML file
-     *
-     * @return void
-     */
-    public function setXMLFile($fileName)
-    {
-        $this->_xmlFile = $fileName;
     }
 
     /**
@@ -219,54 +204,75 @@ class CbCLIController
         $cbViewReview  = new CbViewReview($cbIOHelper);
 
         $cbViewReview->setOutputDir($this->_htmlOutputDir);
+        
+        /**
+         * @TODO move directly to CbViewReview __construct 
+         */
         $cbViewReview->setTemplateDir(PHPCB_TEMPLATE_DIR);
 
         // clear and create output directory
+        /**
+         * @TODO inherit deletion of directory in creation method as in 
+         *       case of creation i need a emtpy directory
+         */
         $cbIOHelper->deleteDirectory($this->_htmlOutputDir);
         $cbIOHelper->createDirectory($this->_htmlOutputDir);
 
         CbLogger::log('Load XML files', CbLogger::PRIORITY_DEBUG);
+        
         // merge xml files
         $cbIssueXml->addDirectory($this->_logDir);
-
         CbLogger::log('Load Plugins', CbLogger::PRIORITY_DEBUG);
+
         // conversion of XML file cc to cb format
         $plugins = array();
         foreach ($this->_registeredErrorPlugins as $className) {
-            $plugin = $plugins[] = new $className($cbIssueXml);
+            $plugins[] = new $className($cbIssueXml);
         }
 
         $issueHandler = new CbIssueHandler($cbIssueXml, $plugins);
-        $files = $issueHandler->getFilesWithIssues();
-        CbLogger::log('Found '.count($files).' files with issues');
+        $files        = $issueHandler->getFilesWithIssues();
+        CbLogger::log(sprintf('Found %d files with issues.', count($files)), CbLogger::PRIORITY_INFO);
 
-
+        /**
+         * If optional source parameter is given load file list from 
+         * source directory, from XML report files else.
+         */
         if (isset($this->_projectSourceDir)) {
             $fileIterator = new CbSourceIterator($this->_projectSourceDir);
         } else {
             $fileIterator = new ArrayIterator($files);
         }
 
+        // Get the path prefix all files have in common
         $commonPathPrefix = CbIOHelper::getCommonPathPrefix($files);
 
         foreach($fileIterator as $file) {
             if (in_array($file, $files)) {
-                $fileShort = substr($file, strlen($commonPathPrefix));
                 CbLogger::log(
-                    'Get issues for "...'.$fileShort.'"',
+                    sprintf('Get issues for "%s"', substr($file, strlen($commonPathPrefix))),
                     CbLogger::PRIORITY_DEBUG
                 );
-
                 $issues = $issueHandler->getIssuesByFile($file);
             } else {
                 $issues = array();
             }
 
-            //PHP_Timer::start();
+            CbLogger::log(
+                // PHP_Timer::start() does not have any return value but we only will init
+                // it in case of DEBUGGING 
+                sprintf('Generating source view for [%s] %s...', $file, PHP_Timer::start()),
+                CbLogger::PRIORITY_DEBUG
+            );
             $cbViewReview->generate($issues, $file, $commonPathPrefix);
-            //CbLogger::log($file . ": " . PHP_Timer::stop());
+            CbLogger::log(
+                sprintf('completed in %s', PHP_Timer::stop()), 
+                CbLogger::PRIORITY_DEBUG
+            );
 
         }
+        
+        // Copy needed ressources (eg js libraries) to output directory 
         $cbViewReview->copyRessourceFolders(true);
     }
 
@@ -279,14 +285,16 @@ class CbCLIController
     public static function main()
     {
         PHP_Timer::start();
+        
+        // TODO: set loglevel via script parameters
+        CbLogger::setLogLevel(CbLogger::PRIORITY_DEBUG);
+        
         $xmlLogDir    = null;
         $sourceFolder = null;
         $htmlOutput   = null;
-        $xmlFileName  = 'cbCodeBrowser.xml';
 
         // register autoloader
         spl_autoload_register(array(new CbAutoloader(), 'autoload'));
-
 
         $argv = $_SERVER['argv'];
         foreach ($argv as $key => $argument) {
@@ -313,33 +321,22 @@ class CbCLIController
         }
 
         // Check for directories
+        // @TODO Error message using wrong script parameters
         if (!is_dir($xmlLogDir) || !is_dir($htmlOutput)
         || (isset($sourceFolder) && !is_dir($sourceFolder))) {
-            printf(
-                "Error: \n%s%s%s\n",
-                !is_dir($xmlLogDir)
-                ? "- xml log directory [$xmlLogDir] not found\n"
-                : '',
-                (isset($sourceFolder) && !is_dir($sourceFolder))
-                ? "- project source directory [$sourceFolder] not found\n"
-                : '',
-                !is_dir($htmlOutput)
-                ? "- output directory [$htmlOutput] not found\n"
-                : ''
-            );
+            #printf('Error occured');
             self::printHelp();
         }
-        CbLogger::setLogLevel(CbLogger::PRIORITY_DEBUG);
-
-        CbLogger::log('Generating PHP_CodeBrowser files');
+        
+        CbLogger::log('Generating PHP_CodeBrowser files', CbLogger::PRIORITY_INFO);
 
         // init new CLIController
         $controller = new CbCLIController(
             $xmlLogDir,
             $sourceFolder,
-            $htmlOutput,
-            $htmlOutput . '/' . $xmlFileName
+            $htmlOutput
         );
+        
         $controller->addErrorPlugins(
             array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan', 'CbErrorCoverage')
         );
@@ -352,7 +349,6 @@ class CbCLIController
             );
         }
 
-        CbLogger::log(PHP_Timer::stop(), CbLogger::PRIORITY_INFO);
         CbLogger::log(PHP_Timer::resourceUsage(), CbLogger::PRIORITY_INFO);
     }
 

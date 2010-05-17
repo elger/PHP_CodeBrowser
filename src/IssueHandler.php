@@ -2,7 +2,7 @@
 /**
  * Issue handler
  *
- * PHP Version 5.2.6
+ * PHP Version 5.3.0
  *
  * Copyright (c) 2007-2010, Mayflower GmbH
  * All rights reserved.
@@ -39,6 +39,7 @@
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
+ * @author    Michel Hartmann <michel.hartmann@mayflower.de>
  * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   SVN: $Id$
@@ -82,22 +83,22 @@ class CbIssueHandler
     /**
      * Default constructor
      *
-     * @param CbIssueXml $cbIssueXml The cbXMLHandler object
+     * @param CbIssueXml $cbIssueXml The CbIssueXml object providing all known issues 
      */
     public function __construct (CbIssueXml $cbIssueXml, array $plugins)
     {
         $this->cbIssueXml = $cbIssueXml;
-        $this->plugins = $plugins;
+        $this->plugins    = $plugins;
     }
 
     /**
      * Get the related error elements for given $fileName.
      *
-     * @param string $fileName  The $fileName to search for, could be a mixe of
+     * @param String $fileName  The $fileName to search for, could be a mixe of
      *                          path with filename as well (e.g.
      *                          relative/path/filename.php)
      *
-     * @return SimpleXMLElement
+     * @return Array
      */
     public function getIssuesByFile($fileName)
     {
@@ -110,11 +111,16 @@ class CbIssueHandler
 
     /**
      * Build a tree of issues to be able to get issues by line number.
-     * @param array $newIssues  Issues to add
-     * @param array $oldIssues  Exisiting issues as tree.
-     * @return array
+     * 
+     * As a file could have several issues in the same line number, the
+     * structure is provided as an array of arrays.
+     * 
+     * @param Array $newIssues Issues to add
+     * @param Array $oldIssues Exisiting issues as tree.
+     * 
+     * @return Array
      */
-    protected function buildIssueTree(array $newIssues, array $oldIssues)
+    protected function buildIssueTree(Array $newIssues, Array $oldIssues)
     {
         foreach ($newIssues as $issue) {
             if (!isset($oldIssues[$issue->lineStart])) {
@@ -126,9 +132,9 @@ class CbIssueHandler
     }
 
     /**
-     * Get all the filenames with issues.
+     * Get a unique list of all filenames with issues.
      *
-     * @return array
+     * @return Array
      */
     public function getFilesWithIssues()
     {

@@ -39,9 +39,12 @@ class CbLogger
             self::$priorities[$priority],
             $message
         );
-        echo $message.PHP_EOL;
+        
+        $logMessage = sprintf('%s%s', $message, PHP_EOL);
+        echo $logMessage;
+        
         if (self::$logFile) {
-            fwrite(self::$logFile, $message.PHP_EOL);
+            fwrite(self::$logFile, $logMessage);
         }
     }
 

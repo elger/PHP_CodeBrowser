@@ -2,7 +2,7 @@
 /**
  * Plugin Abstract
  *
- * PHP Version 5.2.6
+ * PHP Version 5.3.0
  *
  * Copyright (c) 2007-2010, Mayflower GmbH
  * All rights reserved.
@@ -53,7 +53,6 @@
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
- * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
  * @author    Michel Hartmann <michel.hartmann@mayflower.de>
  * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -82,36 +81,44 @@ abstract class CbPluginsAbstract
     /**
      * Name of the attribute that holds the number of the first line
      * of the issue.
+     * 
      * @var String
      */
     protected $lineStartAttr;
+    
     /**
      * Name of the attribute that holds the number of the last line
      * of the issue.
+     * 
      * @var String
      */
     protected $lineEndAttr;
+
     /**
      * Name of the attribute that holds message of the issue.
+     * 
      * @var String
      */
     protected $descriptionAttr;
+    
     /**
      * Name of the attribute that holds severity of the issue.
+     * 
      * @var String
      */
     protected $severityAttr;
 
     /**
      * Default string to use as source for issue.
+     * 
      * @var String
      */
     protected $source;
 
     /**
-     * Constructor
+     * Default Constructor
      *
-     * @param CbIssueXml $issueXml     The cc XML document.
+     * @param CbIssueXml $issueXml The cc XML document.
      */
     public function __construct(CbIssueXml $issueXml)
     {
@@ -123,6 +130,7 @@ abstract class CbPluginsAbstract
      * error to the Issue objects format.
      *
      * @param String $filename  Name of the file to parse the errors for.
+     * 
      * @return array
      */
     public function getIssuesByFile($filename)
@@ -135,29 +143,15 @@ abstract class CbPluginsAbstract
     }
 
     /**
-     * Get all DOMNodes that represent issues for a specific file.
-     *
-     * @param String $filename      Name of the file to get nodes for.
-     * @return DOMNodeList
-     */
-    protected function getIssueNodes($filename)
-    {
-        return $this->issueXml->query(
-            '/*/'.$this->pluginName.'/file[@name="'.$filename.'"]'
-        );
-    }
-
-    /**
      * Get an array with all files that have issues.
      *
      * @return Array
      */
     public function getFilesWithIssues()
     {
-        $filenames = array();
-
+        $filenames  = array();
         $issueNodes = $this->issueXml->query(
-            '/*/'.$this->pluginName.'/file[@name]'
+            sprintf('/*/%s/file[@name]', $this->pluginName)
         );
         foreach ($issueNodes as $node) {
             $filenames[] = $node->getAttribute('name');
@@ -168,14 +162,14 @@ abstract class CbPluginsAbstract
 
     /**
      * The detailed mapper method for each single plugin, returning an array
-     * of Issue objects.
+     * of issue objects.
      * This method provides a default behaviour an can be overloaded to
      * implement special behavior for other plugins.
      *
      * @param DomNode $element  The XML plugin node with its errors
-     * @param filename          Name of the file to return issues for.
+     * @param String  $filename Name of the file to return issues for.
      *
-     * @return array            Array of issue objects.
+     * @return Array            Array of issue objects.
      */
     public function mapIssues(DomNode $element, $filename)
     {
@@ -194,6 +188,20 @@ abstract class CbPluginsAbstract
             );
         }
         return $errorList;
+    }
+    
+    /**
+     * Get all DOMNodes that represent issues for a specific file.
+     *
+     * @param String $filename      Name of the file to get nodes for.
+     * 
+     * @return DOMNodeList
+     */
+    protected function getIssueNodes($filename)
+    {
+        return $this->issueXml->query(
+            sprintf('/*/%s/file[@name="%s"]', $this->pluginName, $filename)
+        );
     }
 
     /**

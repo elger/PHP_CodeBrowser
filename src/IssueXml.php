@@ -2,7 +2,7 @@
 /**
  * Issue XML Document
  *
- * PHP Version 5.2.6
+ * PHP Version 5.3.2
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -58,7 +58,6 @@
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
- * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
  * @author    Michel Hartmann <michel.hartmann@mayflower.de>
  * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -68,36 +67,49 @@
  */
 class CbIssueXml extends DOMDocument
 {
+	/**
+	 * 
+	 * 
+	 * @var DOMXPath
+	 */
+	static $xpath;
 
     /**
      * Do not preserve white spaces.
      * @see DOMDocument
+     *
      * @var Boolean
      */
     public $preserveWhiteSpace = false;
+    
     /**
      * Provide nice output.
+     * 
      * @var Boolean
      */
     public $formatOutput = true;
 
     /**
-     * Constructor
+     * Default constructor
+     * 
+     * @param String $version  The version definitio for DomDocument
+     * @param String $encoding The used encoding for DomDocument
      */
     public function __construct($version = '1.0', $encoding = 'UTF-8')
     {
         parent::__construct($version, $encoding);
         $this->appendChild(
-            $this->createElement('cruisecontrol')
+            $this->createElement('codebrowser')
         );
     }
 
     /**
-     * Set a directory with xml files to merge
+     * Parses directory for XML report files, generating a single DomDocument 
+     * inheritting all files and issues. 
      *
-     * @param string $directory The path to directory where xml files are stored
+     * @param String $directory The path to directory where xml files are stored
      *
-     * @return CbIssueXml     This object
+     * @return CbIssueXml This object
      */
     public function addDirectory($directory)
     {
@@ -106,24 +118,31 @@ class CbIssueXml extends DOMDocument
         );
 
         foreach ($iterator as $current) {
-            if ($current->isFile()
-                && ($current->getFilename() !== $current->getBasename('.xml'))
-            ) {
-                CbLogger::log('Read file: '.realpath($current));
-                $xml = new DOMDocument('1.0', 'UTF-8');
-                $xml->validateOnParse = true;
-                if (@$xml->load(realpath($current))) {
-                    CbLogger::log('ADD file', CbLogger::PRIORITY_DEBUG);
-                    $this->addXMLFile($xml);
-                } else {
-                    CbLogger::log(
-                        'Could not read file "'.realpath($current).'"',
-                        CbLogger::PRIORITY_WARN
-                    );
-                }
-                CbLogger::log('DESTROY DOMDocument', CbLogger::PRIORITY_DEBUG);
-                unset($xml);
+            if (!$current->isFile() || ($current->getFilename() === $current->getBasename('.xml')) ) {
+                continue;	
             }
+            
+          	$realFileName = realpath($current);
+            CbLogger::log(
+                sprintf('Read file: %s', $realFileName), 
+                CbLogger::PRIORITY_DEBUG
+            );
+            $xml                  = new DOMDocument('1.0', 'UTF-8');
+            $xml->validateOnParse = true;
+            if (@$xml->load(realpath($current))) {
+                CbLogger::log(
+                    'ADD file', 
+                    CbLogger::PRIORITY_DEBUG
+                );
+                $this->addXMLFile($xml);
+            } else {
+                CbLogger::log(
+                    sprintf('Could not read file "%s"', $realFileName),
+                    CbLogger::PRIORITY_WARN
+                );
+            }
+            CbLogger::log('DESTROY DOMDocument', CbLogger::PRIORITY_DEBUG);
+            unset($xml);
         }
 
         if (!$this->documentElement->hasChildNodes()) {
@@ -137,7 +156,8 @@ class CbIssueXml extends DOMDocument
     /**
      * Add xml file to merge
      *
-     * @param DOMDocument $domDocument  The DOMDocument to merge.
+     * @param DOMDocument $domDocument The DOMDocument to merge.
+     * 
      * @return void
      */
     public function addXMLFile(DOMDocument $domDocument)
@@ -149,29 +169,35 @@ class CbIssueXml extends DOMDocument
 
     /**
      * Perform a XPath-Query on the document.
-     *
      * @see DOMXPath::query
-     * @param String $expression    xpath expression to query for.
-     * @param DOMNode $contextNode  node to use as context (optional)
-     * @return DOMNodeList          list of all matching nodes.
+     * 
+     * @param String  $expression  Xpath expression to query for.
+     * @param DOMNode $contextNode Node to use as context (optional)
+     * 
+     * @return DOMNodeList         List of all matching nodes.
      */
     public function query($expression, DOMNode $contextNode = null)
     {
-        $start = microtime(true);
-        static $xpath;
-        if (!isset($xpath)) {
-            $xpath = new DOMXPath($this);
+        PHP_Timer::start();
+        if (!isset(self::$xpath)) {
+            self::$xpath = new DOMXPath($this);
         }
 
         if ($contextNode) {
-            $result = $xpath->query($expression, $contextNode);
+            $result = self::$xpath->query($expression, $contextNode);
         } else {
-            $result = $xpath->query($expression);
+            $result = self::$xpath->query($expression);
         }
-        if (microtime(true)-$start > 0.1) {
-            CbLogger::log('XPATH: '.$expression
-                .($contextNode ? ' on '.$contextNode->getNodePath() : '')
-                .' '.round((microtime(true)-$start), 2).'s');
+        
+        $queryRunTime = PHP_Timer::stop();
+        if ($queryRunTime > 0.1) {
+            CbLogger::log(
+                sprintf('XPATH: %s %s %ds', 
+                        $expression, 
+                        ($contextNode ? sprintf(' on %s', $contextNode->getNodePath()) : ''),
+                        $queryRunTime),
+                CbLogger::PRIORITY_DEBUG
+            );
         }
         return $result;
     }
