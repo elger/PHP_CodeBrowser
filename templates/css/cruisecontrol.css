@@ -101,14 +101,14 @@ body.codebrowser {
     background-color: #FF6666;
 }
 
-.codebrowser .Checkstyle {
+ .Checkstyle {
 	background-color: #FFF2BF;
 }
 
-.codebrowser .NPathComplexity {
+ .NPathComplexity {
 	background-color: #E6FF80;
 }
-.codebrowser .Padawan {
+ .Padawan {
     background-color: #E6FF80;
 }
 .codebrowser .CRAP {
@@ -174,72 +174,7 @@ body.codebrowser {
 	background-color: #F3F3F0;
 }
 
-.codebrowser table {
-	width: 100%;
-	background-color: #FFFFFF;
-	border: 1px solid #d3d3d0;
-}
 
-.codebrowser table td {
-	vertical-align: top;
-}
-
-.codebrowser table tr.head td {
-	background-color: #fff;
-	height: 25px;
-	border-bottom: solid 1px #BABDB6;
-}
-
-.codebrowser table tr {
-	background-color: #FFFFFF;
-}
-
-.codebrowser table tr.oddrow td {
-	background-color: #EEEEEC;
-}
-
-.codebrowser ol.code {
-	width: 99%;
-	margin: 15px;
-	padding: 0;
-	font-size: 0.75em;
-	line-height: 1.8em;
-	color: #939399;
-	text-align: left;
-	border: 1px solid #d3d3d0;
-	height: 99%;
-	list-style: none;
-}
-
-.codebrowser ol.code li {
-	white-space: nowrap;
-	margin: 0;
-	padding: 0 0 0 1%;
-	color: #4E4E4E;
-}
-
-.codebrowser ol.code li {
-	margin: 0;
-	padding: 0;
-}
-
-.codebrowser ol.code ul {
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-	
-.codebrowser ol.code li a {
-
-}
-
-.codebrowser ol.code li.even {
-	background: #f3f3f0;
-}
-
-.codebrowser ol.code li.white {
-	background: #FFFFFF;
-}
 
 .codebrowser ol.code li.transparent {
 	background-color: transparent;
