@@ -36,7 +36,7 @@ class CbViewReview extends CbViewAbstract
         $shortFilename = substr($fileName, strlen($commonPathPrefix));
 
         $data['issues']   = $issueList;
-        $data['title']    = 'Code Browser - ViewReview View';
+        $data['title']    = 'Code Browser - Review View';
         $data['filepath'] = $shortFilename;
         $data['csspath']  = '';
         $data['source']   = $this->_formatSourceCode($fileName, $issues);
