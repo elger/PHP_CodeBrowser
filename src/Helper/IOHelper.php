@@ -74,13 +74,13 @@ class CbIOHelper
      *
      * @return void
      */
-    public function createFile($fileName, $fileContent)
+    public static function createFile($fileName, $fileContent)
     {
         $realName = basename($fileName);
         $path     = substr($fileName, 0, - 1 * (strlen($realName)));
 
         if (!empty($path)) {
-            $this->createDirectory($path);
+            self::createDirectory($path);
         }
         file_put_contents(realpath($path) . '/' . $realName, $fileContent);
     }
@@ -94,7 +94,7 @@ class CbIOHelper
      *
      * @return void
      */
-    public function deleteFile($fileName)
+    public static function deleteFile($fileName)
     {
         if (file_exists($fileName)) {
             unlink($fileName);
@@ -111,14 +111,14 @@ class CbIOHelper
      * @return return void
      * @throws Exception
      */
-    public function copyFile($fileSource, $sourceFolder)
+    public static function copyFile($fileSource, $sourceFolder)
     {
         if (!file_exists($fileSource)) {
             throw new Exception('File ' . $fileSource . ' does not exists!');
         }
 
         $fileName = basename($fileSource);
-        $this->createFile(
+        self::createFile(
             $sourceFolder . '/' . $fileName, self::loadFile($fileSource)
         );
     }
@@ -131,7 +131,7 @@ class CbIOHelper
      * @return string
      * @throws Exception
      */
-    public function loadFile($fileName)
+    public static function loadFile($fileName)
     {
         if (!file_exists($fileName)) {
             throw new Exception('File ' . $fileName . ' does not exist!');
@@ -147,7 +147,7 @@ class CbIOHelper
      *
      * @return void
      */
-    public function createDirectory($target)
+    public static function createDirectory($target)
     {
         if (DIRECTORY_SEPARATOR == substr($target, - 1, 1)) {
             $target = substr($target, 0, -1);
@@ -170,7 +170,7 @@ class CbIOHelper
      * @return void
      * @throws Exception
      */
-    public function deleteDirectory($source)
+    public static function deleteDirectory($source)
     {
         $iterator = new DirectoryIterator($source);
         while ($iterator->valid()) {
@@ -179,12 +179,12 @@ class CbIOHelper
 
             // delete file
             if ($iterator->isFile()) {
-                $this->deleteFile($src);
+                self::deleteFile($src);
             }
 
             // delete folder recursive
             if (! $iterator->isDot() && $iterator->isDir()) {
-                $this->deleteDirectory($src);
+                self::deleteDirectory($src);
             }
 
             $iterator->next();
@@ -206,10 +206,10 @@ class CbIOHelper
      *
      * @return void
      */
-    public function copyDirectory($source, $target, $exclude = array())
+    public static function copyDirectory($source, $target, $exclude = array())
     {
         // first check for target itself
-        $this->createDirectory($target);
+        self::createDirectory($target);
         $iterator = new DirectoryIterator($source);
         while ($iterator->valid()) {
 
@@ -217,7 +217,7 @@ class CbIOHelper
 
             // create new file
             if ($iterator->isFile()) {
-                $this->copyFile($source . '/' . $item, $target);
+                self::copyFile($source . '/' . $item, $target);
             }
 
             // create folder recursive
@@ -225,7 +225,7 @@ class CbIOHelper
                 && $iterator->isDir()
                 && !in_array($item, $exclude)
             ) {
-                $this->copyDirectory($source . '/' . $item, $target . '/' . $item);
+                self::copyDirectory($source . '/' . $item, $target . '/' . $item);
             }
             $iterator->next();
         }

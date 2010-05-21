@@ -51,14 +51,14 @@ if (strpos('@php_dir@', '@php_dir') === false) {
         define('PHPCB_ROOT_DIR', '@php_dir@/PHP_CodeBrowser');
     }
     if (!defined('PHPCB_TEMPLATE_DIR')) {
-        define('PHPCB_TEMPLATE_DIR', '@data_dir@/PHP_CodeBrowser/views/templates');
+        define('PHPCB_TEMPLATE_DIR', '@data_dir@/PHP_CodeBrowser/templates');
     }
 } else {
     if (!defined('PHPCB_ROOT_DIR')) {
         define('PHPCB_ROOT_DIR', dirname(__FILE__) . '/../');
     }
     if (!defined('PHPCB_TEMPLATE_DIR')) {
-        define('PHPCB_TEMPLATE_DIR', dirname(__FILE__) . '/../src/views/templates');
+        define('PHPCB_TEMPLATE_DIR', dirname(__FILE__) . '/../templates');
     }
 }
 
@@ -199,9 +199,8 @@ class CbCLIController
     public function run()
     {
         // init needed classes
-        $cbIOHelper    = new CbIOHelper();
         $cbIssueXml    = new CbIssueXml();
-        $cbViewReview  = new CbViewReview($cbIOHelper);
+        $cbViewReview  = new CbViewReview();
 
         $cbViewReview->setOutputDir($this->_htmlOutputDir);
         
@@ -211,17 +210,14 @@ class CbCLIController
         $cbViewReview->setTemplateDir(PHPCB_TEMPLATE_DIR);
 
         // clear and create output directory
-        /**
-         * @TODO inherit deletion of directory in creation method as in 
-         *       case of creation i need a emtpy directory
-         */
-        $cbIOHelper->deleteDirectory($this->_htmlOutputDir);
-        $cbIOHelper->createDirectory($this->_htmlOutputDir);
+        CbIOHelper::deleteDirectory($this->_htmlOutputDir);
+        CbIOHelper::createDirectory($this->_htmlOutputDir);
 
         CbLogger::log('Load XML files', CbLogger::PRIORITY_DEBUG);
         
         // merge xml files
         $cbIssueXml->addDirectory($this->_logDir);
+        
         CbLogger::log('Load Plugins', CbLogger::PRIORITY_DEBUG);
 
         // conversion of XML file cc to cb format
@@ -232,6 +228,7 @@ class CbCLIController
 
         $issueHandler = new CbIssueHandler($cbIssueXml, $plugins);
         $files        = $issueHandler->getFilesWithIssues();
+        
         CbLogger::log(sprintf('Found %d files with issues.', count($files)), CbLogger::PRIORITY_INFO);
 
         /**
@@ -250,7 +247,7 @@ class CbCLIController
         foreach($fileIterator as $file) {
             if (in_array($file, $files)) {
                 CbLogger::log(
-                    sprintf('Get issues for "%s"', substr($file, strlen($commonPathPrefix))),
+                    sprintf('Get issues for "...%s"', substr($file, strlen($commonPathPrefix))),
                     CbLogger::PRIORITY_DEBUG
                 );
                 $issues = $issueHandler->getIssuesByFile($file);
@@ -258,20 +255,21 @@ class CbCLIController
                 $issues = array();
             }
 
+            // @TODO Timer::start() only for logging check performace and remove if neccessary 
+            PHP_Timer::start(); 
             CbLogger::log(
-                // PHP_Timer::start() does not have any return value but we only will init
-                // it in case of DEBUGGING 
-                sprintf('Generating source view for [%s] %s...', $file, PHP_Timer::start()),
+                sprintf('Generating source view for [...%s]', $file),
                 CbLogger::PRIORITY_DEBUG
             );
+            
             $cbViewReview->generate($issues, $file, $commonPathPrefix);
+            
             CbLogger::log(
                 sprintf('completed in %s', PHP_Timer::stop()), 
                 CbLogger::PRIORITY_DEBUG
             );
 
         }
-        
         // Copy needed ressources (eg js libraries) to output directory 
         $cbViewReview->copyRessourceFolders(true);
     }
@@ -286,9 +284,6 @@ class CbCLIController
     {
         PHP_Timer::start();
         
-        // TODO: set loglevel via script parameters
-        CbLogger::setLogLevel(CbLogger::PRIORITY_DEBUG);
-        
         $xmlLogDir    = null;
         $sourceFolder = null;
         $htmlOutput   = null;
@@ -296,6 +291,9 @@ class CbCLIController
         // register autoloader
         spl_autoload_register(array(new CbAutoloader(), 'autoload'));
 
+        // TODO: set loglevel via script parameters
+        CbLogger::setLogLevel(CbLogger::PRIORITY_DEBUG);
+        
         $argv = $_SERVER['argv'];
         foreach ($argv as $key => $argument) {
             switch ($argument) {
