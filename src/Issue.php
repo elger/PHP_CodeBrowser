@@ -56,7 +56,6 @@
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
- * @author    Christopher Weckerle <christopher.weckerle@mayflower.de>
  * @author    Michel Hartmann <michel.hartmann@mayflower.de>
  * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
@@ -112,12 +111,12 @@ class CbIssue
     /**
      * Default constructor
      *
-     * @param string $fileName    The source file name the issue was found in. 
-     * @param string $lineStart   The starting line of the issue.
-     * @param string $lineEnd     The ending line of registered issue.
-     * @param string $foundBy     The plugin name definition.
-     * @param string $description The description of the issue.
-     * @param string $severity
+     * @param String $fileName    The source file name the issue was found in. 
+     * @param String $lineStart   The starting line of the issue.
+     * @param String $lineEnd     The ending line of registered issue.
+     * @param String $foundBy     The plugin name definition.
+     * @param String $description The description of the issue.
+     * @param String $severity    
      */
     public function __construct($fileName, $lineStart, $lineEnd, $foundBy, $description, $severity)
     {
@@ -129,5 +128,4 @@ class CbIssue
         $this->severity    = $severity;
 
     }
-
 }

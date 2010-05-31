@@ -3,19 +3,19 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>
-            Mayflower Code Browser
+            Mayflower Code Browser - Folder Tree
         </title>
-        <link rel="stylesheet" type="text/css" href="./<?php print $csspath; ?>js/jquery.sidebar/css/codebrowser/sidebar.css" />
+<!--        <link rel="stylesheet" type="text/css" href="./<?php print $csspath; ?>js/jquery.sidebar/css/codebrowser/sidebar.css" />-->
         <link rel="stylesheet" type="text/css" href="./<?php print $csspath; ?>css/cruisecontrol.css" />
-        <link rel="stylesheet" type="text/css" href="./<?php print $csspath; ?>css/review.css" />
+<!--        <link rel="stylesheet" type="text/css" href="./<?php print $csspath; ?>css/review.css" />-->
         
-        <script type="text/javascript" src="./<?php print $csspath; ?>js/review.js"></script>
-        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.sidebar/jquery-1.4.min.js"></script>
-        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.sidebar/jquery-ui-1.7.2.custom.min.js"></script>
-        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.sidebar/jquery.sidebar.js"></script>
-        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.cluetip/lib/jquery.hoverIntent.js"></script>
-        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.cluetip/lib/jquery.bgiframe.min.js"></script>
-        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.cluetip/jquery.cluetip.js"></script>
+<!--        <script type="text/javascript" src="./<?php print $csspath; ?>js/review.js"></script>-->
+<!--        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.sidebar/jquery-1.4.min.js"></script>-->
+<!--        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.sidebar/jquery-ui-1.7.2.custom.min.js"></script>-->
+<!--        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.sidebar/jquery.sidebar.js"></script>-->
+<!--        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.cluetip/lib/jquery.hoverIntent.js"></script>-->
+<!--        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.cluetip/lib/jquery.bgiframe.min.js"></script>-->
+<!--        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.cluetip/jquery.cluetip.js"></script>-->
         
     </head>
     <body class="codebrowser">

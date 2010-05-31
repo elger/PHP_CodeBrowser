@@ -137,6 +137,7 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
     protected function tearDown()
     {
         parent::tearDown();
+        
         $this->_cleanUp(PHPCB_TEST_OUTPUT);
         rmdir(PHPCB_TEST_OUTPUT);
     }
@@ -149,8 +150,8 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
      */
     protected function _getMockXMLHandler()
     {
-        $functions = array('loadXML', 'countItems', 'saveXML');
-        $params = array($this->_getMockFDHandler());
+        $functions      = array('loadXML', 'countItems', 'saveXML');
+        $params         = array($this->_getMockFDHandler());
         $mockXMLHandler = $this->getMock('CbXMLHandler', $functions, $params);
 
         return $mockXMLHandler;

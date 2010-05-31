@@ -3,7 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <title>
-            Mayflower Code Browser
+            Mayflower Code Browser - Source Code
         </title>
         <link rel="stylesheet" type="text/css" href="./<?php print $csspath; ?>js/jquery.sidebar/css/codebrowser/sidebar.css" />
         <link rel="stylesheet" type="text/css" href="./<?php print $csspath; ?>css/cruisecontrol.css" />

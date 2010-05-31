@@ -45,7 +45,7 @@
  * @since      File available since 1.0
  */
 
-if (!defined('PHPCB_ROOT_DIR')) define('PHPCB_ROOT_DIR', dirname( __FILE__ ) . '/../');
+if (!defined('PHPCB_ROOT_DIR')) define('PHPCB_ROOT_DIR', realpath(dirname( __FILE__ ) . '/../'));
 if (!defined('PHPCB_SOURCE')) define('PHPCB_SOURCE', realpath(PHPCB_ROOT_DIR) . '/src');
 if (!defined('PHPCB_TEST_DIR')) define('PHPCB_TEST_DIR', realpath(PHPCB_ROOT_DIR) . '/tests/testData');
 if (!defined('PHPCB_TEST_OUTPUT')) define('PHPCB_TEST_OUTPUT', PHPCB_TEST_DIR . '/output');
@@ -56,18 +56,18 @@ require_once 'PHPUnit/Framework/TestSuite.php';
 require_once 'PHPUnit/TextUI/TestRunner.php';
 require_once 'PHPUnit/Util/Filter.php';
 
-require_once dirname( __FILE__ ) . '/src/JSGeneratorTest.php';
-require_once dirname( __FILE__ ) . '/src/HTMLGeneratorTest.php';
-require_once dirname( __FILE__ ) . '/src/ErrorHandlerTest.php';
-require_once dirname( __FILE__ ) . '/src/XMLGeneratorTest.php';
-require_once dirname( __FILE__ ) . '/src/XMLHandlerTest.php';
-require_once dirname( __FILE__ ) . '/src/FDHandlerTest.php';
-require_once dirname( __FILE__ ) . '/src/PluginErrorTest.php';
-
-require_once dirname( __FILE__ ) . '/src/Plugins/ErrorPMDTest.php';
-require_once dirname( __FILE__ ) . '/src/Plugins/ErrorCPDTest.php';
-require_once dirname( __FILE__ ) . '/src/Plugins/ErrorCheckstyleTest.php';
-require_once dirname( __FILE__ ) . '/src/Plugins/ErrorPadawanTest.php';
+//require_once dirname( __FILE__ ) . '/src/JSGeneratorTest.php';
+//require_once dirname( __FILE__ ) . '/src/HTMLGeneratorTest.php';
+//require_once dirname( __FILE__ ) . '/src/ErrorHandlerTest.php';
+//require_once dirname( __FILE__ ) . '/src/XMLGeneratorTest.php';
+//require_once dirname( __FILE__ ) . '/src/XMLHandlerTest.php';
+//require_once dirname( __FILE__ ) . '/src/FDHandlerTest.php';
+//require_once dirname( __FILE__ ) . '/src/PluginErrorTest.php';
+//
+//require_once dirname( __FILE__ ) . '/src/Plugins/ErrorPMDTest.php';
+//require_once dirname( __FILE__ ) . '/src/Plugins/ErrorCPDTest.php';
+//require_once dirname( __FILE__ ) . '/src/Plugins/ErrorCheckstyleTest.php';
+//require_once dirname( __FILE__ ) . '/src/Plugins/ErrorPadawanTest.php';
 
 PHPUnit_Util_Filter::addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
 
@@ -94,21 +94,23 @@ class CbAllTests extends PHPUnit_Framework_TestSuite
         spl_autoload_register( array( new CbAutoloader(), 'autoload' ) );
 
         $this->setName('AllTests');
+        // TODO set a directory filter 
 
         // source
-        $this->addTestSuite('CbFDHandlerTest');
-        $this->addTestSuite('CbXMLHandlerTest');
-        $this->addTestSuite('CbXMLGeneratorTest');
-        $this->addTestSuite('CbErrorHandlerTest');
-        $this->addTestSuite('CbPluginErrorTest');
-        $this->addTestSuite('CbHTMLGeneratorTest');
-        $this->addTestSuite('CbJSGeneratorTest');
-
-        // plugins
-        $this->addTestSuite('CbErrorPMDTest');
-        $this->addTestSuite('CbErrorCPDTest');
-        $this->addTestSuite('CbErrorCheckstyleTest');
-        $this->addTestSuite('CbErrorPadawanTest');
+        $this->addTestSuite('CbIssueTest');
+//        $this->addTestSuite('CbFDHandlerTest');
+//        $this->addTestSuite('CbXMLHandlerTest');
+//        $this->addTestSuite('CbXMLGeneratorTest');
+//        $this->addTestSuite('CbErrorHandlerTest');
+//        $this->addTestSuite('CbPluginErrorTest');
+//        $this->addTestSuite('CbHTMLGeneratorTest');
+//        $this->addTestSuite('CbJSGeneratorTest');
+//
+//        // plugins
+//        $this->addTestSuite('CbErrorPMDTest');
+//        $this->addTestSuite('CbErrorCPDTest');
+//        $this->addTestSuite('CbErrorCheckstyleTest');
+//        $this->addTestSuite('CbErrorPadawanTest');
     }
 
     /**

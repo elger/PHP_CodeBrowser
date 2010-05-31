@@ -294,6 +294,7 @@ class CbCLIController
         // TODO: set loglevel via script parameters
         CbLogger::setLogLevel(CbLogger::PRIORITY_DEBUG);
         
+        // TODO: refactor argument parser
         $argv = $_SERVER['argv'];
         foreach ($argv as $key => $argument) {
             switch ($argument) {
@@ -357,20 +358,23 @@ class CbCLIController
      */
     public static function printHelp()
     {
-        $help = sprintf(
-            "Usage: phpcb --log <dir> --output <dir> [--source <dir>] [--logfile <dir>]
+        print "<<<USAGE
+Usage: phpcb --log <dir> --output <dir> [--source <dir>] [--logfile <dir>]
 
-            PHP_CodeBrowser arguments:
-            \t--log <dir>      \t\tThe path to the xml log files, e.g. generated from phpunit.
-            \t--output <dir>   \t\tPath to the output folder where generated files should be stored.
-            \t--source <dir> (opt)   \tPath to the project source code. Parse complete source directory
-                                \t\t\t\tif is set, else only files from logs.
-            \t--logfile <dir> (opt) \tPath of the file to use for logging the output.
+PHP_CodeBrowser arguments:
+--log <dir>             The path to the xml log files, e.g. generated from phpunit.
+--output <dir>          Path to the output folder where generated files should be stored.
+--source <dir>   (opt)  Path to the project source code. Parse complete source directory
+                        is set, else only files found in logs.
+--log-file <dir> (opt)  Path of the file to use for logging the output.
+--log-level
 
-            General arguments:
-            \t--help           \t\t\tPrint this help.\n\n"
-        );
-        echo str_replace("  ", "", $help);
+General arguments:
+--help                  Print this help.
+--version               Print actual verison.
+
+USAGE";
+        
         exit();
     }
 
@@ -381,10 +385,10 @@ class CbCLIController
      */
     public static function printVersion()
     {
-        $help = sprintf(
-            "PHP_CodeBrowser by Mayflower GmbH\n\n"
-        );
-        echo str_replace("  ", "", $help);
+        print "<<<USAGE
+PHP_CodeBrowser by Mayflower GmbH
+Version 1.2  21.Mai.2010 
+USAGE";
         exit();
     }
 }
