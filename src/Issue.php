@@ -111,12 +111,12 @@ class CbIssue
     /**
      * Default constructor
      *
-     * @param String $fileName    The source file name the issue was found in. 
-     * @param String $lineStart   The starting line of the issue.
-     * @param String $lineEnd     The ending line of registered issue.
-     * @param String $foundBy     The plugin name definition.
-     * @param String $description The description of the issue.
-     * @param String $severity    
+     * @param String  $fileName    The source file name the issue was found in. 
+     * @param Integer $lineStart   The starting line of the issue.
+     * @param Integer $lineEnd     The ending line of registered issue.
+     * @param String  $foundBy     The plugin name definition.
+     * @param String  $description The description of the issue.
+     * @param String  $severity    
      */
     public function __construct($fileName, $lineStart, $lineEnd, $foundBy, $description, $severity)
     {
