@@ -63,11 +63,11 @@ require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
 class CbIssueHandlerTest extends CbAbstractTests
 {
     /**
-     * Issue object to test
+     * IssueHandler object to test
      *
-     * @var cbIssue
+     * @var cbIssueHandler
      */
-    protected $_cbIssue;
+    protected $_cbIssueHandler;
 
     /**
      * (non-PHPdoc)
