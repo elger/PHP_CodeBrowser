@@ -77,13 +77,19 @@ class CbSourceIteratorTest extends CbAbstractTests
     protected $_srcPath;
 
     /**
+     * Initialize variables
+     */
+    public function __construct() {
+        $this->_srcPath = realpath(dirname(__FILE__) . '/../testData/src/');
+    }
+
+    /**
      * (non-PHPdoc)
      * @see tests/cbAbstractTests#setUp()
      */
     protected function setUp()
     {
         parent::setUp();
-        $this->_srcPath = realpath(dirname(__FILE__) . '/../testData/src/');
         $this->_cbSourceIterator = new CbSourceIterator($this->_srcPath);
     }
 
