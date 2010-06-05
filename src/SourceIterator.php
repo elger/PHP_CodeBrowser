@@ -112,6 +112,4 @@ class CbSourceIterator extends FilterIterator
     {
         return parent::current()->getRealPath();
     }
-
-
 }
