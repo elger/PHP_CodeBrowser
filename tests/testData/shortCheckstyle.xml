@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="1.2.0RC3">
+ <file name="/opt/cruisecontrol/projects/phpcb/source/src/JSGenerator.php">
+  <error line="37" column="1" severity="error" message="m1" source="PEAR.Commenting.FileCommentSniff"/>
+  <error line="38" column="1" severity="error" message="m2" source="PEAR.Commenting.FileCommentSniff"/>
+ </file>
+ <file name="/opt/cruisecontrol/projects/phpcb/source/src/AnotherFile.php">
+  <error line="39" column="1" severity="error" message="m3" source="PEAR.Commenting.FileCommentSniff"/>
+  <error line="40" column="1" severity="error" message="m4" source="PEAR.Commenting.FileCommentSniff"/>
+ </file>
+</checkstyle>

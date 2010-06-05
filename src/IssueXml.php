@@ -47,6 +47,8 @@
  * @since     File available since 1.0
  */
 
+require_once 'PHP/Timer.php';
+
 /**
  * CbIssueXML
  *
