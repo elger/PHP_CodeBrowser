@@ -72,7 +72,6 @@ class CbIOHelperTest extends CbAbstractTests
         if (!$this->_testDir) {
             $this->fail('Could not find tests/testData directory.');
         }
-        echo 'fooo';
     }
 
     /**
