@@ -201,7 +201,6 @@ class CbViewReviewTest extends CbAbstractTests
      */
     public function test__generateUnknownType()
     {
-        //asdasdfbsdaffffffffffffffffffffffffffffffffffffffff ffffffffffffffo ybwefosbadfbsa dofybsadfybsaoeyb rfebfyualsdfbal sdyhbfowureybfo sakldhybfvzxkl jchvbapoyeiwrg fqoweyfhbsaldvc ubasodfybsaeyofb wqeyrfbqwodfuiyb xcavoukyhadbpwey rfqweifubansdlfiyb
         $prefix = realpath(dirname(__FILE__) . '/../../testData/');
         $file = realpath($prefix . '/basic.xml');
         if (!$file || !$prefix) {
@@ -221,6 +220,21 @@ class CbViewReviewTest extends CbAbstractTests
 
         $this->_cbViewReview->generate($issueList, $file, $prefix);
         $this->assertTrue(file_exists($this->_outDir . '/basic.xml.html'));
+    }
+
+    /**
+     * Test if the ressource folders are copied.
+     *
+     * @return void
+     */
+    public function test__copyRessourceFolders()
+    {
+        $this->_cbViewReview->copyRessourceFolders();
+
+        $this->assertTrue(file_exists($this->_outDir . '/img/'));
+        $this->assertTrue(file_exists($this->_outDir . '/js/'));
+        $this->assertTrue(file_exists($this->_outDir . '/css/'));
+        $this->assertTrue(file_exists($this->_outDir . '/index.html'));
     }
 
     /**
