@@ -70,14 +70,14 @@ class CbViewReview extends CbViewAbstract
 {
     /**
      * Highlight mapping.
-     * 
+     *
      * @var Array
      */
     protected $phpHighlightColorMap;
 
     /**
      * Default constructor
-     * 
+     *
      * Highlighting strings are set.
      */
     public function __construct()
@@ -93,17 +93,17 @@ class CbViewReview extends CbViewAbstract
 
     /**
      * Generating the Html code browser view for a given file.
-     * 
+     *
      * Issuelist for each file will be marked in source code.
      * Source code is highlighted.
-     * Generated Html source code is be saved as Html. 
-     * 
+     * Generated Html source code is be saved as Html.
+     *
      * @param Qrray  $issueList        The issue list for given file
      * @param String $filePath         The path to file the should be generated
      * @param String $commonPathPrefix The prefix path all given files have in common
-     * 
+     *
      * @return void
-     * 
+     *
      * @see self::_formatIssues
      * @see self::_formatSourceCode
      * @see self::_generateJSCode
@@ -124,7 +124,7 @@ class CbViewReview extends CbViewAbstract
 
         $dataGenerate['title']   = $data['title'];
         $dataGenerate['csspath'] = $data['csspath'];
-        
+
         CbIOHelper::createFile(
             $this->_outputDir . DIRECTORY_SEPARATOR . $shortFilename . '.html',
             $this->_render('review', $data)
@@ -134,9 +134,9 @@ class CbViewReview extends CbViewAbstract
 
     /**
      * Generating JavaScript code like tooltip, etc., for each issue line.
-     * 
+     *
      * @param Array $issueList The issue list as array of arrays
-     * 
+     *
      * @return String
      */
     private function _grenerateJSCode(Array $issueList)
@@ -158,14 +158,14 @@ class CbViewReview extends CbViewAbstract
     }
 
     /**
-     * Source code is highlighted an formatted. 
-     * 
+     * Source code is highlighted an formatted.
+     *
      * Besides highlighting, whole lines will be marked with different colors
      * and JQuery functions (like tooltips) are integrated.
      *
      * @param String $filename     The file to format
      * @param Array  $outputIssues Sorted issueList by line number
-     * 
+     *
      * @return String Html formatted string
      */
     private function _formatSourceCode($filename, $outputIssues)
@@ -173,7 +173,7 @@ class CbViewReview extends CbViewAbstract
         $sourceDom  = $this->_highlightCode($filename);
         $xpath      = new DOMXPath($sourceDom);
         $lines      = $xpath->query('//ol/li');
-        
+
         $lineNumber = 0;
         foreach ($lines as $line) {
             ++$lineNumber;
@@ -191,7 +191,7 @@ class CbViewReview extends CbViewAbstract
                         $issue->foundBy,
                         $issue->foundBy,
                         $issue->description
-                    ); 
+                    );
                 }
                 $line->setAttribute('title', utf8_encode($message));
             }
@@ -207,16 +207,16 @@ class CbViewReview extends CbViewAbstract
 
             // set li css class depending on line errors
             switch ($tmp = (isset($outputIssues[$lineNumber]) ? count($outputIssues[$lineNumber]) : 0)) {
-            	case 0 :
-            		break;
-            	case 1 :
-            		$lineClasses[] = $outputIssues[$lineNumber][0]->foundBy;
-            		break;
-            	case 1 < $tmp :
-            		$lineClasses[] = 'moreErrors';
-            		break;
-            	default:
-            		break;
+                case 0 :
+                    break;
+                case 1 :
+                    $lineClasses[] = $outputIssues[$lineNumber][0]->foundBy;
+                    break;
+                case 1 < $tmp :
+                    $lineClasses[] = 'moreErrors';
+                    break;
+                default:
+                    break;
             }
             $line->setAttribute('class', implode(' ', $lineClasses));
         }
@@ -225,13 +225,13 @@ class CbViewReview extends CbViewAbstract
 
     /**
      * Highlighter method for PHP source code
-     * 
+     *
      * The source code is highlighted by PHP native method.
-     * Afterwords a DOMDocument will be generated with each 
+     * Afterwords a DOMDocument will be generated with each
      * line in a seperate node.
-     * 
+     *
      * @param String $sourceCode The PHP source code
-     * 
+     *
      * @return DOMDocument
      */
     protected function _highlightPhpCode($sourceCode)
@@ -275,7 +275,7 @@ class CbViewReview extends CbViewAbstract
             );
 
             foreach ($sourceElement->childNodes as $sourceChildElement) {
-                if ($sourceChildElement instanceof DOMElement 
+                if ($sourceChildElement instanceof DOMElement
                 && 'br' === $sourceChildElement->tagName) {
                     // create new li and new line
                     $li = $targetDom->createElement('li');
@@ -295,9 +295,9 @@ class CbViewReview extends CbViewAbstract
 
     /**
      * Return colors defined in ini files.
-     *  
+     *
      * @param String $style The given style name, e.g. "comment"
-     * 
+     *
      * @return String
      */
     protected function _mapPhpColors($style)
@@ -308,13 +308,13 @@ class CbViewReview extends CbViewAbstract
 
     /**
      * Highlighting source code of given file.
-     * 
+     *
      * Php code is using native php highlighter.
-     * If PEAR Text_Highlighter is installed all defined files in $highlightMap 
+     * If PEAR Text_Highlighter is installed all defined files in $highlightMap
      * will be highlighted as well.
-     * 
+     *
      * @param String $file The filename / realpath to file
-     * 
+     *
      * @return String Html representation of parsed source code
      */
     protected function _highlightCode($file)
@@ -377,9 +377,9 @@ class CbViewReview extends CbViewAbstract
     /**
      * Sorting a list of issues combining issues matching same line number
      * for each file.
-     * 
+     *
      * @param Array $issueList List of issues
-     * 
+     *
      * @return Array
      */
     private function _formatIssues($issueList)
