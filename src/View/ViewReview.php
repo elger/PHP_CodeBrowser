@@ -110,10 +110,6 @@ class CbViewReview extends CbViewAbstract
      */
     public function generate(Array $issueList, $fileName, $commonPathPrefix)
     {
-        if (!is_array($issueList)) {
-            throw new Exception('Wrong data format for error list!');
-        }
-
         $issues           = $this->_formatIssues($issueList);
         $shortFilename    = substr($fileName, strlen($commonPathPrefix));
         $data['issues']   = $issueList;
