@@ -102,6 +102,7 @@ class CbAllTests extends PHPUnit_Framework_TestSuite
         $this->addTestSuite('CbSourceIteratorTest');
         $this->addTestSuite('CbIOHelperTest');
         $this->addTestSuite('CbLoggerTest');
+        $this->addTestSuite('CbViewReviewTest');
 //        $this->addTestSuite('CbFDHandlerTest');
 //        $this->addTestSuite('CbXMLHandlerTest');
 //        $this->addTestSuite('CbXMLGeneratorTest');
