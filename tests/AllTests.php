@@ -96,26 +96,27 @@ class CbAllTests extends PHPUnit_Framework_TestSuite
         $this->setName('AllTests');
         // TODO set a directory filter 
 
-        // source
-        $this->addTestSuite('CbIssueTest');
+        // tests/src
         $this->addTestSuite('CbIssueHandlerTest');
+        $this->addTestSuite('CbIssueTest');
         $this->addTestSuite('CbSourceIteratorTest');
+
+        // tests/src/Helper
         $this->addTestSuite('CbIOHelperTest');
+
+        // tests/src/Plugins
+        //TODO: Rewrite these
+        //$this->addTestSuite('CbErrorCPDTest');
+        //$this->addTestSuite('CbErrorCheckstyleTest');
+        //$this->addTestSuite('CbErrorPMDTest');
+        //$this->addTestSuite('CbErrorPadawanTest');
+
+        // tests/src/Util
+        //$this->addTestSuite('CbAutoloaderTest');
         $this->addTestSuite('CbLoggerTest');
+
+        // tests/src/View
         $this->addTestSuite('CbViewReviewTest');
-//        $this->addTestSuite('CbFDHandlerTest');
-//        $this->addTestSuite('CbXMLHandlerTest');
-//        $this->addTestSuite('CbXMLGeneratorTest');
-//        $this->addTestSuite('CbErrorHandlerTest');
-//        $this->addTestSuite('CbPluginErrorTest');
-//        $this->addTestSuite('CbHTMLGeneratorTest');
-//        $this->addTestSuite('CbJSGeneratorTest');
-//
-//        // plugins
-//        $this->addTestSuite('CbErrorPMDTest');
-//        $this->addTestSuite('CbErrorCPDTest');
-//        $this->addTestSuite('CbErrorCheckstyleTest');
-//        $this->addTestSuite('CbErrorPadawanTest');
     }
 
     /**
