@@ -74,7 +74,7 @@ class CbIssueXml extends DOMDocument
 	 * 
 	 * @var DOMXPath
 	 */
-	static $xpath;
+	protected $_xpath;
 
     /**
      * Do not preserve white spaces.
@@ -181,14 +181,14 @@ class CbIssueXml extends DOMDocument
     public function query($expression, DOMNode $contextNode = null)
     {
         PHP_Timer::start();
-        if (!isset(self::$xpath)) {
-            self::$xpath = new DOMXPath($this);
+        if (!isset($this->_xpath)) {
+            $this->_xpath = new DOMXPath($this);
         }
 
         if ($contextNode) {
-            $result = self::$xpath->query($expression, $contextNode);
+            $result = $this->_xpath->query($expression, $contextNode);
         } else {
-            $result = self::$xpath->query($expression);
+            $result = $this->_xpath->query($expression);
         }
         
         $queryRunTime = PHP_Timer::stop();
