@@ -97,15 +97,16 @@ class CbAllTests extends PHPUnit_Framework_TestSuite
         // TODO set a directory filter 
 
         // tests/src
-        $this->addTestSuite('CbIssueHandlerTest');
+        $this->addTestSuite('CbCLIControllerTest');
         $this->addTestSuite('CbIssueTest');
+        $this->addTestSuite('CbIssueHandlerTest');
+        //$this->addTestSuite('CbIssueXmlTest');
         $this->addTestSuite('CbSourceIteratorTest');
 
         // tests/src/Helper
         $this->addTestSuite('CbIOHelperTest');
 
         // tests/src/Plugins
-        //TODO: Rewrite these
         //$this->addTestSuite('CbErrorCPDTest');
         //$this->addTestSuite('CbErrorCheckstyleTest');
         //$this->addTestSuite('CbErrorPMDTest');
