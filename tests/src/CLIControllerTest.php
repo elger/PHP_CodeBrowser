@@ -110,6 +110,16 @@ class CbCLIControllerTest extends CbAbstractTests
     }
 
     /**
+     * Clean up afterwards.
+     */
+    public function __destruct()
+    {
+        if (file_exists($this->_logDir . '/tmpfile')) {
+            unlink($this->_logDir . '/tmpfile');
+        }
+    }
+
+    /**
      * (non-PHPdoc)
      * @see tests/cbAbstractTests#setUp()
      */
