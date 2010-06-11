@@ -2,10 +2,31 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <script type="text/javascript" src="js/jquery-1.4.2.js"></script>
+        <script type="text/javascript" src="js/jquery.jstree/jquery.jstree.js"></script>
+        <script type="text/javascript" src="js/tree.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/tree.css"/>
         <title>PHP CodeBrowser</title>
     </head>
-    <frameset cols="220,*" frameborder="yes" id="frameset" name="frameset" border="2" framespacing="0">
-        <frame src="./tree.html" name="treeView" scrolling="auto" id="treeView" title="treeView" />
-        <frame src="./flatView.html" name="reviewView" id="reviewView" title="reviewView" />
-    </frameset>
+    <body>
+        <div id="tree">
+        <ul>
+<?php
+function printDir(Array $dir) {
+    foreach ($dir as $key => $val) {
+        if (is_array($val)) {
+            echo "<li><a>$key</a><ul>";
+            printDir($val);
+            echo "</ul></li>";
+        } else {
+            echo "<li class='php'><a>$val</a></li>";
+        }
+    }
+}
+
+printDir($files);
+?>
+        </ul>
+        </div>
+    </body>
 </html>

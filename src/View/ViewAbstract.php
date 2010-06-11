@@ -154,6 +154,49 @@ class CbViewAbstract
     }
 
     /**
+     * Creates a javascript-filled index.html
+     *
+     * @param Iterator $fileIterator The files to list
+     *
+     * @return void
+     */
+    public function generateIndex($fileIterator)
+    {
+        $files = array();
+        foreach ($fileIterator as $f) {
+            $files[] = $f;
+        }
+        $prefix = CbIOHelper::getCommonPathPrefix($files);
+
+        $shortFiles = array();
+        foreach ($files as $f) {
+            $shortFiles[] = substr($f, strlen($prefix) + 1);
+        }
+
+        $fileTree = array();
+        foreach ($shortFiles as $f) {
+            $pos = strpos($f, DIRECTORY_SEPARATOR);
+            $parent =& $fileTree;
+            while ($pos !== false) {
+                $dir = substr($f, 0, $pos);
+                $f = substr($f, $pos + 1);
+
+                if (!array_key_exists($dir, $parent)) {
+                    $parent[$dir] = array();
+                }
+                $parent =& $parent[$dir];
+                $pos = strpos($f, DIRECTORY_SEPARATOR);
+            }
+            $parent[] = $f;
+        }
+
+        CbIOHelper::createFile(
+            $this->_outputDir . DIRECTORY_SEPARATOR . 'index.html',
+            $this->_render('index', array('files' => $fileTree))
+        );
+    }
+
+    /**
      * Render a template.
      * 
      * Defined template is parsed and filled with data.

@@ -272,6 +272,7 @@ class CbCLIController
         }
         // Copy needed ressources (eg js libraries) to output directory 
         $cbViewReview->copyRessourceFolders(true);
+        $cbViewReview->generateIndex($fileIterator);
     }
 
 
