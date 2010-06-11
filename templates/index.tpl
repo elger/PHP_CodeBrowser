@@ -12,19 +12,35 @@
         <div id="tree">
         <ul>
 <?php
-function printDir(Array $dir) {
+function printDir(Array $dir, $prefix) {
+    if ($prefix !== '') {
+        $prefix .= '/';
+    }
+    $subdirs = array();
+    $files = array();
     foreach ($dir as $key => $val) {
         if (is_array($val)) {
-            echo "<li><a>$key</a><ul>";
-            printDir($val);
-            echo "</ul></li>";
+            $subdirs[$key] = $val;
         } else {
-            echo "<li class='php'><a>$val</a></li>";
+            $files[] = $val;
         }
+    }
+
+    ksort($subdirs);
+    sort($files);
+
+    foreach ($subdirs as $key => $val) {
+        echo "<li><a href='$prefix$key'>$key</a><ul>";
+        printDir($val, $prefix . '/' . $key);
+        echo "</ul></li>";
+    }
+
+    foreach ($files as $f) {
+        echo "<li class='php'><a href='$prefix$f.html'>$f</a></li>";
     }
 }
 
-printDir($files);
+printDir($files, '');
 ?>
         </ul>
         </div>
