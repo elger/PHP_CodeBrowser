@@ -77,6 +77,11 @@ class CbViewReviewTest extends CbAbstractTests
     protected $_outDir;
 
     /**
+     * IOHelper mock to simulate filesystem interaction.
+     */
+    protected $_ioMock;
+
+    /**
      * Initialize common variables.
      */
     public function __construct()
@@ -85,7 +90,6 @@ class CbViewReviewTest extends CbAbstractTests
         if (!$this->_outDir) {
             $this->fail('Could not find testData directory');
         }
-        $this->_outDir = $this->_outDir . '/tmpdir/';
     }
 
     /**
@@ -96,12 +100,12 @@ class CbViewReviewTest extends CbAbstractTests
     {
         parent::setUp();
 
+        $this->_ioMock = $this->getMock('CbIOHelper');
+
         $templateDir = dirname(__FILE__) . '/../../../templates/';
-        $this->_cbViewReview = new CbViewReview();
+        $this->_cbViewReview = new CbViewReview($this->_ioMock);
         $this->_cbViewReview->setTemplateDir($templateDir);
 
-        $this->delTree($this->_outDir);
-        mkdir($this->_outDir);
         $this->_cbViewReview->setOutputDir($this->_outDir);
     }
 
@@ -112,7 +116,6 @@ class CbViewReviewTest extends CbAbstractTests
     protected function tearDown()
     {
         parent::tearDown();
-        $this->delTree($this->_outDir);
     }
 
     /**
@@ -122,10 +125,13 @@ class CbViewReviewTest extends CbAbstractTests
      */
     public function test__generateNoIssues()
     {
-        $this->_cbViewReview->generate(array(), __FILE__, dirname(__FILE__));
-
         $expectedFile = $this->_outDir . '/' . basename(__FILE__) . '.html';
-        $this->assertTrue(file_exists($expectedFile));
+
+        $this->_ioMock->expects($this->once())
+                      ->method('createFile')
+                      ->with($this->equalTo($expectedFile));
+
+        $this->_cbViewReview->generate(array(), __FILE__, dirname(__FILE__));
     }
 
     /**
@@ -147,10 +153,13 @@ class CbViewReviewTest extends CbAbstractTests
                 )
             )
         );
+        $expectedFile = $this->_outDir . '/' . basename(__FILE__) . '.html';
+
+        $this->_ioMock->expects($this->once())
+                      ->method('createFile')
+                      ->with($this->equalTo($expectedFile));
 
         $this->_cbViewReview->generate($issueList, __FILE__, dirname(__FILE__));
-        $expectedFile = $this->_outDir . '/' . basename(__FILE__) . '.html';
-        $this->assertTrue(file_exists($expectedFile));
     }
 
     /**
@@ -180,9 +189,13 @@ class CbViewReviewTest extends CbAbstractTests
                 )
             )
         );
-        $this->_cbViewReview->generate($issueList, __FILE__, dirname(__FILE__));
         $expectedFile = $this->_outDir . '/' . basename(__FILE__) . '.html';
-        $this->assertTrue(file_exists($expectedFile));
+
+        $this->_ioMock->expects($this->once())
+                      ->method('createFile')
+                      ->with($this->equalTo($expectedFile));
+
+        $this->_cbViewReview->generate($issueList, __FILE__, dirname(__FILE__));
     }
 
     /**
@@ -192,6 +205,7 @@ class CbViewReviewTest extends CbAbstractTests
      */
     public function test__generateWithTextHighlighter()
     {
+        $this->markTestIncomplete();
     }
 
     /**
@@ -207,6 +221,12 @@ class CbViewReviewTest extends CbAbstractTests
             $this->fail('Could not find test file.');
         }
 
+        $expectedFile = $this->_outDir . '/basic.xml.html';
+
+        $this->_ioMock->expects($this->once())
+                      ->method('createFile')
+                      ->with($this->equalTo($expectedFile));
+
         $issueList = array(
             5 => array(
                 new CbIssue(
@@ -219,7 +239,6 @@ class CbViewReviewTest extends CbAbstractTests
         );
 
         $this->_cbViewReview->generate($issueList, $file, $prefix);
-        $this->assertTrue(file_exists($this->_outDir . '/basic.xml.html'));
     }
 
     /**
@@ -229,29 +248,13 @@ class CbViewReviewTest extends CbAbstractTests
      */
     public function test__copyRessourceFolders()
     {
+        $this->_ioMock->expects($this->exactly(3))
+                      ->method('copyDirectory')
+                      ->with($this->matchesRegularExpression(
+                          '|^' .  realpath(dirname(__FILE__) .
+                                                  '/../../../templates/') .
+                          '|')
+                      );
         $this->_cbViewReview->copyRessourceFolders();
-
-        $this->assertTrue(file_exists($this->_outDir . '/img/'));
-        $this->assertTrue(file_exists($this->_outDir . '/js/'));
-        $this->assertTrue(file_exists($this->_outDir . '/css/'));
-        $this->assertTrue(file_exists($this->_outDir . '/index.html'));
-    }
-
-    /**
-     * Helper method to recursively delete a directory. Use with care.
-     */
-    private function delTree($dir)
-    {
-        $files = glob($dir . '*', GLOB_MARK );
-        foreach ($files as $file) {
-            if (is_dir($file)) {
-                $this->delTree($file);
-            } else {
-                unlink($file);
-            }
-        }
-        if (is_dir($dir)) {
-            rmdir( $dir );
-        }
     }
 }

@@ -70,6 +70,11 @@ class CbCLIControllerTest extends CbAbstractTests
     protected $_cbCLIController;
 
     /**
+     * Mock IOHelper
+     */
+    protected $_ioMock;
+
+    /**
      * The log path used for testing.
      *
      * @var string
@@ -96,14 +101,15 @@ class CbCLIControllerTest extends CbAbstractTests
     public function __construct()
     {
         $this->_logDir = realpath(dirname(__FILE__) . '/../testData/testLogs/');
+        $this->_projectSourceDir = realpath($this->_logDir . '/../src/');
+        $this->_outputDir = realpath($this->_logDir . '/../');
+
         if (!$this->_logDir) {
             $this->fail('Could not find testData/testLogs directory');
         }
-        $this->_projectSourceDir = realpath($this->_logDir . '/../src/');
         if (!$this->_projectSourceDir) {
             $this->fail('Could not find dummy source directory testData/src');
         }
-        $this->_outputDir = $this->_logDir  . '/tmpdir';
 
         // Try not to get our terminal cluttered
         CbLogger::setLogFile($this->_logDir . '/tmpfile');
@@ -126,10 +132,17 @@ class CbCLIControllerTest extends CbAbstractTests
     protected function setUp()
     {
         parent::setUp();
+        $this->_ioMock = $this->getMock('CbIOHelper',
+                                        array('deleteDirectory',
+                                              'createDirectory',
+                                              'createFile',
+                                              'copyDirectory'
+                                        )
+        );
         $this->_cbCLIController = new CbCLIController($this->_logDir,
                                                       $this->_projectSourceDir,
-                                                      $this->_outputDir);
-        mkdir($this->_outputDir);
+                                                      $this->_outputDir,
+                                                      $this->_ioMock);
         $this->_cbCLIController->addErrorPlugins(array('CbErrorCoverage'));
     }
 
@@ -140,7 +153,6 @@ class CbCLIControllerTest extends CbAbstractTests
     protected function tearDown()
     {
         parent::tearDown();
-        $this->delTree($this->_outputDir);
     }
 
     /**
@@ -150,12 +162,17 @@ class CbCLIControllerTest extends CbAbstractTests
      */
     public function test__run()
     {
+        // We expect this from CLIController
+        $this->_ioMock->expects($this->once())
+                      ->method('deleteDirectory')
+                      ->with($this->equalTo($this->_outputDir));
+        $this->_ioMock->expects($this->once())
+                      ->method('createDirectory')
+                      ->with($this->equalTo($this->_outputDir));
+        $this->_ioMock->expects($this->any())
+                      ->method('createFile')
+                      ->with($this->stringContains($this->_outputDir, false));
         $this->_cbCLIController->run();
-
-        $this->assertTrue(is_dir($this->_outputDir . '/css/'));
-        $this->assertTrue(is_dir($this->_outputDir . '/js/'));
-        $this->assertTrue(is_dir($this->_outputDir . '/img/'));
-        $this->assertTrue(file_exists($this->_outputDir . '/index.html'));
     }
 
     /**
@@ -165,46 +182,17 @@ class CbCLIControllerTest extends CbAbstractTests
      */
     public function test__runWithSourceDirNull()
     {
+        $this->_ioMock->expects($this->once())
+                      ->method('deleteDirectory')
+                      ->with($this->equalTo($this->_outputDir));
+        $this->_ioMock->expects($this->once())
+                      ->method('createDirectory')
+                      ->with($this->equalTo($this->_outputDir));
+        $this->_ioMock->expects($this->any())
+                      ->method('createFile')
+                      ->with($this->stringContains($this->_outputDir, false));
+
         $this->_cbCLIController->setProjectSourceDir(null);
         $this->_cbCLIController->run();
-
-        $this->assertTrue(is_dir($this->_outputDir . '/css/'));
-        $this->assertTrue(is_dir($this->_outputDir . '/js/'));
-        $this->assertTrue(is_dir($this->_outputDir . '/img/'));
-        $this->assertTrue(file_exists($this->_outputDir . '/index.html'));
-    }
-
-    /**
-     * Test the main method
-     *
-     * @return void
-     */
-    public function test__main()
-    {
-        $_SERVER['argv'] = array(
-            '--log', $this->_logDir,
-            '--source', $this->_projectSourceDir,
-            '--output', $this->_outputDir
-        );
-        
-        CbCLIController::main();
-    }
-
-    /**
-     * Helper method to recursively delete a directory. Use with care.
-     */
-    private function delTree($dir)
-    {
-        $files = glob($dir . '*', GLOB_MARK );
-        foreach ($files as $file) {
-            if (is_dir($file)) {
-                $this->delTree($file);
-            } else {
-                unlink($file);
-            }
-        }
-        if (is_dir($dir)) {
-            rmdir( $dir );
-        }
     }
 }

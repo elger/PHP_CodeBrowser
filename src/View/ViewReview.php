@@ -127,7 +127,7 @@ class CbViewReview extends CbViewAbstract
         $dataGenerate['csspath'] = $data['csspath'];
 
         $this->_ioHelper->createFile(
-            $this->_outputDir . DIRECTORY_SEPARATOR . $shortFilename . '.html',
+            $this->_outputDir . $shortFilename . '.html',
             $this->_render('review', $data)
         );
     }

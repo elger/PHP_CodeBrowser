@@ -127,6 +127,9 @@ class CbViewAbstract
     public function setOutputDir($outputDir)
     {
         $this->_outputDir = realpath($outputDir);
+        if (!$this->_outputDir) {
+            throw new Exception("Specified output directory '$outputDir' doesn't exist");
+        }
     }
 
 
