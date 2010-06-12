@@ -88,10 +88,20 @@ class CbViewAbstract
     protected $_ressourceFolders = array('css', 'js', 'img');
 
     /**
-     * Default Constructor
+     * IOHelper for filesystem interaction.
+     *
+     * @var CbIOHelper
      */
-    public function __construct()
+    protected $_ioHelper;
+
+    /**
+     * Default Constructor
+     *
+     * @param CbIOHelper $ioHelper The CbIOHelper used for filesystem interaction.
+     */
+    public function __construct($ioHelper)
     {
+        $this->_ioHelper = $ioHelper;
     }
 
     /**
@@ -127,7 +137,7 @@ class CbViewAbstract
      *
      * @return void
      * @throws Exception
-     * @see cbIOHelper::copyFile
+     * @see cbIOHelper->copyFile
      * 
      * @TODO Refactor this method
      */
@@ -138,17 +148,17 @@ class CbViewAbstract
         }
 
         foreach ($this->_ressourceFolders as $folder) {
-            CbIOHelper::copyDirectory(
+            $this->_ioHelper->copyDirectory(
                 $this->_templateDir . DIRECTORY_SEPARATOR . $folder,
                 $this->_outputDir . DIRECTORY_SEPARATOR . $folder
             );
         }
 
         $template = ($hasErrors) ?  'index.tpl' : 'noErrors.tpl';
-        $content  = CbIOHelper::loadFile(
+        $content  = $this->_ioHelper->loadFile(
             $this->_templateDir . DIRECTORY_SEPARATOR . $template
         );
-        CbIOHelper::createFile(
+        $this->_ioHelper->createFile(
             $this->_outputDir . DIRECTORY_SEPARATOR . 'index.html', $content
         );
     }
