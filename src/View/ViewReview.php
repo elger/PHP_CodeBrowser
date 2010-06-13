@@ -98,9 +98,10 @@ class CbViewReview extends CbViewAbstract
      * Source code is highlighted.
      * Generated Html source code is be saved as Html.
      *
-     * @param Qrray  $issueList        The issue list for given file
+     * @param Array  $issueList        The issue list for given file
      * @param String $filePath         The path to file the should be generated
      * @param String $commonPathPrefix The prefix path all given files have in common
+     * @param Array  $allFiles         All files that are looked at. Needed for the sidebar.
      *
      * @return void
      *
@@ -108,7 +109,8 @@ class CbViewReview extends CbViewAbstract
      * @see self::_formatSourceCode
      * @see self::_generateJSCode
      */
-    public function generate(Array $issueList, $fileName, $commonPathPrefix)
+    public function generate(Array $issueList, $fileName,
+                             $commonPathPrefix, Array $allFiles)
     {
         $issues           = $this->_formatIssues($issueList);
         $shortFilename    = substr($fileName, strlen($commonPathPrefix));
@@ -118,6 +120,7 @@ class CbViewReview extends CbViewAbstract
         $data['csspath']  = '';
         $data['source']   = $this->_formatSourceCode($fileName, $issues);
         $data['jsCode']   = $this->_grenerateJSCode($issues);
+        $data['files']    = $this->fileListToDirTree($allFiles);
 
         $depth            = substr_count($shortFilename, DIRECTORY_SEPARATOR);
         $data['csspath']  = str_repeat('../', $depth - 1 >= 0 ? $depth - 1 : 0);

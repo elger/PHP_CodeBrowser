@@ -156,16 +156,31 @@ class CbViewAbstract
     /**
      * Creates a javascript-filled index.html
      *
-     * @param Iterator $fileIterator The files to list
+     * @param Array $files The files to show in the sidebar
      *
      * @return void
      */
-    public function generateIndex($fileIterator)
+    public function generateIndex(Array $files)
     {
-        $files = array();
-        foreach ($fileIterator as $f) {
-            $files[] = $f;
-        }
+
+        CbIOHelper::createFile(
+            $this->_outputDir . DIRECTORY_SEPARATOR . 'index.html',
+            $this->_render(
+                'index',
+                array('files' => $this->fileListToDirTree($files)))
+        );
+    }
+
+    /**
+     * Gets a list of complete Filenames and returns a tree-is structure
+     * representing the directories.
+     *
+     * @param Array $files The list of files.
+     *
+     * @return Array A treeish structure representing the directory structure.
+     */
+    protected function fileListToDirTree(Array $files)
+    {
         $prefix = CbIOHelper::getCommonPathPrefix($files);
 
         $shortFiles = array();
@@ -189,11 +204,7 @@ class CbViewAbstract
             }
             $parent[] = $f;
         }
-
-        CbIOHelper::createFile(
-            $this->_outputDir . DIRECTORY_SEPARATOR . 'index.html',
-            $this->_render('index', array('files' => $fileTree))
-        );
+        return $fileTree;
     }
 
     /**

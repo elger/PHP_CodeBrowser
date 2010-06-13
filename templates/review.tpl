@@ -5,19 +5,28 @@
         <title>
             Mayflower Code Browser - Source Code
         </title>
-        <link rel="stylesheet" type="text/css" href="./<?php print $csspath; ?>js/jquery.sidebar/css/codebrowser/sidebar.css" />
-        <link rel="stylesheet" type="text/css" href="./<?php print $csspath; ?>css/cruisecontrol.css" />
-        <link rel="stylesheet" type="text/css" href="./<?php print $csspath; ?>css/review.css" />
+        <link rel="stylesheet" type="text/css" href="<?php print $csspath; ?>js/jquery.sidebar/css/codebrowser/sidebar.css" />
+        <link rel="stylesheet" type="text/css" href="<?php print $csspath; ?>css/cruisecontrol.css" />
+        <link rel="stylesheet" type="text/css" href="<?php print $csspath; ?>css/review.css" />
+        <link rel="stylesheet" type="text/css" href="<?php print $csspath; ?>css/tree.css" />
         
-        <script type="text/javascript" src="./<?php print $csspath; ?>js/review.js"></script>
-        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.sidebar/jquery-1.4.min.js"></script>
-        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.sidebar/jquery-ui-1.7.2.custom.min.js"></script>
-        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.sidebar/jquery.sidebar.js"></script>
-        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.cluetip/lib/jquery.hoverIntent.js"></script>
-        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.cluetip/lib/jquery.bgiframe.min.js"></script>
-        <script type="text/javascript" src="./<?php print $csspath; ?>js/jquery.cluetip/jquery.cluetip.js"></script>
+        <script type="text/javascript" src="<?php print $csspath; ?>js/review.js"></script>
+        <script type="text/javascript" src="<?php print $csspath; ?>js/jquery-1.4.2.js"></script>
+        <script type="text/javascript" src="<?php print $csspath; ?>js/jquery.jstree/jquery.jstree.js"></script>
+        <script type="text/javascript" src="<?php print $csspath; ?>js/jquery.sidebar/jquery-ui-1.7.2.custom.min.js"></script>
+        <script type="text/javascript" src="<?php print $csspath; ?>js/jquery.sidebar/jquery.sidebar.js"></script>
+        <script type="text/javascript" src="<?php print $csspath; ?>js/jquery.cluetip/lib/jquery.hoverIntent.js"></script>
+        <script type="text/javascript" src="<?php print $csspath; ?>js/jquery.cluetip/lib/jquery.bgiframe.min.js"></script>
+        <script type="text/javascript" src="<?php print $csspath; ?>js/jquery.cluetip/jquery.cluetip.js"></script>
+        <script type="text/javascript" src="<?php print $csspath; ?>js/tree.js"></script>
     </head>
     <body class="codebrowser">
+        <div id="tree">
+<?php
+require_once (dirname(__FILE__) . '/Helpers/FileSidebar.php');
+echoFileTree($files, $csspath);
+?>
+        </div>
         <div class="review">
             <div class="header">
                 <a href="./<?php echo $csspath; ?>flatView.html">&larr; flat View</a> | <?php echo $title; ?>
