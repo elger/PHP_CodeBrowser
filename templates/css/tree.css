@@ -2,3 +2,7 @@
     background-repeat: repeat;
     background-image: url(../img/page.gif);
 }
+
+#tree {
+    float: left;
+}
