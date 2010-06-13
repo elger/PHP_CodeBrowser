@@ -80,8 +80,9 @@ class CbViewReview extends CbViewAbstract
      *
      * Highlighting strings are set.
      */
-    public function __construct()
+    public function __construct($ioHelper)
     {
+        parent::__construct($ioHelper);
         $this->phpHighlightColorMap = array(
             ini_get('highlight.string')  => 'string',
             ini_get('highlight.comment') => 'comment',
@@ -128,8 +129,8 @@ class CbViewReview extends CbViewAbstract
         $dataGenerate['title']   = $data['title'];
         $dataGenerate['csspath'] = $data['csspath'];
 
-        CbIOHelper::createFile(
-            $this->_outputDir . DIRECTORY_SEPARATOR . $shortFilename . '.html',
+        $this->_ioHelper->createFile(
+            $this->_outputDir . $shortFilename . '.html',
             $this->_render('review', $data)
         );
     }
@@ -329,7 +330,7 @@ class CbViewReview extends CbViewAbstract
         );
 
         $extension = strrchr($file, '.');
-        $sourceCode = CbIOHelper::loadFile($file);
+        $sourceCode = $this->_ioHelper->loadFile($file);
 
         if ('.php' === $extension) {
             return $this->_highlightPhpCode($sourceCode);

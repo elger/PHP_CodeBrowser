@@ -116,6 +116,13 @@ class CbCLIController
     private $_registeredErrorPlugins;
 
     /**
+     * The IOHelper used for filesystem interaction.
+     *
+     * @var CbIOHelper
+     */
+    private $_ioHelper;
+
+    /**
      * The constructor
      *
      * Standard setters are initialized
@@ -124,12 +131,15 @@ class CbCLIController
      * @param string $projectSourceDir The project source directory
      * @param string $htmlOutputDir    The html output dir, where new files will
      *                                 be created
+     * @param CbIOHelper $ioHelper     The CbIOHelper object to be used for
+     *                                 filesystem interaction.
      */
-    public function __construct($logPath, $projectSourceDir, $htmlOutputDir)
+    public function __construct($logPath, $projectSourceDir, $htmlOutputDir, $ioHelper)
     {
         $this->setXMLLogDir($logPath);
         $this->setProjectSourceDir($projectSourceDir);
         $this->setHtmlOutputDir($htmlOutputDir);
+        $this->_ioHelper = $ioHelper;
     }
 
     /**
@@ -200,7 +210,7 @@ class CbCLIController
     {
         // init needed classes
         $cbIssueXml    = new CbIssueXml();
-        $cbViewReview  = new CbViewReview();
+        $cbViewReview  = new CbViewReview($this->_ioHelper);
 
         $cbViewReview->setOutputDir($this->_htmlOutputDir);
         
@@ -210,8 +220,8 @@ class CbCLIController
         $cbViewReview->setTemplateDir(PHPCB_TEMPLATE_DIR);
 
         // clear and create output directory
-        CbIOHelper::deleteDirectory($this->_htmlOutputDir);
-        CbIOHelper::createDirectory($this->_htmlOutputDir);
+        $this->_ioHelper->deleteDirectory($this->_htmlOutputDir);
+        $this->_ioHelper->createDirectory($this->_htmlOutputDir);
 
         CbLogger::log('Load XML files', CbLogger::PRIORITY_DEBUG);
         
@@ -335,7 +345,8 @@ class CbCLIController
         $controller = new CbCLIController(
             $xmlLogDir,
             $sourceFolder,
-            $htmlOutput
+            $htmlOutput,
+            new CbIOHelper()
         );
         
         $controller->addErrorPlugins(
