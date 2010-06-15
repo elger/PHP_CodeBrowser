@@ -27,7 +27,7 @@ require_once (dirname(__FILE__) . '/Helpers/FileSidebar.php');
 echoFileTree($files, $csspath);
 ?>
         </div>
-        <div class="review">
+        <div id="review">
             <div class="header">
                 <a href="./<?php echo $csspath; ?>flatView.html">&larr; flat View</a> | <?php echo $title; ?>
             </div>

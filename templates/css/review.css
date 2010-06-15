@@ -1,5 +1,5 @@
 
-.review ol {
+#review ol {
     width: 99%;
     margin: 15px;
     padding: 0;
@@ -13,68 +13,68 @@
     list-style: none;
 }
 
-.review ol li {
+#review ol li {
     white-space: nowrap;
     margin: 0;
     padding: 0 0 0 1%;
     color: #4E4E4E;
 }
 
-.review ol li.even {
+#review ol li.even {
     background-color: #F9F9F9;
     border-top: 1px solid #E7E7E7;
 }
 
-.review ol li.white {
+#review ol li.white {
     background-color: #FFFFFF;
     border-top: 1px solid #E7E7E7;
 }
 
-.review ol li.CodeCoverage {
+#review ol li.CodeCoverage {
     background-color: #BFE4FF;
 }
 
-.review ol li.Duplication {
+#review ol li.Duplication {
     background-color: #FFBFDC;
 }
 
-.review ol li.moreErrors {
+#review ol li.moreErrors {
     background-color: #FFB380;
 }
 
-.review ol li.ZendCodeAnalyzer {
+#review ol li.ZendCodeAnalyzer {
     background-color: #D5BFFF;
 }
 
-.review ol li.EfferentCoupling {
+#review ol li.EfferentCoupling {
     background-color: #CCFF99;
 }
 
-.review ol li.CyclomaticComplexity {
+#review ol li.CyclomaticComplexity {
     background-color: #FFCC80;
 }
 
-.review ol li.ExcessiveMethodLength {
+#review ol li.ExcessiveMethodLength {
     background-color: #F2FFBF;
 }
 
-.review ol li.ExcessiveClassLength {
+#review ol li.ExcessiveClassLength {
     background-color: #FF6666;
 }
 
-.review ol li.Checkstyle {
+#review ol li.Checkstyle {
     background-color: #FFF2BF;
 }
 
-.review ol li.NPathComplexity {
+#review ol li.NPathComplexity {
     background-color: #E6FF80;
 }
 
-.review ol li.Padawan {
+#review ol li.Padawan {
     background-color: #E6FF80;
 }
 
-.review ol li.CRAP {
+#review ol li.CRAP {
     background-color: #FFBFEF;
 }
 
