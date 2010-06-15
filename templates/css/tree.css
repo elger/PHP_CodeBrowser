@@ -16,3 +16,9 @@
     display: inline-block;
     background-image: url(../img/treeToggle.gif);
 }
+
+#treeHeader {
+    font-weight: bold;
+    color: #555753;
+    white-space: nowrap;
+}
