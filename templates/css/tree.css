@@ -5,4 +5,8 @@
 
 #tree {
     float: left;
+    background-image: url('../img/separator.gif');
+    background-position: right top;
+    background-repeat: repeat-y;
+    padding-right: 5px;
 }
