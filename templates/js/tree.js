@@ -3,6 +3,15 @@ $(function() {
         "plugins" : ["html_data", "themes"]
     });
 
-    var w = $("#tree").width() + 40;
-    var h = $("#tree").height() + 40;
+    $("#treeToggle").click().toggle(function() {
+        $("#tree").animate({
+            width: "hide",
+            opacity: "hide"
+        }, "slow");
+    }, function() {
+        $("#tree").animate({
+            width: "show",
+            opacity: "show"
+        }, "slow");
+    });
 });

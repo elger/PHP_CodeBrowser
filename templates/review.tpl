@@ -21,12 +21,12 @@
         <script type="text/javascript" src="<?php print $csspath; ?>js/tree.js"></script>
     </head>
     <body class="codebrowser">
-        <div id="tree">
+        <div id="treeContainer"><div id="tree">
 <?php
 require_once (dirname(__FILE__) . '/Helpers/FileSidebar.php');
 echoFileTree($files, $csspath);
 ?>
-        </div>
+        </div><div id="treeToggle"><img src="<?php print $csspath; ?>img/treeToggle.gif"></div></div>
         <div id="review">
             <div class="header">
                 <a href="./<?php echo $csspath; ?>flatView.html">&larr; flat View</a> | <?php echo $title; ?>

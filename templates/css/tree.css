@@ -3,10 +3,16 @@
     background-image: url(../img/page.gif);
 }
 
+#treeContainer {
+    float: left;
+}
+
 #tree {
     float: left;
-    background-image: url('../img/separator.gif');
-    background-position: right top;
-    background-repeat: repeat-y;
     padding-right: 5px;
+}
+
+#treeToggle {
+    display: inline-block;
+    background-image: url(../img/treeToggle.gif);
 }

@@ -1,3 +1,6 @@
+#review {
+    display: inline-block;
+}
 
 #review ol {
     width: 99%;
