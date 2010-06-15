@@ -219,8 +219,11 @@ class CbViewReview extends CbViewAbstract
                 case 1 < $tmp :
                     $lineClasses[] = 'moreErrors';
                     break;
+                // This can't happen, count always returns >= 0
+                // @codeCoverageIgnoreStart
                 default:
                     break;
+                // @codeCoverageIgnoreEnd
             }
             $line->setAttribute('class', implode(' ', $lineClasses));
         }
