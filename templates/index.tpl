@@ -11,11 +11,18 @@
         <title>PHP CodeBrowser</title>
     </head>
     <body class="codebrowser">
-        <div id="tree">
+        <div id="treeContainer"><div id="tree">
 <?php
 require_once (dirname(__FILE__) . '/Helpers/FileSidebar.php');
 echoFileTree($files, '');
 ?>
+        </div><div id="treeToggle"><img src="img/treeToggle.gif"></div></div>
+        <div id="fileList" style="display: inline-block;">
+            <ul>
+                <li>Some</li>
+                <li>Content</li>
+                <li>Here</li>
+            </ul>
         </div>
     </body>
 </html>
