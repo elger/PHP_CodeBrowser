@@ -256,15 +256,11 @@ class CbCLIController
         $allFiles = iterator_to_array($fileIterator);
 
         foreach($fileIterator as $file) {
-            if (in_array($file, $files)) {
-                CbLogger::log(
-                    sprintf('Get issues for "...%s"', substr($file, strlen($commonPathPrefix))),
-                    CbLogger::PRIORITY_DEBUG
-                );
-                $issues = $issueHandler->getIssuesByFile($file);
-            } else {
-                $issues = array();
-            }
+            CbLogger::log(
+                sprintf('Get issues for "...%s"', substr($file, strlen($commonPathPrefix))),
+                CbLogger::PRIORITY_DEBUG
+            );
+            $issues = $issueHandler->getIssuesByFile($file);
 
             // @TODO Timer::start() only for logging check performace and remove if neccessary 
             PHP_Timer::start(); 

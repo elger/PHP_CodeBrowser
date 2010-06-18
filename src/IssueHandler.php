@@ -98,7 +98,8 @@ class CbIssueHandler
      *                          path with filename as well (e.g.
      *                          relative/path/filename.php)
      *
-     * @return Array
+     * @return Array    Array containing all the issues for the given file.
+     *                  If none exist, an empty array will be returned.
      */
     public function getIssuesByFile($fileName)
     {
