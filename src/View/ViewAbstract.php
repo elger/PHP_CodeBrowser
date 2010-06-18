@@ -157,13 +157,14 @@ class CbViewAbstract
             );
         }
 
-        $template = ($hasErrors) ?  'index.tpl' : 'noErrors.tpl';
-        $content  = $this->_ioHelper->loadFile(
-            $this->_templateDir . DIRECTORY_SEPARATOR . $template
-        );
-        $this->_ioHelper->createFile(
-            $this->_outputDir . DIRECTORY_SEPARATOR . 'index.html', $content
-        );
+        //TODO: Move this intelligently to generateIndex
+        //$template = ($hasErrors) ?  'index.tpl' : 'noErrors.tpl';
+        //$content  = $this->_ioHelper->loadFile(
+        //    $this->_templateDir . '/' . $template
+        //);
+        //$this->_ioHelper->createFile(
+        //    $this->_outputDir . '/index.html', $content
+        //);
     }
 
     /**
