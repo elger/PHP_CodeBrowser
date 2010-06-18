@@ -65,6 +65,13 @@ class CbIOHelperTest extends CbAbstractTests
     protected $_testDir;
 
     /**
+     * The CbIOHelper object under test.
+     *
+     * @var CbIOHelper
+     */
+    protected $_ioHelper;
+
+    /**
      * Define variables
      */
     public function __construct() {
@@ -72,6 +79,17 @@ class CbIOHelperTest extends CbAbstractTests
         if (!$this->_testDir) {
             $this->fail('Could not find tests/testData directory.');
         }
+    }
+
+    /**
+     * (non-PHPdoc)
+     * @see tests/cbAbstractTests#setUp()
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->_ioHelper = new CbIOHelper();
     }
 
     /**
@@ -88,7 +106,7 @@ class CbIOHelperTest extends CbAbstractTests
             unlink($filename);
         }
 
-        CbIOHelper::createFile($filename, $content);
+        $this->_ioHelper->createFile($filename, $content);
         $this->assertTrue(file_exists($filename));
         $this->assertEquals($content, file_get_contents($filename));
 
@@ -113,7 +131,7 @@ class CbIOHelperTest extends CbAbstractTests
             rmdir($dirname);
         }
 
-        CbIOHelper::createFile($filename, $content);
+        $this->_ioHelper->createFile($filename, $content);
         $this->assertTrue(file_exists($dirname));
         $this->assertTrue(file_exists($filename));
         $this->assertEquals($content, file_get_contents($filename));
@@ -135,7 +153,7 @@ class CbIOHelperTest extends CbAbstractTests
             file_put_contents($filename, 'Lorem ipsum');
         }
 
-        CbIOHelper::deleteFile($filename);
+        $this->_ioHelper->deleteFile($filename);
         $this->assertFalse(file_exists($filename));
     }
 
@@ -160,7 +178,7 @@ class CbIOHelperTest extends CbAbstractTests
 
         file_put_contents($srcFile, $content);
 
-        CbIOHelper::copyFile($srcFile, $dstDir);
+        $this->_ioHelper->copyFile($srcFile, $dstDir);
         $this->assertTrue(file_exists($srcFile));
         $this->assertTrue(file_exists($dstDir));
         $this->assertTrue(file_exists($dstFile));
@@ -187,7 +205,7 @@ class CbIOHelperTest extends CbAbstractTests
         }
 
         try {
-            CbIOHelper::copyFile($file, $dstDir);
+            $this->_ioHelper->copyFile($file, $dstDir);
         } catch (Exception $e) {
             return;
         }
