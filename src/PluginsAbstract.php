@@ -161,6 +161,37 @@ abstract class CbPluginsAbstract
     }
 
     /**
+     * Returns how many issues are in each file.
+     * The returned Array has the following structure:
+     *  array(
+     *      'filename' => array(
+     *          'nontSoSevere' => 3,
+     *          'quiteSevere'  => 1
+     *      ),
+     *      ...
+     *  )
+     *
+     *  @return array
+     */
+    public function getIssueCounts()
+    {
+        $counts = array();
+        foreach ($this->getFilesWithIssues() as $file) {
+            foreach ($this->getIssuesByFile($file) as $issue) {
+                $severity = $issue->severity;
+                if (!array_key_exists($file, $counts)) {
+                    $counts[$file] = array($severity => 1);
+                } else if (!array_key_exists($severity, $counts[$file])) {
+                    $counts[$file][$severity] = 1;
+                } else {
+                    $counts[$file][$severity] += 1;
+                }
+            }
+        }
+        return $counts;
+    }
+
+    /**
      * The detailed mapper method for each single plugin, returning an array
      * of issue objects.
      * This method provides a default behaviour an can be overloaded to

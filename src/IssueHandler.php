@@ -111,6 +111,42 @@ class CbIssueHandler
     }
 
     /**
+     * Returns how many issues are in each file.
+     * The returned Array has the following structure:
+     *  array(
+     *      'filename' => array(
+     *          'nontSoSevere' => 3,
+     *          'quiteSevere'  => 1
+     *      ),
+     *      ...
+     *  )
+     *
+     *  @return array
+     */
+    public function getIssueCounts() {
+        $total = array();
+        foreach ($this->plugins as $plugin) {
+            foreach ($plugin->getIssueCounts() as $file => $counts) {
+                if (!array_key_exists($file, $total)) {
+                    // If we don't already have any issues for this file, just
+                    // copy the ones from the plugin.
+                    $total[$file] = $counts;
+                } else {
+                    // If we already have some, we have to merge them.
+                    foreach ($counts as $severity => $c) {
+                        if (!array_key_exists($severity, $total[$file])) {
+                            $total[$file][$severity] = $c;
+                        } else {
+                            $total[$file][$severity] += $c;
+                        }
+                    }
+                }
+            }
+        }
+        return $total;
+    }
+
+    /**
      * Build a tree of issues to be able to get issues by line number.
      * 
      * As a file could have several issues in the same line number, the

@@ -174,14 +174,16 @@ class CbViewAbstract
      *
      * @return void
      */
-    public function generateIndex(Array $files)
+    public function generateIndex(Array $issueCounts)
     {
-
         $this->_ioHelper->createFile(
-            $this->_outputDir . DIRECTORY_SEPARATOR . 'index.html',
+            $this->_outputDir . '/index.html',
             $this->_render(
                 'index',
-                array('files' => $this->fileListToDirTree($files)))
+                array(
+                    'files' => $this->fileListToDirTree(
+                                            array_keys($issueCounts)))
+                )
         );
     }
 

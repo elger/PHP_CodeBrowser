@@ -253,7 +253,7 @@ class CbCLIController
 
         // Get the path prefix all files have in common
         $commonPathPrefix = CbIOHelper::getCommonPathPrefix($files);
-        $allFiles = iterator_to_array($fileIterator);
+        $issueCounts = $issueHandler->getIssueCounts();
 
         foreach($fileIterator as $file) {
             CbLogger::log(
@@ -269,7 +269,7 @@ class CbCLIController
                 CbLogger::PRIORITY_DEBUG
             );
             
-            $cbViewReview->generate($issues, $file, $commonPathPrefix, $allFiles);
+            $cbViewReview->generate($issues, $file, $commonPathPrefix, $issueCounts);
             
             CbLogger::log(
                 sprintf('completed in %s', PHP_Timer::stop()), 
@@ -279,9 +279,8 @@ class CbCLIController
         }
         // Copy needed ressources (eg js libraries) to output directory 
         $cbViewReview->copyRessourceFolders(true);
-        $cbViewReview->generateIndex($allFiles);
+        $cbViewReview->generateIndex($issueCounts);
     }
-
 
     /**
      * Main method called by script
