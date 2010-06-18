@@ -3,6 +3,10 @@
     background-image: url(../img/page.gif);
 }
 
+.jstree a {
+    cursor: pointer;
+}
+
 #treeContainer {
     float: left;
 }
