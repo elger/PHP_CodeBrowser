@@ -16,7 +16,7 @@ function echoFileTree(Array $dir, $prefix) {
 
     echo '<ul>';
     foreach ($subdirs as $key => $val) {
-        echo "<li><a href='$prefix$key'>$key</a>";
+        echo "<li><a class='treeDir'>$key</a>";
         echoFileTree($val, $prefix . $key . '/');
         echo '</li>';
     }

@@ -3,6 +3,10 @@ $(function() {
         "plugins" : ["html_data", "themes"]
     });
 
+    $(".treeDir").click(function() {
+        $("#tree").jstree("toggle_node", this);
+    });
+
     $("#treeToggle").click().toggle(function() {
         $("#tree").animate({
             width: "hide",
