@@ -182,8 +182,10 @@ class CbViewAbstract
                 'index',
                 array(
                     'files' => $this->fileListToDirTree(
-                                            array_keys($issueCounts)))
+                        array_keys($issueCounts)),
+                    'issueCounts' => $issueCounts
                 )
+            )
         );
     }
 

@@ -21,12 +21,34 @@ echoFileTree($files, '');
 ?>
         </div><div id="treeToggle"><img src="img/treeToggle.gif"></div></div>
         <div id="fileList" style="display: inline-block; margin:15px;">
-            <ul>
+            <table border="0" cellspacing="2" cellpadding="3">
+                <tr class="head">
+                    <td><strong>File</strong></td>
+                    <td width="50px" align="center"><strong>Errors</strong></td>
+                    <td width="50px" align="center"><strong>Notices</strong></td>
+                </tr>
 <?php
-require_once (dirname(__FILE__) . '/Helpers/FileList.php');
-printFileList($files, '');
+$oddrow = true;
+$preLen = strlen(CbIOHelper::getCommonPathPrefix(array_keys($issueCounts))) + 1;
+foreach ($issueCounts as $filename => $count) {
+    $tag = $oddrow ? 'oddrow' : 'file';
+    $shortName = substr($filename, $preLen);
+    $errors = array_key_exists('error', $count) ? $count['error'] : 0;
+    $notices = 0;
+    foreach ($count as $severity => $count) {
+        if (strcmp($severity, 'error') != 0) {
+            $notices += $count;
+        }
+    }
+
+    echo "<tr class='$tag'>";
+    echo "<td><a href='$shortName.html'>$shortName</a></td>";
+    echo "<td align='center'><span class='errors'>$errors</span></td>";
+    echo "<td align='center'><span class='notices'>$notices</span></td>";
+    echo "</tr>";
+}
 ?>
-        </ul>
+        </table>
         </div>
     </body>
 </html>
