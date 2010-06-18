@@ -27,3 +27,8 @@
     color: #555753;
     white-space: nowrap;
 }
+
+#treeHeader .jstree-icon {
+    background-image: url("../img/base.gif");
+    background-position: 0 0;
+}

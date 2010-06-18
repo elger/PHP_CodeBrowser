@@ -13,7 +13,7 @@
     <body class="codebrowser">
         <div id="treeContainer"><div id="tree">
         <div id="treeHeader">
-            <img alt="" src="img/base.gif" id="ia0">CodeBrowser
+            <a href="#">CodeBrowser</a>
         </div>
 <?php
 require_once (dirname(__FILE__) . '/Helpers/FileSidebar.php');
