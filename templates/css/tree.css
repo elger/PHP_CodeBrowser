@@ -10,6 +10,7 @@
 #tree {
     float: left;
     padding-right: 5px;
+    display: none;
 }
 
 #treeToggle {
