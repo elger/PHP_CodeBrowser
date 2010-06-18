@@ -113,11 +113,11 @@ class CbSourceIteratorTest extends CbAbstractTests
             $this->_srcPath . '/JSTestGenerator.php',
             $this->_srcPath . '/subdir/anotherFile.php'
         );
+        $actualFiles = iterator_to_array($this->_cbSourceIterator);
 
-        $actualFiles = array();
-        foreach ($this->_cbSourceIterator as $file) {
-            $actualFiles[] = $file;
-        }
+        sort($expectedFiles);
+        sort($actualFiles);
+
         $this->assertEquals($actualFiles, $expectedFiles);
     }
 }
