@@ -126,6 +126,10 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
         self::$_cbGeneratedXMLTest = PHPCB_TEST_DIR . '/GeneratedXMLTest.xml';
         self::$_serializedErrors   = PHPCB_TEST_DIR . '/serializedErrors.txt';
 
+        if (is_dir(PHPCB_TEST_OUTPUT)) {
+            $this->_cleanUp(PHPCB_TEST_OUTPUT);
+            rmdir(PHPCB_TEST_OUTPUT);
+        }
         mkdir(PHPCB_TEST_OUTPUT);
     }
 
