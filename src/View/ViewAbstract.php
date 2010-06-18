@@ -176,7 +176,7 @@ class CbViewAbstract
     public function generateIndex(Array $files)
     {
 
-        CbIOHelper::createFile(
+        $this->_ioHelper->createFile(
             $this->_outputDir . DIRECTORY_SEPARATOR . 'index.html',
             $this->_render(
                 'index',
@@ -194,7 +194,7 @@ class CbViewAbstract
      */
     protected function fileListToDirTree(Array $files)
     {
-        $prefix = CbIOHelper::getCommonPathPrefix($files);
+        $prefix = $this->_ioHelper->getCommonPathPrefix($files);
 
         $shortFiles = array();
         foreach ($files as $f) {
