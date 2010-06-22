@@ -256,7 +256,10 @@ class CbIOHelper
      */
     protected static function _getCommonPathPrefix($currentPrefix, $path)
     {
-        if (strpos($path, $currentPrefix) === 0 || $currentPrefix == '/') {
+        if (strpos($path, $currentPrefix) === 0
+                || $currentPrefix == '/'
+                || $currentPrefix == ''
+                || $currentPrefix == '.') {
             return $currentPrefix;
         }
         return self::_getCommonPathPrefix(dirname($currentPrefix), $path);
