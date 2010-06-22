@@ -84,7 +84,7 @@ class CbSourceHandler
     /**
      * Default constructor
      *
-     * @param CbIssueXml $cbIssueXml The CbIssueXml object providing all known issues 
+     * @param CbIssueXml $cbIssueXml The CbIssueXml object providing all known issues
      */
     public function __construct (CbIssueXml $cbIssueXml, array $plugins)
     {
@@ -116,8 +116,8 @@ class CbSourceHandler
      * The returned Array has the following structure:
      *  array(
      *      'filename' => array(
-     *          'nontSoSevere' => 3,
-     *          'quiteSevere'  => 1
+     *          'notSoSevere' => 3,
+     *          'quiteSevere' => 1
      *      ),
      *      ...
      *  )
@@ -149,13 +149,13 @@ class CbSourceHandler
 
     /**
      * Build a tree of issues to be able to get issues by line number.
-     * 
+     *
      * As a file could have several issues in the same line number, the
      * structure is provided as an array of arrays.
-     * 
+     *
      * @param Array $newIssues Issues to add
      * @param Array $oldIssues Exisiting issues as tree.
-     * 
+     *
      * @return Array
      */
     protected function buildIssueTree(Array $newIssues, Array $oldIssues)
