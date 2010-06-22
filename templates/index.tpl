@@ -17,7 +17,7 @@
         </div>
 <?php
 require_once (dirname(__FILE__) . '/Helpers/FileSidebar.php');
-echoFileTree($files, '');
+echoFileTree($dirTree, '');
 ?>
         </div><div id="treeToggle"><img src="img/treeToggle.gif"></div></div>
         <div id="fileList" style="display: inline-block; margin:15px;">
@@ -29,17 +29,13 @@ echoFileTree($files, '');
                 </tr>
 <?php
 $oddrow = true;
-$preLen = strlen(CbIOHelper::getCommonPathPrefix(array_keys($issueCounts))) + 1;
-foreach ($issueCounts as $filename => $count) {
+$preLen = strlen(CbIOHelper::getCommonPathPrefix(array_keys($fileList))) + 1;
+foreach ($fileList as $filename => $f) {
     $tag = $oddrow ? 'oddrow' : 'file';
+    $oddrow = !$oddrow;
     $shortName = substr($filename, $preLen);
-    $errors = array_key_exists('error', $count) ? $count['error'] : 0;
-    $notices = 0;
-    foreach ($count as $severity => $count) {
-        if (strcmp($severity, 'error') != 0) {
-            $notices += $count;
-        }
-    }
+    $errors = $f->getErrorCount();
+    $notices = $f->getWarningCount();
 
     echo "<tr class='$tag'>";
     echo "<td><a href='$shortName.html'>$shortName</a></td>";

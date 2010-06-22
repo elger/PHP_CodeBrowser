@@ -66,31 +66,29 @@ echoFileTree($files, $csspath);
                     </thead>
                     <tbody>
                         <?php foreach($issues as $issue):?>
-                        <?php foreach($issue as $notice):?>
                         
-                        <tr class="<?php print $notice->foundBy; ?>">
+                        <tr class="<?php print $issue->foundBy; ?>">
                             <td align="center">
-                                <a href="#line_<?php print $notice->lineStart;?>" onClick="switchLine('line_<?php print $notice->lineStart;?>')">
-                                <?php print $notice->lineStart; ?></a>
+                                <a href="#line_<?php print $issue->lineStart;?>" onClick="switchLine('line_<?php print $issue->lineStart;?>')">
+                                <?php print $issue->lineStart; ?></a>
                             </td>
                             <td align="center">
-                                <a href="#line_<?php print $notice->lineEnd;?>" onClick="switchLine('line_<?php print $notice->lineStart;?>')"
-                                    onclick="new Effect.Highlight('line_<?php print $notice->lineStart."-".$notice->lineEnd; ?>', {duration: 1.5}); return false">
-                                <?php print $notice->lineEnd;?></a>
+                                <a href="#line_<?php print $issue->lineEnd;?>" onClick="switchLine('line_<?php print $issue->lineStart;?>')"
+                                    onclick="new Effect.Highlight('line_<?php print $issue->lineStart."-".$issue->lineEnd; ?>', {duration: 1.5}); return false">
+                                <?php print $issue->lineEnd;?></a>
                             </td>
                             <td>
-                                <a href="#line_<?php print $notice->lineStart; ?>" onClick="switchLine('line_<?php print $notice->lineStart;?>')"
-                                    onclick="new Effect.Highlight('line_<?php print $notice->lineStart."-".$notice->lineEnd; ?>', {duration: 1.5}); return false">
-                                <?php print (string)$notice->description;?></a>
+                                <a href="#line_<?php print $issue->lineStart; ?>" onClick="switchLine('line_<?php print $issue->lineStart;?>')"
+                                    onclick="new Effect.Highlight('line_<?php print $issue->lineStart."-".$issue->lineEnd; ?>', {duration: 1.5}); return false">
+                                <?php print (string)$issue->description;?></a>
                             </td>
                             <td>
-                                <?php print $notice->foundBy;?>
+                                <?php print $issue->foundBy;?>
                             </td>
                             <td>
-                                <?php print $notice->severity;?>
+                                <?php print $issue->severity;?>
                             </td>
                         </tr>
-                        <?php endforeach; //$issue as $notice ?>
                         <?php endforeach; //$issues as $issue ?>
                     </tbody>
                 </table>
