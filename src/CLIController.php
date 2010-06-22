@@ -236,7 +236,7 @@ class CbCLIController
             $plugins[] = new $className($cbIssueXml);
         }
 
-        $issueHandler = new CbIssueHandler($cbIssueXml, $plugins);
+        $issueHandler = new CbSourceHandler($cbIssueXml, $plugins);
         $files        = $issueHandler->getFilesWithIssues();
         
         CbLogger::log(sprintf('Found %d files with issues.', count($files)), CbLogger::PRIORITY_INFO);
