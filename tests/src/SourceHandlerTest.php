@@ -48,7 +48,7 @@
 require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
 
 /**
- * CbIssueHandlerTest
+ * CbSourceHandlerTest
  *
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
@@ -60,14 +60,14 @@ require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
  * @link       http://www.phpunit.de/
  * @since      Class available since 1.0
  */
-class CbIssueHandlerTest extends CbAbstractTests
+class CbSourceHandlerTest extends CbAbstractTests
 {
     /**
-     * IssueHandler object to test
+     * SourceHandler object to test
      *
-     * @var cbIssueHandler
+     * @var cbSourceHandler
      */
-    protected $_cbIssueHandler;
+    protected $_cbSourceHandler;
 
     /**
      * (non-PHPdoc)
@@ -83,7 +83,7 @@ class CbIssueHandlerTest extends CbAbstractTests
         $xml->load(realpath(dirname(__FILE__) . '/../testData/shortCheckstyle.xml'));
         $issueXML->addXMLFile($xml);
         $plugins = array(new CbErrorCheckstyle($issueXML));
-        $this->_cbIssueHandler = new CbIssueHandler($issueXML, $plugins);
+        $this->_cbSourceHandler = new CbSourceHandler($issueXML, $plugins);
     }
 
     /**
@@ -121,7 +121,7 @@ class CbIssueHandlerTest extends CbAbstractTests
             ))
         );
         $filename = '/opt/cruisecontrol/projects/phpcb/source/src/JSGenerator.php';
-        $actualIssues = $this->_cbIssueHandler->getIssuesByFile($filename);
+        $actualIssues = $this->_cbSourceHandler->getIssuesByFile($filename);
         $this->assertEquals($expectedIssues, $actualIssues);
     }
 
@@ -132,7 +132,7 @@ class CbIssueHandlerTest extends CbAbstractTests
      */
     public function test__getIssuesByFileNonexisting()
     {
-        $issues = $this->_cbIssueHandler->getIssuesByFile('/nonExistingFile');
+        $issues = $this->_cbSourceHandler->getIssuesByFile('/nonExistingFile');
         $this->assertEquals(array(), $issues);
     }
 
@@ -147,7 +147,7 @@ class CbIssueHandlerTest extends CbAbstractTests
             '/opt/cruisecontrol/projects/phpcb/source/src/JSGenerator.php',
             '/opt/cruisecontrol/projects/phpcb/source/src/AnotherFile.php'
         );
-        $actualFiles = $this->_cbIssueHandler->getFilesWithIssues();
+        $actualFiles = $this->_cbSourceHandler->getFilesWithIssues();
         $this->assertEquals($expectedFiles, $actualFiles);
     }
 }
