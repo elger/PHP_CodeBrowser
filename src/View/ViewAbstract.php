@@ -174,16 +174,16 @@ class CbViewAbstract
      *
      * @return void
      */
-    public function generateIndex(Array $issueCounts)
+    public function generateIndex(Array $fileList)
     {
         $this->_ioHelper->createFile(
             $this->_outputDir . '/index.html',
             $this->_render(
                 'index',
                 array(
-                    'files' => $this->fileListToDirTree(
-                        array_keys($issueCounts)),
-                    'issueCounts' => $issueCounts
+                    'dirTree' => $this->fileListToDirTree(
+                        array_keys($fileList)),
+                    'fileList' => $fileList
                 )
             )
         );
@@ -227,7 +227,7 @@ class CbViewAbstract
 
     /**
      * Render a template.
-     * 
+     *
      * Defined template is parsed and filled with data.
      * Rendered content is read from output buffer.
      *
@@ -245,12 +245,12 @@ class CbViewAbstract
         }
 
         extract($data, EXTR_SKIP);
-        
+
         ob_start();
         include($filePath);
         $contents = ob_get_contents();
         ob_end_clean();
-        
+
         return $contents;
     }
 }

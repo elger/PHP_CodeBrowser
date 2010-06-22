@@ -111,7 +111,7 @@ class CbViewReview extends CbViewAbstract
      * @see self::_generateJSCode
      */
     public function generate(Array $issueList, $fileName,
-                             $commonPathPrefix, Array $issueCounts)
+                             $commonPathPrefix, Array $fileList)
     {
         $issues           = $this->_formatIssues($issueList);
         $shortFilename    = substr($fileName, strlen($commonPathPrefix));
@@ -121,7 +121,7 @@ class CbViewReview extends CbViewAbstract
         $data['csspath']  = '';
         $data['source']   = $this->_formatSourceCode($fileName, $issues);
         $data['jsCode']   = $this->_grenerateJSCode($issues);
-        $data['files']    = $this->fileListToDirTree(array_keys($issueCounts));
+        $data['files']    = $this->fileListToDirTree(array_keys($fileList));
 
         $depth            = substr_count($shortFilename, DIRECTORY_SEPARATOR);
         $data['csspath']  = str_repeat('../', $depth - 1 >= 0 ? $depth - 1 : 0);
@@ -392,9 +392,9 @@ class CbViewReview extends CbViewAbstract
     private function _formatIssues($issueList)
     {
         $outputIssues = array();
-        foreach ($issueList as $issues) foreach ($issues as $error) {
-            for ($i = $error->lineStart; $i <= $error->lineEnd; $i++) {
-                $outputIssues[$i][] = $error;
+        foreach ($issueList as $issue) {
+            for ($i = $issue->lineStart; $i <= $issue->lineEnd; $i++) {
+                $outputIssues[$i][] = $issue;
             }
         }
         return $outputIssues;
