@@ -82,6 +82,13 @@ class CbSourceHandler
     protected $plugins = array();
 
     /**
+     * Files to be included in the report
+     *
+     * @var Array of CbFile
+     */
+    protected $_files = array();
+
+    /**
      * Default constructor
      *
      * @param CbIssueXml $cbIssueXml The CbIssueXml object providing all known issues
@@ -90,83 +97,53 @@ class CbSourceHandler
     {
         $this->cbIssueXml = $cbIssueXml;
         $this->plugins    = $plugins;
-    }
 
-    /**
-     * Get the related error elements for given $fileName.
-     *
-     * @param String $fileName  The $fileName to search for, could be a mixe of
-     *                          path with filename as well (e.g.
-     *                          relative/path/filename.php)
-     *
-     * @return Array    Array containing all the issues for the given file.
-     *                  If none exist, an empty array will be returned.
-     */
-    public function getIssuesByFile($fileName)
-    {
-        $list = array();
-        foreach ($this->plugins as $plugin) {
-            $list = $this->buildIssueTree($plugin->getIssuesByFile($fileName), $list);
-        }
-        return $list;
-    }
-
-    /**
-     * Returns how many issues are in each file.
-     * The returned Array has the following structure:
-     *  array(
-     *      'filename' => array(
-     *          'notSoSevere' => 3,
-     *          'quiteSevere' => 1
-     *      ),
-     *      ...
-     *  )
-     *
-     *  @return array
-     */
-    public function getIssueCounts() {
-        $total = array();
-        foreach ($this->plugins as $plugin) {
-            foreach ($plugin->getIssueCounts() as $file => $counts) {
-                if (!array_key_exists($file, $total)) {
-                    // If we don't already have any issues for this file, just
-                    // copy the ones from the plugin.
-                    $total[$file] = $counts;
+        foreach ($plugins as $p) {
+            $files = $p->getFilelist();
+            foreach ($files as $f) {
+                if (array_key_exists($f->name(), $this->_files)) {
+                    $this->_files[$f->name()]->merge($f);
                 } else {
-                    // If we already have some, we have to merge them.
-                    foreach ($counts as $severity => $c) {
-                        if (!array_key_exists($severity, $total[$file])) {
-                            $total[$file][$severity] = $c;
-                        } else {
-                            $total[$file][$severity] += $c;
-                        }
-                    }
+                    $this->_files[$f->name()] = $f;
                 }
             }
         }
-        return $total;
     }
 
     /**
-     * Build a tree of issues to be able to get issues by line number.
+     * Add a source directory to the file list.
      *
-     * As a file could have several issues in the same line number, the
-     * structure is provided as an array of arrays.
-     *
-     * @param Array $newIssues Issues to add
-     * @param Array $oldIssues Exisiting issues as tree.
-     *
-     * @return Array
+     * @param String $dir The name of the directory to add.
      */
-    protected function buildIssueTree(Array $newIssues, Array $oldIssues)
+    public function addSourceDir($dir)
     {
-        foreach ($newIssues as $issue) {
-            if (!isset($oldIssues[$issue->lineStart])) {
-                $oldIssues[$issue->lineStart] = array();
+        foreach (new CbSourceIterator($dir) as $f)
+        {
+            if (!array_key_exists($f, $this->_files)) {
+                echo "adding ".$f."\n";
+                $this->_files[$f] = new CbFile($f);
             }
-            $oldIssues[$issue->lineStart][] = $issue;
         }
-        return $oldIssues;
+    }
+
+    /**
+     * Retrieves the parent directory all files have in common.
+     *
+     * @return String
+     */
+    public function getCommonPathPrefix()
+    {
+        return CbIOHelper::getCommonPathPrefix(array_keys($this->_files));
+    }
+
+    /**
+     * Returns the files that should be in the report.
+     *
+     * @return Array of CbFile
+     */
+    public function getFiles()
+    {
+        return $this->_files;
     }
 
     /**
@@ -176,10 +153,6 @@ class CbSourceHandler
      */
     public function getFilesWithIssues()
     {
-        $files = array();
-        foreach ($this->plugins as $plugin) {
-            $files = array_merge($files, $plugin->getFilesWithIssues());
-        }
-        return array_unique($files);
+        return array_keys($this->_files);
     }
 }
