@@ -236,50 +236,57 @@ class CbCLIController
             $plugins[] = new $className($cbIssueXml);
         }
 
-        $issueHandler = new CbSourceHandler($cbIssueXml, $plugins);
-        $files        = $issueHandler->getFilesWithIssues();
-        
-        CbLogger::log(sprintf('Found %d files with issues.', count($files)), CbLogger::PRIORITY_INFO);
+        $sourceHandler = new CbSourceHandler($cbIssueXml, $plugins);
 
-        /**
-         * If optional source parameter is given load file list from 
-         * source directory, from XML report files else.
-         */
+        CbLogger::log(
+            sprintf(
+                'Found %d files with issues.',
+                count($sourceHandler->getFiles())
+            ),
+            CbLogger::PRIORITY_INFO
+        );
+
         if (isset($this->_projectSourceDir)) {
-            $fileIterator = new CbSourceIterator($this->_projectSourceDir);
-        } else {
-            $fileIterator = new ArrayIterator($files);
+            $sourceHandler->addSourceDir($this->_projectSourceDir);
         }
+        $files = $sourceHandler->getFiles();
 
         // Get the path prefix all files have in common
-        $commonPathPrefix = CbIOHelper::getCommonPathPrefix($files);
-        $issueCounts = $issueHandler->getIssueCounts();
+        $commonPathPrefix = $sourceHandler->getCommonPathPrefix();
 
-        foreach($fileIterator as $file) {
+        foreach($files as $file) {
             CbLogger::log(
-                sprintf('Get issues for "...%s"', substr($file, strlen($commonPathPrefix))),
+                sprintf(
+                    'Get issues for "...%s"',
+                    substr($file->name(), strlen($commonPathPrefix))
+                ),
                 CbLogger::PRIORITY_DEBUG
             );
-            $issues = $issueHandler->getIssuesByFile($file);
+            $issues = $file->getIssues();
 
             // @TODO Timer::start() only for logging check performace and remove if neccessary 
-            PHP_Timer::start(); 
+            PHP_Timer::start();
             CbLogger::log(
-                sprintf('Generating source view for [...%s]', $file),
-                CbLogger::PRIORITY_DEBUG
-            );
-            
-            $cbViewReview->generate($issues, $file, $commonPathPrefix, $issueCounts);
-            
-            CbLogger::log(
-                sprintf('completed in %s', PHP_Timer::stop()), 
+                sprintf('Generating source view for [...%s]', $file->name()),
                 CbLogger::PRIORITY_DEBUG
             );
 
+            $cbViewReview->generate(
+                $issues,
+                $file->name(),
+                $commonPathPrefix,
+                $files
+            );
+
+            CbLogger::log(
+                sprintf('completed in %s', PHP_Timer::stop()),
+                CbLogger::PRIORITY_DEBUG
+            );
         }
-        // Copy needed ressources (eg js libraries) to output directory 
+
+        // Copy needed ressources (eg js libraries) to output directory
         $cbViewReview->copyRessourceFolders(true);
-        $cbViewReview->generateIndex($issueCounts);
+        $cbViewReview->generateIndex($files);
     }
 
     /**
