@@ -126,6 +126,20 @@ abstract class CbPluginsAbstract
     }
 
     /**
+     * Gets a list of CbFile objects, including their issues.
+     *
+     * @return Array of CbFile List of files with issues.
+     */
+    public function getFilelist()
+    {
+        $files = array();
+        foreach ($this->getFilesWithIssues() as $name) {
+            $files[] = new CbFile($name, $this->getIssuesByFile($name));
+        }
+        return $files;
+    }
+
+    /**
      * Parse the cc XML file for defined error type, e.g. "pmd" and map this
      * error to the Issue objects format.
      *
