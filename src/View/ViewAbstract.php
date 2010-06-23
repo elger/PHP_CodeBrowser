@@ -144,7 +144,7 @@ class CbViewAbstract
      * 
      * @TODO Refactor this method
      */
-    public function copyRessourceFolders($hasErrors = true)
+    public function copyRessourceFolders()
     {
         if (!isset($this->_outputDir)) {
             throw new Exception('Output directory is not set!');
@@ -156,15 +156,6 @@ class CbViewAbstract
                 $this->_outputDir . DIRECTORY_SEPARATOR . $folder
             );
         }
-
-        //TODO: Move this intelligently to generateIndex
-        //$template = ($hasErrors) ?  'index.tpl' : 'noErrors.tpl';
-        //$content  = $this->_ioHelper->loadFile(
-        //    $this->_templateDir . '/' . $template
-        //);
-        //$this->_ioHelper->createFile(
-        //    $this->_outputDir . '/index.html', $content
-        //);
     }
 
     /**
