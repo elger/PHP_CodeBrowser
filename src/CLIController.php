@@ -297,50 +297,95 @@ class CbCLIController
     public static function main()
     {
         PHP_Timer::start();
-        
-        $xmlLogDir    = null;
-        $sourceFolder = null;
-        $htmlOutput   = null;
 
         // register autoloader
         spl_autoload_register(array(new CbAutoloader(), 'autoload'));
 
         // TODO: set loglevel via script parameters
         CbLogger::setLogLevel(CbLogger::PRIORITY_DEBUG);
-        
-        // TODO: refactor argument parser
-        $argv = $_SERVER['argv'];
-        foreach ($argv as $key => $argument) {
-            switch ($argument) {
-            case '--log':
-                $xmlLogDir = $argv[$key + 1];
-                break;
-            case '--source':
-                $sourceFolder = isset($argv[$key + 1]) ? $argv[$key + 1] : '';
-                break;
-            case '--output':
-                $htmlOutput = $argv[$key + 1];
-                break;
-            case '--help':
-            case '-h':
-                self::printHelp();
-                break;
-            case '--version':
+
+        // Parse arguments
+        $opts = getopt('l:s:o:hv', array(
+            'log:',
+            'source:',
+            'output:',
+            'help',
+            'version',
+            'logfile'
+        ));
+
+        foreach ($opts as $opt => $val) switch ($opt) {
+            case 'v':
+            case 'version':
                 self::printVersion();
+                exit();
+            case 'h':
+            case 'help':
+                self::printHelp();
+                exit();
+            case 's':
+            case 'source':
+                if (isset($sourceFolder) || is_array($val)) {
+                    print 'Only one source folder may be given';
+                    self::printHelp();
+                    exit();
+                }
+                $sourceFolder = $val;
                 break;
-            case '--logfile':
-                CbLogger::setLogFile($argv[$key + 1]);
-            }
+            case 'l':
+            case 'log':
+                if (isset($xmlLogDir) || is_array($val)) {
+                    print 'Only one log folder may be given';
+                    self::printHelp();
+                    exit();
+                }
+                $xmlLogDir = $val;
+                break;
+            case 'output':
+            case 'o':
+                if (isset($htmlOutput) || is_array($val)) {
+                    print 'Only one output folder may be given';
+                    self::printHelp();
+                    exit();
+                }
+                $htmlOutput = $val;
+                break;
+            case 'logfile':
+                if (is_array($val)) {
+                    print 'Only one logfile may be given';
+                    self::printHelp();
+                    exit();
+                }
+                CbLogger::setLogFile($val);
+                break;
         }
 
-        // Check for directories
-        // @TODO Error message using wrong script parameters
-        if (!is_dir($xmlLogDir) || !is_dir($htmlOutput)
-        || (isset($sourceFolder) && !is_dir($sourceFolder))) {
-            #printf('Error occured');
-            self::printHelp();
+        // Check if given parameters are valid.
+        $errors = array();
+        if (!isset($xmlLogDir)) {
+            $errors[] = 'Log folder must be given.';
+        } else if (!is_dir($xmlLogDir)) {
+            $errors[] = 'Log folder is no directory.';
         }
-        
+        if (!isset($htmlOutput)) {
+            $errors[] = 'Output folder must be given.';
+        } else if (file_exists($xmlLogDir) && !is_dir($xmlLogDir)) {
+            $errors[] = 'Output folder exists and is no directory.';
+        }
+        if (isset($sourceFolder) && !is_dir($sourceFolder)) {
+            $errors[] = "Source folder '$sourceFolder' does not exist "
+                      . 'or is no directory';
+        }
+
+        if ($errors) {
+            foreach ($errors as $e) {
+                print $e . "\n";
+            }
+            print 'Try `' . $_SERVER['PHP_SELF']
+                . " --help` for more information.\n";
+            exit();
+        }
+
         CbLogger::log('Generating PHP_CodeBrowser files', CbLogger::PRIORITY_INFO);
 
         // init new CLIController
@@ -350,9 +395,13 @@ class CbCLIController
             $htmlOutput,
             new CbIOHelper()
         );
-        
-        $controller->addErrorPlugins(
-            array('CbErrorCheckstyle', 'CbErrorPMD', 'CbErrorCPD', 'CbErrorPadawan', 'CbErrorCoverage')
+
+        $controller->addErrorPlugins(array(
+            'CbErrorCheckstyle',
+            'CbErrorPMD',
+            'CbErrorCPD',
+            'CbErrorPadawan',
+            'CbErrorCoverage')
         );
 
         try {
@@ -373,24 +422,25 @@ class CbCLIController
      */
     public static function printHelp()
     {
-        print "<<<USAGE
+        print <<<USAGE
 Usage: phpcb --log <dir> --output <dir> [--source <dir>] [--logfile <dir>]
 
 PHP_CodeBrowser arguments:
---log <dir>             The path to the xml log files, e.g. generated from phpunit.
---output <dir>          Path to the output folder where generated files should be stored.
---source <dir>   (opt)  Path to the project source code. Parse complete source directory
-                        is set, else only files found in logs.
---log-file <dir> (opt)  Path of the file to use for logging the output.
---log-level
+-l <dir>    --log <dir>     The path to the xml log files, e.g. generated
+                            from phpunit. Mandatory.
+-o <dir>    --output <dir>  Path to the output folder where generated
+                            files should be stored. Mandatory.
+-s <dir>    --source <dir>  Path to the project source code. Parse complete
+                            source directory if set, else only files found
+                            in logs. Optional.
+--log-file <dir>            Path of the file to use for logging the output.
+                            If not given, stdout will be used. Optional.
 
 General arguments:
 --help                  Print this help.
 --version               Print actual verison.
 
-USAGE";
-        
-        exit();
+USAGE;
     }
 
     /**
@@ -400,10 +450,10 @@ USAGE";
      */
     public static function printVersion()
     {
-        print "<<<USAGE
+        print <<<USAGE
 PHP_CodeBrowser by Mayflower GmbH
-Version 1.2  21.Mai.2010 
-USAGE";
-        exit();
+Version 1.2  21.Mai.2010
+
+USAGE;
     }
 }
