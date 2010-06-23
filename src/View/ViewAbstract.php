@@ -167,17 +167,60 @@ class CbViewAbstract
      */
     public function generateIndex(Array $fileList)
     {
+        $data['treeList'] = $this->_getTreeListHtml($fileList);
+        $data['fileList'] = $fileList;
+
         $this->_ioHelper->createFile(
             $this->_outputDir . '/index.html',
-            $this->_render(
-                'index',
-                array(
-                    'dirTree' => $this->fileListToDirTree(
-                        array_keys($fileList)),
-                    'fileList' => $fileList
-                )
-            )
+            $this->_render('index',$data)
         );
+    }
+
+    /**
+     * Convert a list of files to a html fragment for jstree.
+     *
+     * @param Array $fileList   The files, format array('name' => CbFile, ...)
+     *
+     * @return String           The html fragment.
+     */
+    protected function _getTreeListHtml(Array $fileList)
+    {
+        $fileList = $this->fileListToDirTree(array_keys($fileList));
+        return $this->_getFileTree($fileList, '');
+
+    }
+
+    /**
+     * Helper function for _getTreeHtml
+     */
+    protected function _getFileTree(Array $dir, $prefix) {
+        $ret = '';
+
+        $subdirs = array();
+        $files = array();
+        foreach ($dir as $key => $val) {
+            if (is_array($val)) {
+                $subdirs[$key] = $val;
+            } else {
+                $files[] = $val;
+            }
+        }
+
+        ksort($subdirs);
+        sort($files);
+
+        $ret .= '<ul>';
+        foreach ($subdirs as $key => $val) {
+            $ret .= "<li><a class='treeDir'>$key</a>";
+            $ret .= $this->_getFileTree($val, $prefix . $key . '/');
+            $ret .= '</li>';
+        }
+
+        foreach ($files as $f) {
+            $ret .= "<li class='php'><a href='$prefix$f.html'>$f</a></li>";
+        }
+        $ret .= '</ul>';
+        return $ret;
     }
 
     /**
