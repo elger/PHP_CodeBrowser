@@ -190,4 +190,51 @@ class CbFile
         }
         $this->_issues = array_merge($this->_issues, $file->_issues);
     }
+
+    /**
+     * Sorts an array of CbFiles. Key value association will be preserved.
+     *
+     * @param Array $files The files to sort.
+     */
+    public static function sort(Array &$files)
+    {
+        uasort($files, 'CbFile::_sort');
+    }
+
+    /**
+     * Sorting function used in CbFile::sort()
+     */
+    protected static function _sort($a, $b)
+    {
+        $a = $a->name();
+        $b = $b->name();
+
+        $prelen = strlen(CbIOHelper::getCommonPathPrefix(array($a, $b))) + 1;
+
+        $a = substr($a, $prelen);
+        $b = substr($b, $prelen);
+
+        $aIsInSubdir = (substr_count($a, DIRECTORY_SEPARATOR) !== 0);
+        $bIsInSubdir = (substr_count($b, DIRECTORY_SEPARATOR) !== 0);
+
+        if ($aIsInSubdir) {
+            if ($bIsInSubdir) {
+                // both are subdirectories
+                return strcmp($a, $b);
+            } else {
+                // a lies in a subdir of the dir in which b lies,
+                // so b comes later.
+                return -1;
+            }
+        } else {
+            if ($bIsInSubdir) {
+                // b lies in a subdir of the dir in which a lies,
+                // so a comes later.
+                return 1;
+            } else {
+                // both are files
+                return strcmp($a, $b);
+            }
+        }
+    }
 }

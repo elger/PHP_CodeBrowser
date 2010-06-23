@@ -137,12 +137,13 @@ class CbSourceHandler
     }
 
     /**
-     * Returns the files that should be in the report.
+     * Returns a sorted array of the files that should be in the report.
      *
      * @return Array of CbFile
      */
     public function getFiles()
     {
+        CbFile::sort($this->_files);
         return $this->_files;
     }
 
