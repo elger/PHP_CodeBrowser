@@ -120,7 +120,6 @@ class CbViewReview extends CbViewAbstract
         $data['filepath'] = $shortFilename;
         $data['csspath']  = '';
         $data['source']   = $this->_formatSourceCode($fileName, $issues);
-        $data['jsCode']   = $this->_grenerateJSCode($issues);
         $data['treeList'] = $this->_getTreeListHtml($fileList);
 
         $depth            = substr_count($shortFilename, DIRECTORY_SEPARATOR);
@@ -133,32 +132,6 @@ class CbViewReview extends CbViewAbstract
             $this->_outputDir . $shortFilename . '.html',
             $this->_render('review', $data)
         );
-    }
-
-
-    /**
-     * Generating JavaScript code like tooltip, etc., for each issue line.
-     *
-     * @param Array $issueList The issue list as array of arrays
-     *
-     * @return String
-     */
-    private function _grenerateJSCode(Array $issueList)
-    {
-        $jsCode = '';
-        foreach ($issueList as $num => $lineIssues) {
-            $jsCode .= sprintf("
-                $('#line_%d').cluetip({
-                    splitTitle: '|',
-                    activation: 'hover',
-                    dropShadow: false,
-                    tracking: true,
-                    cluetipClass: 'default'
-                });",
-                $num
-            );
-        }
-        return $jsCode;
     }
 
     /**
