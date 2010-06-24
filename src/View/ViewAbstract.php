@@ -185,78 +185,43 @@ class CbViewAbstract
      */
     protected function _getTreeListHtml(Array $fileList)
     {
-        $fileList = $this->fileListToDirTree(array_keys($fileList));
-        return $this->_getFileTree($fileList, '');
+        $names = array_keys($fileList);
+        $curDir = CbIOHelper::getCommonPathPrefix($names);
+        $preLen = strlen($curDir) + 1;
 
-    }
+        $ret = '<ul>';
+        foreach ($names as $name) {
+            $dir = dirname($name);
+            $shortName = substr($name, $preLen);
+            $fileName = basename($name);
 
-    /**
-     * Helper function for _getTreeHtml
-     */
-    protected function _getFileTree(Array $dir, $prefix) {
-        $ret = '';
-
-        $subdirs = array();
-        $files = array();
-        foreach ($dir as $key => $val) {
-            if (is_array($val)) {
-                $subdirs[$key] = $val;
-            } else {
-                $files[] = $val;
+            // Go back until the file is somewhere below curDir
+            while (strpos($dir, $curDir) !== 0) {
+                // chop off one subdir from $curDir
+                $curDir = substr(
+                    $curDir,
+                    0,
+                    strrpos($curDir, DIRECTORY_SEPARATOR)
+                );
+                $ret .= '</ul></li>';
             }
+
+            if ($dir !== $curDir) {
+                // File is in a subdir of current directory
+                $relDir = substr($dir, strlen($curDir) + 1);
+                $relDirs = explode(DIRECTORY_SEPARATOR, $relDir);
+
+                foreach ($relDirs as $dirName) {
+                    $ret .= "<li><a class='treeDir'>$dirName</a><ul>";
+                }
+                $curDir = $dir;
+            }
+            $ret .= "<li class='php' ><a href='$shortName.html'>";
+            $ret .= "$fileName</a></li>";
         }
 
-        ksort($subdirs);
-        sort($files);
-
-        $ret .= '<ul>';
-        foreach ($subdirs as $key => $val) {
-            $ret .= "<li><a class='treeDir'>$key</a>";
-            $ret .= $this->_getFileTree($val, $prefix . $key . '/');
-            $ret .= '</li>';
-        }
-
-        foreach ($files as $f) {
-            $ret .= "<li class='php'><a href='$prefix$f.html'>$f</a></li>";
-        }
         $ret .= '</ul>';
         return $ret;
-    }
-
-    /**
-     * Gets a list of complete Filenames and returns a tree-is structure
-     * representing the directories.
-     *
-     * @param Array $files The list of files.
-     *
-     * @return Array A treeish structure representing the directory structure.
-     */
-    protected function fileListToDirTree(Array $files)
-    {
-        $prefix = $this->_ioHelper->getCommonPathPrefix($files);
-
-        $shortFiles = array();
-        foreach ($files as $f) {
-            $shortFiles[] = substr($f, strlen($prefix) + 1);
-        }
-
-        $fileTree = array();
-        foreach ($shortFiles as $f) {
-            $pos = strpos($f, DIRECTORY_SEPARATOR);
-            $parent =& $fileTree;
-            while ($pos !== false) {
-                $dir = substr($f, 0, $pos);
-                $f = substr($f, $pos + 1);
-
-                if (!array_key_exists($dir, $parent)) {
-                    $parent[$dir] = array();
-                }
-                $parent =& $parent[$dir];
-                $pos = strpos($f, DIRECTORY_SEPARATOR);
-            }
-            $parent[] = $f;
-        }
-        return $fileTree;
     }
 
     /**
