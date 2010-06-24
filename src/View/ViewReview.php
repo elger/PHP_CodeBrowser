@@ -183,7 +183,12 @@ class CbViewReview extends CbViewAbstract
             ++$lineNumber;
             $line->setAttribute('id', 'line_' . $lineNumber);
 
+            $lineClasses = array(
+                $lineNumber % 2 ? 'white' : 'even'
+            );
+
             if (isset($outputIssues[$lineNumber])) {
+                $lineClasses[] = 'hasIssues';
                 $message = '|';
                 foreach ($outputIssues[$lineNumber] as $issue) {
                     $message .= sprintf('
@@ -204,10 +209,6 @@ class CbViewReview extends CbViewAbstract
             $anchor = $sourceDom->createElement('a');
             $anchor->setAttribute('name', 'line_' . $lineNumber);
             $line->appendChild($anchor);
-
-            $lineClasses = array(
-                $lineNumber % 2 ? 'white' : 'even'
-            );
 
             // set li css class depending on line errors
             switch ($tmp = (isset($outputIssues[$lineNumber]) ? count($outputIssues[$lineNumber]) : 0)) {

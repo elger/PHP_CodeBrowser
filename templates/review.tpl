@@ -9,7 +9,7 @@
         <link rel="stylesheet" type="text/css" href="<?php print $csspath; ?>css/cruisecontrol.css" />
         <link rel="stylesheet" type="text/css" href="<?php print $csspath; ?>css/review.css" />
         <link rel="stylesheet" type="text/css" href="<?php print $csspath; ?>css/tree.css" />
-        
+
         <script type="text/javascript" src="<?php print $csspath; ?>js/review.js"></script>
         <script type="text/javascript" src="<?php print $csspath; ?>js/jquery-1.4.2.js"></script>
         <script type="text/javascript" src="<?php print $csspath; ?>js/jquery.jstree/jquery.jstree.js"></script>
@@ -67,7 +67,7 @@
                     </thead>
                     <tbody>
                         <?php foreach($issues as $issue):?>
-                        
+
                         <tr class="<?php print $issue->foundBy; ?>">
                             <td align="center">
                                 <a href="#line_<?php print $issue->lineStart;?>" onClick="switchLine('line_<?php print $issue->lineStart;?>')">
@@ -95,10 +95,14 @@
                 </table>
             </div>
             <script language="javascript">
-                <?php
-                    echo $jsCode;
-                ?>
-        
+                $('.hasIssues').cluetip({
+                    splitTitle: '|',
+                    activation: 'hover',
+                    dropShadow: false,
+                    tracking: true,
+                    cluetipClass: 'default'
+                });
+
                 $(function() {
                     $("div#sidebar").sidebar({width:600, height: 400, open : "click", close: "click", position: "right"});
                 })
