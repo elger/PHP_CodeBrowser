@@ -95,17 +95,7 @@
                 </table>
             </div>
             <script language="javascript">
-                $('.hasIssues').cluetip({
-                    splitTitle: '|',
-                    activation: 'hover',
-                    dropShadow: false,
-                    tracking: true,
-                    cluetipClass: 'default'
-                });
-
-                $(function() {
-                    $("div#sidebar").sidebar({width:600, height: 400, open : "click", close: "click", position: "right"});
-                })
+                $(initReview);
             </script> 
             <?php endif; // div sidebar ?> 
         </div>
