@@ -151,21 +151,19 @@ class CbViewReviewTest extends CbAbstractTests
      */
     public function test__generate()
     {
-        $this->markTestIncomplete();
         $issueList = array(
-            80 => array(
-                new CbIssue(
-                    __FILE__,
-                    80,
-                    85,
-                    'finder',
-                    'description',
-                    'severe'
-                )
+            new CbIssue(
+                __FILE__,
+                80,
+                85,
+                'finder',
+                'description',
+                'severe'
             )
         );
-        $expectedFile = $this->_outDir . '/' . basename(__FILE__) . '.html';
+        $file = new CbFile(__FILE__, $issueList);
 
+        $expectedFile = $this->_outDir . '/' . basename(__FILE__) . '.html';
         $this->_ioMock->expects($this->once())
                       ->method('loadFile')
                       ->with($this->equalTo(__FILE__))
@@ -178,7 +176,7 @@ class CbViewReviewTest extends CbAbstractTests
             $issueList,
             __FILE__,
             dirname(__FILE__),
-            array(__FILE__)
+            array($file)
         );
     }
 
@@ -189,29 +187,27 @@ class CbViewReviewTest extends CbAbstractTests
      */
     public function test__generateMultiple()
     {
-        $this->markTestIncomplete();
         $issueList = array(
-            80 => array(
-                new CbIssue(
-                    __FILE__,
-                    80,
-                    80,
-                    'finder',
-                    'description',
-                    'severe'
-                    ),
-                new CbIssue(
-                    __FILE__,
-                    80,
-                    80,
-                    'other finder',
-                    'other description',
-                    'more severe'
-                )
+            new CbIssue(
+                __FILE__,
+                80,
+                80,
+                'finder',
+                'description',
+                'severe'
+                ),
+            new CbIssue(
+                __FILE__,
+                80,
+                80,
+                'other finder',
+                'other description',
+                'more severe'
             )
         );
-        $expectedFile = $this->_outDir . '/' . basename(__FILE__) . '.html';
+        $file = new CbFile(__FILE__, $issueList);
 
+        $expectedFile = $this->_outDir . '/' . basename(__FILE__) . '.html';
         $this->_ioMock->expects($this->once())
                       ->method('loadFile')
                       ->with($this->equalTo(__FILE__))
@@ -224,7 +220,7 @@ class CbViewReviewTest extends CbAbstractTests
             $issueList,
             __FILE__,
             dirname(__FILE__),
-            array(__FILE__)
+            array($file)
         );
     }
 
@@ -235,7 +231,6 @@ class CbViewReviewTest extends CbAbstractTests
      */
     public function test__generateWithTextHighlighter()
     {
-        $this->markTestIncomplete();
         if(!class_exists('Text_Highlighter')) {
             $this->markTestIncomplete();
         }
