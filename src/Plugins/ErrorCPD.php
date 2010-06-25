@@ -87,7 +87,7 @@ class CbErrorCPD extends CbPluginsAbstract
                 (int) $file->getAttribute('line') + $lineCount,
                 'Duplication',
                 htmlentities(
-                    $this->getDescription($parentNode->childNodes, $file)
+                    $this->_CPDgetDescription($parentNode->childNodes, $file)
                 ),
                 'notice'
             );
@@ -119,7 +119,11 @@ class CbErrorCPD extends CbPluginsAbstract
         );
     }
 
-    protected function getDescription(DOMNodeList $allNodes, DOMNode $currentNode)
+    /**
+     * We need another version of getDescription, as we need $allNodes
+     * to find duplicates.
+     */
+    protected function _CPDgetDescription(DOMNodeList $allNodes, DOMNode $currentNode)
     {
         $source = array();
         foreach ($allNodes as $node) {
@@ -134,4 +138,11 @@ class CbErrorCPD extends CbPluginsAbstract
         return "Copy paste from:\n".implode("\n", $source);
     }
 
+    /**
+     * Make sure this is never called.
+     */
+    protected function getDescription(DOMElement $element)
+    {
+        throw new Exception('ErrorCPD does not support getDescription()!');
+    }
 }
