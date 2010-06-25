@@ -16,16 +16,17 @@ $(function() {
         event.preventDefault();
         target = event.originalTarget.href;
         otherDone = false;
+        $('.sidebar-container-right').remove();
+        $('#cluetip').remove();
+        $('#cluetip-waitimage').remove();
+
         $('#fileList').animate({opacity: 'hide'}, 'fast', function() {
         $('#reviewContainer').animate({opacity: 'hide'}, 'fast', function() {
             $('#loading').animate({opacity: 'show'}, 'slow');
             $('#reviewContainer').empty().load(target + ' #review', function() {
                 $('#loading').animate({opacity: 'hide'}, 'fast', function() {
-                    $('#reviewContainer').animate(
-                        {opacity: 'show'},
-                        'slow',
-                        initReview
-                    );
+                    initReview();
+                    $('#reviewContainer').animate({opacity: 'show'}, 'slow');
                 });
             });
         })});
