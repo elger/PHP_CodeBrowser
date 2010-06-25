@@ -210,14 +210,11 @@ class CbCLIController
     {
         // init needed classes
         $cbIssueXml    = new CbIssueXml();
-        $cbViewReview  = new CbViewReview($this->_ioHelper);
-
-        $cbViewReview->setOutputDir($this->_htmlOutputDir);
-        
-        /**
-         * @TODO move directly to CbViewReview __construct 
-         */
-        $cbViewReview->setTemplateDir(PHPCB_TEMPLATE_DIR);
+        $cbViewReview  = new CbViewReview(
+            PHPCB_TEMPLATE_DIR,
+            $this->_htmlOutputDir,
+            $this->_ioHelper
+        );
 
         // clear and create output directory
         $this->_ioHelper->deleteDirectory($this->_htmlOutputDir);

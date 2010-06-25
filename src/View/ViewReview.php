@@ -79,10 +79,14 @@ class CbViewReview extends CbViewAbstract
      * Default constructor
      *
      * Highlighting strings are set.
+     *
+     * @param String $templateDir   The directory containing the templates.
+     * @param String $outputDir     The directory where the reviews should be.
+     * @param CbIOHelper $ioHelper  The CbIOHelper object to use for I/O.
      */
-    public function __construct($ioHelper)
+    public function __construct($templateDir, $outputDir, $ioHelper)
     {
-        parent::__construct($ioHelper);
+        parent::__construct($templateDir, $outputDir, $ioHelper);
         $this->phpHighlightColorMap = array(
             ini_get('highlight.string')  => 'string',
             ini_get('highlight.comment') => 'comment',

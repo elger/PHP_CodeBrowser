@@ -97,41 +97,26 @@ class CbViewAbstract
     /**
      * Default Constructor
      *
-     * @param CbIOHelper $ioHelper The CbIOHelper used for filesystem interaction.
+     * @param String $templateDir   The directory containing the templates.
+     * @param String $outputDir     The directory where the reviews should be.
+     * @param CbIOHelper $ioHelper  The CbIOHelper object to use for I/O.
      */
-    public function __construct($ioHelper)
-    {
-        $this->_ioHelper = $ioHelper;
-    }
-
-    /**
-     * Setter method
-     *
-     * @param String $templateDir Path to template diretory
-     *
-     * @return void
-     */
-    public function setTemplateDir ($templateDir)
+    public function __construct($templateDir, $outputDir, $ioHelper)
     {
         $this->_templateDir = realpath($templateDir);
-    }
+        if (!$this->_templateDir) {
+            throw new Exception("Specified template directory '$outputDir'"
+                                . 'does not exist');
+        }
 
-    /**
-     * Setter mothod
-     * Path where generated view-files should be saved.
-     *
-     * @param String $outputDir Path to output directory
-     *
-     * @return void
-     */
-    public function setOutputDir($outputDir)
-    {
         $this->_outputDir = realpath($outputDir);
         if (!$this->_outputDir) {
-            throw new Exception("Specified output directory '$outputDir' doesn't exist");
+            throw new Exception("Specified output directory '$outputDir'"
+                                . 'does not exist');
         }
-    }
 
+        $this->_ioHelper = $ioHelper;
+    }
 
     /**
      * Copy needed resources to output directory
