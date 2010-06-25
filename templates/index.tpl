@@ -14,6 +14,7 @@
         <script type="text/javascript" src="js/jquery.cluetip/lib/jquery.hoverIntent.js"></script>
         <script type="text/javascript" src="js/jquery.cluetip/lib/jquery.bgiframe.min.js"></script>
         <script type="text/javascript" src="js/jquery.cluetip/jquery.cluetip.js"></script>
+        <script type="text/javascript" src="js/jquery.history.js"></script>
 
         <script type="text/javascript" src="js/review.js"></script>
         <script type="text/javascript" src="js/tree.js"></script>
@@ -33,7 +34,7 @@
         <div id="contentBox" style="display: inline-block; margin: 15px;">
             <div id="loading" style="display: none;"><h1>Loading...</h1></div>
             <div id="reviewContainer" style="display: none;"></div>
-            <div id="fileList" style="display: inline-block; margin:15px;">
+            <div id="fileList">
                 <table border="0" cellspacing="2" cellpadding="3">
                     <tr class="head">
                         <td><strong>File</strong></td>
