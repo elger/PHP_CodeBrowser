@@ -77,11 +77,22 @@ class CbSourceHandlerTest extends CbAbstractTests
     {
         parent::setUp();
 
-        $this->markTestIncomplete();
+        $xmlString = <<<HERE
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="1.2.0RC3">
+ <file name="/a/dir/source.php">
+  <error line="37" column="1" severity="error" message="m1" source="PEAR.Commenting.FileCommentSniff"/>
+ </file>
+ <file name="/a/nother/dir/src.php">
+  <error line="39" column="1" severity="error" message="m3" source="PEAR.Commenting.FileCommentSniff"/>
+  <error line="40" column="1" severity="error" message="m4" source="PEAR.Commenting.FileCommentSniff"/>
+ </file>
+</checkstyle>
+HERE;
         $issueXML = new CbIssueXml();
         $xml      = new DOMDocument('1.0', 'UTF-8');
         $xml->validateOnParse = true;
-        $xml->load(realpath(dirname(__FILE__) . '/../testData/shortCheckstyle.xml'));
+        $xml->loadXML($xmlString);
         $issueXML->addXMLFile($xml);
         $plugins = array(new CbErrorCheckstyle($issueXML));
         $this->_cbSourceHandler = new CbSourceHandler($issueXML, $plugins);
@@ -97,46 +108,45 @@ class CbSourceHandlerTest extends CbAbstractTests
     }
 
     /**
-     * Test getIssuesByFile for a file with issues.
+     * Test getFiles.
      *
      * @return void
      */
-    public function test__getIssuesByFile()
+    public function test__getFiles()
     {
-        $this->markTestIncomplete();
-        $expectedIssues = array(
-            37 => array(new CbIssue(
-                '/opt/cruisecontrol/projects/phpcb/source/src/JSGenerator.php',
-                37,
-                37,
-                'Checkstyle',
-                'm1',
-                'error'
-            )),
-            38 => array(new CbIssue(
-                '/opt/cruisecontrol/projects/phpcb/source/src/JSGenerator.php',
-                38,
-                38,
-                'Checkstyle',
-                'm2',
-                'error'
-            ))
+        $name1 = '/a/dir/source.php';
+        $name1 = '/a/nother/dir/src.php';
+        $expected = array(
+            '/a/nother/dir/src.php' => new CbFile(
+                '/a/nother/dir/src.php',
+                array(
+                    new CbIssue(
+                        '/a/nother/dir/src.php',
+                        39, 39, 'Checkstyle',
+                        'm3', 'error'
+                    ),
+                    new CbIssue(
+                        '/a/nother/dir/src.php',
+                        40, 40, 'Checkstyle',
+                        'm4', 'error'
+                    )
+                )
+            ),
+            '/a/dir/source.php' => new CbFile(
+                '/a/dir/source.php',
+                array(
+                    new CbIssue(
+                        '/a/dir/source.php',
+                        37, 37, 'Checkstyle',
+                        'm1', 'error'
+                    )
+                )
+            )
         );
-        $filename = '/opt/cruisecontrol/projects/phpcb/source/src/JSGenerator.php';
-        $actualIssues = $this->_cbSourceHandler->getIssuesByFile($filename);
-        $this->assertEquals($expectedIssues, $actualIssues);
-    }
+        CbFile::sort($expected);
 
-    /**
-     * Test getIssuesByFile for a file that doesn't have any Issues.
-     *
-     * @return void
-     */
-    public function test__getIssuesByFileNonexisting()
-    {
-        $this->markTestIncomplete();
-        $issues = $this->_cbSourceHandler->getIssuesByFile('/nonExistingFile');
-        $this->assertEquals(array(), $issues);
+        $actual = $this->_cbSourceHandler->getFiles();
+        $this->assertEquals($expected, $actual);
     }
 
     /**
@@ -146,10 +156,9 @@ class CbSourceHandlerTest extends CbAbstractTests
      */
     public function test__getFilesWithIssues()
     {
-        $this->markTestIncomplete();
         $expectedFiles = array (
-            '/opt/cruisecontrol/projects/phpcb/source/src/JSGenerator.php',
-            '/opt/cruisecontrol/projects/phpcb/source/src/AnotherFile.php'
+            '/a/dir/source.php',
+            '/a/nother/dir/src.php'
         );
         $actualFiles = $this->_cbSourceHandler->getFilesWithIssues();
         $this->assertEquals($expectedFiles, $actualFiles);
