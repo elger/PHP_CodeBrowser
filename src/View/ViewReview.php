@@ -120,10 +120,10 @@ class CbViewReview extends CbViewAbstract
         $data['filepath'] = $shortFilename;
         $data['csspath']  = '';
         $data['source']   = $this->_formatSourceCode($fileName, $issues);
-        $data['treeList'] = $this->_getTreeListHtml($fileList);
 
         $depth            = substr_count($shortFilename, DIRECTORY_SEPARATOR);
         $data['csspath']  = str_repeat('../', $depth - 1 >= 0 ? $depth - 1 : 0);
+        $data['treeList'] = $this->_getTreeListHtml($fileList, $data['csspath']);
 
         $dataGenerate['title']   = $data['title'];
         $dataGenerate['csspath'] = $data['csspath'];

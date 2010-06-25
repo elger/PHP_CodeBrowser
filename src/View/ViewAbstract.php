@@ -179,11 +179,12 @@ class CbViewAbstract
     /**
      * Convert a list of files to a html fragment for jstree.
      *
-     * @param Array $fileList   The files, format array('name' => CbFile, ...)
+     * @param Array $fileList       The files, format: array('name' => CbFile).
+     * @param String $hrefPrefix    The prefix to put before all href= tags.
      *
      * @return String           The html fragment.
      */
-    protected function _getTreeListHtml(Array $fileList)
+    protected function _getTreeListHtml(Array $fileList, $hrefPrefix = '')
     {
         $names = array_keys($fileList);
         $curDir = CbIOHelper::getCommonPathPrefix($names);
@@ -216,7 +217,7 @@ class CbViewAbstract
                 }
                 $curDir = $dir;
             }
-            $ret .= "<li class='php' ><a href='$shortName.html'>";
+            $ret .= "<li class='php' ><a href='$hrefPrefix$shortName.html'>";
             $ret .= "$fileName</a></li>";
         }
 
