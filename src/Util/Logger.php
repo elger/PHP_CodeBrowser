@@ -63,37 +63,37 @@
 class CbLogger
 {
 
-	/**
-	 * Constant for loglevel 
-	 * 
-	 * @var Integer
-	 */
-    const PRIORITY_DEBUG  = 1;
-    
     /**
-     * Constant for loglevel 
-     * 
+     * Constant for loglevel
+     *
+     * @var Integer
+     */
+    const PRIORITY_DEBUG  = 1;
+
+    /**
+     * Constant for loglevel
+     *
      * @var Integer
      */
     const PRIORITY_INFO   = 2;
-    
+
     /**
-     * Constant for loglevel 
-     * 
+     * Constant for loglevel
+     *
      * @var Integer
      */
     const PRIORITY_WARN   = 3;
-    
+
     /**
-     * Constant for loglevel 
-     * 
+     * Constant for loglevel
+     *
      * @var Integer
      */
     const PRIORITY_ERROR  = 4;
 
     /**
      * Priority definition for logging.
-     * 
+     *
      * @var Array
      */
     protected static $priorities = array(
@@ -105,25 +105,25 @@ class CbLogger
 
     /**
      * Defined loglevel for this application
-     * 
+     *
      * @var Integer
      */
     protected static $logLevel = -1;
 
     /**
      * Optional option logfile
-     * 
+     *
      * If is set loglevel output will be saved to $logFile
-     * 
+     *
      * @var String
      */
     protected static $logFile;
 
     /**
-     * Setter for log file. 
-     * 
+     * Setter for log file.
+     *
      * @param String $filename The logfile
-     * 
+     *
      * @return void
      */
     public static function setLogFile($filename)
@@ -133,25 +133,45 @@ class CbLogger
 
     /**
      * Setter for application loglevel.
-     * 
-     * @param Integer $priority The priority of loglevl, e.g. CbLogger::DEBUG
-     * 
+     *
+     * @param mixed $priority The priority of loglevl, e.g. CbLogger::DEBUG
+     *                        or a string like 'debug' (case-insensitive)
+     *
      * @return void
      */
     public static function setLogLevel($priority)
     {
-        self::$logLevel = $priority;
+        $levelsByString = array(
+            'DEBUG' => self::PRIORITY_DEBUG,
+            'INFO'  => self::PRIORITY_INFO,
+            'WARN'  => self::PRIORITY_WARN,
+            'ERROR' => self::PRIORITY_ERROR
+        );
+
+        if (is_string($priority)
+                && array_key_exists(strtoupper($priority), $levelsByString)) {
+            $priority = strtoupper($priority);
+            self::$logLevel = $levelsByString[strtoupper($priority)];
+        } else if (is_integer($priority)
+                   && self::PRIORITY_DEBUG <= $priority
+                   && self::PRIORITY_ERROR >= $priority) {
+            self::$logLevel = $priority;
+        } else {
+            throw new InvalidArgumentException(
+                "Invalid log level '$priority' given."
+            );
+        }
     }
 
     /**
      * Method for logging and formatting log information.
-     * 
+     *
      * In case log file option is set, logging information will be written to log file,
      * else it will be echoed.
-     * 
+     *
      * @param String  $message  The message to log
      * @param Integer $priority The priority of log level, default CbLogger::PRIORITY_INFO
-     * 
+     *
      * @return void
      */
     public static function log($message, $priority = CbLogger::PRIORITY_INFO)
@@ -165,20 +185,20 @@ class CbLogger
             self::$priorities[$priority],
             $message
         );
-        
+
         $logMessage = sprintf('%s%s', $message, PHP_EOL);
-        
-        // In case logFile is set write log output to file else echo it 
+
+        // In case logFile is set write log output to file else echo it
         if (self::$logFile) {
             fwrite(self::$logFile, $logMessage);
         } else {
-            echo $logMessage;	
+            echo $logMessage;
         }
     }
 
     /**
      * Destructor
-     * 
+     *
      * Log file handle will be closed if option log file is set.
      */
     public function __destruct()

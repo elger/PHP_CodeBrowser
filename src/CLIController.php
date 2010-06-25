@@ -221,10 +221,10 @@ class CbCLIController
         $this->_ioHelper->createDirectory($this->_htmlOutputDir);
 
         CbLogger::log('Load XML files', CbLogger::PRIORITY_DEBUG);
-        
+
         // merge xml files
         $cbIssueXml->addDirectory($this->_logDir);
-        
+
         CbLogger::log('Load Plugins', CbLogger::PRIORITY_DEBUG);
 
         // conversion of XML file cc to cb format
@@ -261,7 +261,7 @@ class CbCLIController
             );
             $issues = $file->getIssues();
 
-            // @TODO Timer::start() only for logging check performace and remove if neccessary 
+            // @TODO Timer::start() only for logging check performace and remove if neccessary
             PHP_Timer::start();
             CbLogger::log(
                 sprintf('Generating source view for [...%s]', $file->name()),
@@ -298,9 +298,6 @@ class CbCLIController
         // register autoloader
         spl_autoload_register(array(new CbAutoloader(), 'autoload'));
 
-        // TODO: set loglevel via script parameters
-        CbLogger::setLogLevel(CbLogger::PRIORITY_DEBUG);
-
         // Parse arguments
         $opts = getopt('l:s:o:hv', array(
             'log:',
@@ -308,7 +305,8 @@ class CbCLIController
             'output:',
             'help',
             'version',
-            'logfile'
+            'log-file:',
+            'log-level:'
         ));
 
         foreach ($opts as $opt => $val) switch ($opt) {
@@ -347,7 +345,7 @@ class CbCLIController
                 }
                 $htmlOutput = $val;
                 break;
-            case 'logfile':
+            case 'log-file':
                 if (is_array($val)) {
                     print 'Only one logfile may be given';
                     self::printHelp();
@@ -355,6 +353,26 @@ class CbCLIController
                 }
                 CbLogger::setLogFile($val);
                 break;
+            case 'log-level':
+                if (is_array($val)) {
+                    print 'Only one loglevel may be given';
+                    self::printHelp();
+                    exit();
+                }
+                $loglevel = $val;
+                break;
+        }
+
+        if (isset($loglevel)) {
+            try {
+                CbLogger::setLogLevel($loglevel);
+            } catch (InvalidArgumentException $e) {
+                print $e->getMessage() . "\n\n";
+                print "See `{$_SERVER['PHP_SELF']} --help` for more help\n";
+                exit();
+            }
+        } else {
+            CbLogger::setLogLevel(CbLogger::PRIORITY_DEBUG);
         }
 
         // Check if given parameters are valid.
@@ -422,7 +440,8 @@ class CbCLIController
         print <<<USAGE
 Usage: phpcb --log <dir> --output <dir> [--source <dir>] [--logfile <dir>]
 
-PHP_CodeBrowser arguments:
+Mandatory Arguments:
+--------------------
 -l <dir>    --log <dir>     The path to the xml log files, e.g. generated
                             from phpunit. Mandatory.
 -o <dir>    --output <dir>  Path to the output folder where generated
@@ -430,8 +449,16 @@ PHP_CodeBrowser arguments:
 -s <dir>    --source <dir>  Path to the project source code. Parse complete
                             source directory if set, else only files found
                             in logs. Optional.
+
+Optional Arguments:
+-------------------
 --log-file <dir>            Path of the file to use for logging the output.
                             If not given, stdout will be used. Optional.
+--log-level <level>         Specify the log level. Available values for level,
+                            sorted from most to least noise:
+                            DEBUG, INFO, WARN, ERROR.
+                            Comparision is case insensitive.
+                            Defaults to DEBUG in this release.
 
 General arguments:
 --help                  Print this help.
