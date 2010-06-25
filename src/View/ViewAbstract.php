@@ -126,8 +126,6 @@ class CbViewAbstract
      * @return void
      * @throws Exception
      * @see cbIOHelper->copyFile
-     * 
-     * @TODO Refactor this method
      */
     public function copyRessourceFolders()
     {
