@@ -40,9 +40,9 @@ $(function() {
     });
 
     // When the user clicks on a leaf item in the tree (representing a file)
-    // we want to hide the filelist/the currently shown review and display the
-    // correct review.
-    $("#tree li.jstree-leaf a").click(function(event) {
+    // or an item in the fileList, want to hide the filelist/the currently
+    // shown review and display the correct review.
+    $(".fileLink").click(function(event) {
         event.preventDefault();
         target = event.originalTarget.href;
         $.History.go(target);

@@ -52,7 +52,7 @@ foreach ($fileList as $filename => $f) {
     $notices = $f->getWarningCount();
 
     echo "<tr class='$tag'>";
-    echo "<td><a href='$shortName.html'>$shortName</a></td>";
+    echo "<td><a class='fileLink' href='$shortName.html'>$shortName</a></td>";
     echo "<td align='center'><span class='errors'>$errors</span></td>";
     echo "<td align='center'><span class='notices'>$notices</span></td>";
     echo "</tr>";

@@ -200,7 +200,7 @@ class CbViewAbstract
                 }
                 $curDir = $dir;
             }
-            $ret .= "<li class='php' ><a href='$hrefPrefix$shortName.html'>";
+            $ret .= "<li class='php' ><a class='fileLink' href='$hrefPrefix$shortName.html'>";
             $ret .= "$fileName</a></li>";
         }
 
