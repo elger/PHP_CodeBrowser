@@ -1,3 +1,33 @@
+$.History.bind(function (state) {
+    $('.sidebar-container-right').remove();
+    $('#cluetip').remove();
+    $('#cluetip-waitimage').remove();
+
+    if (state == '') {
+        $('#reviewContainer').animate({opacity: 'hide'}, 'fast', function() {
+            $('#fileList').animate({opacity: 'show'}, 'slow');
+        });
+    } else {
+        // Go to specific review
+        $('#fileList').animate({opacity: 'hide'}, 'fast', function() {
+        $('#reviewContainer').animate({opacity: 'hide'}, 'fast', function() {
+            $('#loading').animate({opacity: 'show'}, 'slow');
+            $('#reviewContainer').empty().load(state + ' #review', function() {
+                $('#loading').animate({opacity: 'hide'}, 'fast', function() {
+                    initReview();
+                    $('#reviewContainer').animate({opacity: 'show'}, 'slow');
+                });
+            });
+        })});
+    }
+});
+
+$("#treeToggle").click().toggle(function() {
+    $("#tree").animate({width: "hide", opacity: "hide"}, "slow");
+}, function() {
+    $("#tree").animate({width: "show", opacity: "show"}, "slow");
+});
+
 $(function() {
     $("#tree").bind("loaded.jstree", function(event, data) {
         $("#tree").animate({width: "show", opacity: "show"}, "slow");
@@ -15,26 +45,7 @@ $(function() {
     $("#tree li.jstree-leaf a").click(function(event) {
         event.preventDefault();
         target = event.originalTarget.href;
-        otherDone = false;
-        $('.sidebar-container-right').remove();
-        $('#cluetip').remove();
-        $('#cluetip-waitimage').remove();
-
-        $('#fileList').animate({opacity: 'hide'}, 'fast', function() {
-        $('#reviewContainer').animate({opacity: 'hide'}, 'fast', function() {
-            $('#loading').animate({opacity: 'show'}, 'slow');
-            $('#reviewContainer').empty().load(target + ' #review', function() {
-                $('#loading').animate({opacity: 'hide'}, 'fast', function() {
-                    initReview();
-                    $('#reviewContainer').animate({opacity: 'show'}, 'slow');
-                });
-            });
-        })});
-    });
-
-    $("#treeToggle").click().toggle(function() {
-        $("#tree").animate({width: "hide", opacity: "hide"}, "slow");
-    }, function() {
-        $("#tree").animate({width: "show", opacity: "show"}, "slow");
+        $.History.go(target);
     });
 });
+
