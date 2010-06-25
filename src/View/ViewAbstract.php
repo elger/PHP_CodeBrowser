@@ -129,10 +129,6 @@ class CbViewAbstract
      */
     public function copyRessourceFolders()
     {
-        if (!isset($this->_outputDir)) {
-            throw new Exception('Output directory is not set!');
-        }
-
         foreach ($this->_ressourceFolders as $folder) {
             $this->_ioHelper->copyDirectory(
                 $this->_templateDir . DIRECTORY_SEPARATOR . $folder,
@@ -222,10 +218,6 @@ class CbViewAbstract
     protected function _render($templateName, $data)
     {
         $filePath = $this->_templateDir . DIRECTORY_SEPARATOR . $templateName . '.tpl';
-
-        if (!count($data)) {
-            return '';
-        }
 
         extract($data, EXTR_SKIP);
 
