@@ -85,10 +85,7 @@ class CbFile
      */
     public function __construct($name, Array $issues = array())
     {
-        $this->_name = realpath($name);
-        if (!$this->_name) {
-            throw new Exception('File '. $name . ' does not exist.');
-        }
+        $this->_name = $name;
         $this->_issues = $issues;
     }
 
