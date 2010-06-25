@@ -120,7 +120,6 @@ class CbSourceHandler
         foreach (new CbSourceIterator($dir) as $f)
         {
             if (!array_key_exists($f, $this->_files)) {
-                echo "adding ".$f."\n";
                 $this->_files[$f] = new CbFile($f);
             }
         }
