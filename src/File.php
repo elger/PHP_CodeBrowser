@@ -87,7 +87,7 @@ class CbFile
     {
         $this->_name = realpath($name);
         if (!$this->_name) {
-            throw new Exception('File '. $name . 'does not exist.');
+            throw new Exception('File '. $name . ' does not exist.');
         }
         $this->_issues = $issues;
     }
