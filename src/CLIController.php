@@ -299,34 +299,22 @@ class CbCLIController
         spl_autoload_register(array(new CbAutoloader(), 'autoload'));
 
         // Parse arguments
-        $opts = getopt('l:s:o:hv', array(
+        $opts = getopt('l:o:e:s:hv', array(
+            // Mandatory
             'log:',
-            'source:',
             'output:',
-            'help',
-            'version',
+            // Optional
+            'exclude:',
             'log-file:',
-            'log-level:'
+            'log-level:',
+            'source:',
+            // General args
+            'help',
+            'version'
         ));
 
         foreach ($opts as $opt => $val) switch ($opt) {
-            case 'v':
-            case 'version':
-                self::printVersion();
-                exit();
-            case 'h':
-            case 'help':
-                self::printHelp();
-                exit();
-            case 's':
-            case 'source':
-                if (isset($sourceFolder) || is_array($val)) {
-                    print 'Only one source folder may be given';
-                    self::printHelp();
-                    exit();
-                }
-                $sourceFolder = $val;
-                break;
+            // Mandatory
             case 'l':
             case 'log':
                 if (isset($xmlLogDir) || is_array($val)) {
@@ -336,6 +324,7 @@ class CbCLIController
                 }
                 $xmlLogDir = $val;
                 break;
+
             case 'output':
             case 'o':
                 if (isset($htmlOutput) || is_array($val)) {
@@ -345,6 +334,14 @@ class CbCLIController
                 }
                 $htmlOutput = $val;
                 break;
+
+            // Optional
+            case 'e':
+            case 'exclude':
+                print '--exclude is not implemented yet, aborting...' . PHP_EOL;
+                exit();
+                break;
+
             case 'log-file':
                 if (is_array($val)) {
                     print 'Only one logfile may be given';
@@ -353,6 +350,7 @@ class CbCLIController
                 }
                 CbLogger::setLogFile($val);
                 break;
+
             case 'log-level':
                 if (is_array($val)) {
                     print 'Only one loglevel may be given';
@@ -361,6 +359,27 @@ class CbCLIController
                 }
                 $loglevel = $val;
                 break;
+
+            case 's':
+            case 'source':
+                if (isset($sourceFolder) || is_array($val)) {
+                    print 'Only one source folder may be given';
+                    self::printHelp();
+                    exit();
+                }
+                $sourceFolder = $val;
+                break;
+
+            // General
+            case 'h':
+            case 'help':
+                self::printHelp();
+                exit();
+
+            case 'v':
+            case 'version':
+                self::printVersion();
+                exit();
         }
 
         if (isset($loglevel)) {
@@ -444,23 +463,32 @@ Mandatory Arguments:
 --------------------
 -l <dir>    --log <dir>     The path to the xml log files, e.g. generated
                             from phpunit. Mandatory.
+
 -o <dir>    --output <dir>  Path to the output folder where generated
                             files should be stored. Mandatory.
--s <dir>    --source <dir>  Path to the project source code. Parse complete
-                            source directory if set, else only files found
-                            in logs. Optional.
 
 Optional Arguments:
 -------------------
+-e <regexp> --exclude <regexp>
+                            Excludes all files matching <regexp>. This is
+                            done after pulling the files in the source dir
+                            in if one is given.
+
 --log-file <dir>            Path of the file to use for logging the output.
                             If not given, stdout will be used. Optional.
+
 --log-level <level>         Specify the log level. Available values for level,
                             sorted from most to least noise:
                             DEBUG, INFO, WARN, ERROR.
                             Comparision is case insensitive.
                             Defaults to DEBUG in this release.
 
+-s <dir>    --source <dir>  Path to the project source code. Parse complete
+                            source directory if set, else only files found
+                            in logs. Optional.
+
 General arguments:
+------------------
 --help                  Print this help.
 --version               Print actual verison.
 
