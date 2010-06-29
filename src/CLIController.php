@@ -148,47 +148,11 @@ class CbCLIController
                                 $htmlOutputDir, Array $excludeExpressions,
                                 $ioHelper)
     {
-        $this->setXMLLogDir($logPath);
-        $this->setProjectSourceDir($projectSourceDir);
-        $this->setHtmlOutputDir($htmlOutputDir);
+        $this->_logDir = $logPath;
+        $this->_projectSourceDir = $projectSourceDir;
+        $this->_htmlOutputDir = $htmlOutputDir;
         $this->_excludeExpressions = $excludeExpressions;
         $this->_ioHelper = $ioHelper;
-    }
-
-    /**
-     * Setter method for the (path-to) XML log files
-     *
-     * @param string $directory The (path-to) XML file log directory
-     *
-     * @return void
-     */
-    public function setXMLLogDir($directory)
-    {
-        $this->_logDir = $directory;
-    }
-
-    /**
-     * Setter method for the project source directory
-     *
-     * @param string $projectSourceDir The (path-to) project source directory
-     *
-     * @return void
-     */
-    public function setProjectSourceDir($projectSourceDir)
-    {
-        $this->_projectSourceDir = $projectSourceDir;
-    }
-
-    /**
-     * Setter method for the output directory
-     *
-     * @param string $htmlOutputDir The (path-to) output directory
-     *
-     * @return void
-     */
-    public function setHtmlOutputDir($htmlOutputDir)
-    {
-        $this->_htmlOutputDir = $htmlOutputDir;
     }
 
     /**
@@ -442,7 +406,6 @@ class CbCLIController
         CbLogger::log('Generating PHP_CodeBrowser files', CbLogger::PRIORITY_INFO);
 
         // init new CLIController
-        var_dump($excludeExpressions);
         $controller = new CbCLIController(
             $xmlLogDir,
             $sourceFolder,
