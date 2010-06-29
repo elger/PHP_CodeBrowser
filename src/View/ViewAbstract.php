@@ -165,15 +165,18 @@ class CbViewAbstract
      */
     protected function _getTreeListHtml(Array $fileList, $hrefPrefix = '')
     {
+        /*
+         * In this method, all directories have a trailing DIRECTORY_SEPARATOR.
+         * This is important so that $curDir doesn't become empty if we go
+         * up to the root directory ('/' on linux)
+         */
         $names = array_keys($fileList);
-        $curDir = CbIOHelper::getCommonPathPrefix($names);
-        $preLen = strlen($curDir) + 1;
+        $curDir = CbIOHelper::getCommonPathPrefix($names) . DIRECTORY_SEPARATOR;
+        $preLen = strlen($curDir);
 
         $ret = '<ul>';
         foreach ($names as $name) {
-            $dir = dirname($name);
-            $shortName = substr($name, $preLen);
-            $fileName = basename($name);
+            $dir = dirname($name) . DIRECTORY_SEPARATOR;
 
             // Go back until the file is somewhere below curDir
             while (strpos($dir, $curDir) !== 0) {
@@ -181,14 +184,16 @@ class CbViewAbstract
                 $curDir = substr(
                     $curDir,
                     0,
-                    strrpos($curDir, DIRECTORY_SEPARATOR)
+                    strrpos($curDir, DIRECTORY_SEPARATOR, -2) + 1
+                    //strrpos($curDir, DIRECTORY_SEPARATOR)
                 );
                 $ret .= '</ul></li>';
             }
 
             if ($dir !== $curDir) {
                 // File is in a subdir of current directory
-                $relDir = substr($dir, strlen($curDir) + 1);
+                // relDir has no leading or trailing slash.
+                $relDir = substr($dir, strlen($curDir), -1);
                 $relDirs = explode(DIRECTORY_SEPARATOR, $relDir);
 
                 foreach ($relDirs as $dirName) {
@@ -196,6 +201,9 @@ class CbViewAbstract
                 }
                 $curDir = $dir;
             }
+
+            $shortName = substr($name, $preLen);
+            $fileName = basename($name);
             $ret .= "<li class='php' ><a class='fileLink' href='$hrefPrefix$shortName.html'>";
             $ret .= "$fileName</a></li>";
         }
