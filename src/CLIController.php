@@ -109,6 +109,13 @@ class CbCLIController
     private $_projectSourceDir;
 
     /**
+     * Array of PCREs. Matching files will not appear in the output.
+     *
+     * @var Array
+     */
+    private $_excludeExpressions;
+
+    /**
      * The error plugin classes
      *
      * @var array
@@ -131,14 +138,20 @@ class CbCLIController
      * @param string $projectSourceDir The project source directory
      * @param string $htmlOutputDir    The html output dir, where new files will
      *                                 be created
+     * @param Array  $excludeExpressions
+     *                                 A list of PCREs. Files matching will not
+     *                                 appear in the output.
      * @param CbIOHelper $ioHelper     The CbIOHelper object to be used for
      *                                 filesystem interaction.
      */
-    public function __construct($logPath, $projectSourceDir, $htmlOutputDir, $ioHelper)
+    public function __construct($logPath,       $projectSourceDir,
+                                $htmlOutputDir, Array $excludeExpressions,
+                                $ioHelper)
     {
         $this->setXMLLogDir($logPath);
         $this->setProjectSourceDir($projectSourceDir);
         $this->setHtmlOutputDir($htmlOutputDir);
+        $this->_excludeExpressions = $excludeExpressions;
         $this->_ioHelper = $ioHelper;
     }
 
@@ -246,6 +259,11 @@ class CbCLIController
         if (isset($this->_projectSourceDir)) {
             $sourceHandler->addSourceDir($this->_projectSourceDir);
         }
+
+        foreach ($this->_excludeExpressions as $expr) {
+            $sourceHandler->excludeMatching($expr);
+        }
+
         $files = $sourceHandler->getFiles();
 
         // Get the path prefix all files have in common
@@ -313,6 +331,8 @@ class CbCLIController
             'version'
         ));
 
+        $excludeExpressions = array();
+
         foreach ($opts as $opt => $val) switch ($opt) {
             // Mandatory
             case 'l':
@@ -338,8 +358,7 @@ class CbCLIController
             // Optional
             case 'e':
             case 'exclude':
-                print '--exclude is not implemented yet, aborting...' . PHP_EOL;
-                exit();
+                $excludeExpressions[] = $val;
                 break;
 
             case 'log-file':
@@ -423,10 +442,12 @@ class CbCLIController
         CbLogger::log('Generating PHP_CodeBrowser files', CbLogger::PRIORITY_INFO);
 
         // init new CLIController
+        var_dump($excludeExpressions);
         $controller = new CbCLIController(
             $xmlLogDir,
             $sourceFolder,
             $htmlOutput,
+            $excludeExpressions,
             new CbIOHelper()
         );
 
@@ -470,9 +491,11 @@ Mandatory Arguments:
 Optional Arguments:
 -------------------
 -e <regexp> --exclude <regexp>
-                            Excludes all files matching <regexp>. This is
-                            done after pulling the files in the source dir
-                            in if one is given.
+                            Excludes all files matching the PCRE <regexp>.
+                            This is done after pulling the files in the
+                            source dir in if one is given.
+                            NOTE: The match is run against absolute filenames.
+                            Can be given multiple times.
 
 --log-file <dir>            Path of the file to use for logging the output.
                             If not given, stdout will be used. Optional.
