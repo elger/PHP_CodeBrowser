@@ -142,6 +142,7 @@ class CbCLIControllerTest extends CbAbstractTests
         $this->_cbCLIController = new CbCLIController($this->_logDir,
                                                       $this->_projectSourceDir,
                                                       $this->_outputDir,
+                                                      array(),
                                                       $this->_ioMock);
         $this->_cbCLIController->addErrorPlugins(array('CbErrorCoverage'));
     }
