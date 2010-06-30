@@ -22,13 +22,13 @@ $.History.bind(function (state) {
     }
 });
 
-$("#treeToggle").click().toggle(function() {
-    $("#tree").animate({width: "hide", opacity: "hide"}, "slow");
-}, function() {
-    $("#tree").animate({width: "show", opacity: "show"}, "slow");
-});
-
 $(function() {
+    $("#treeToggle").click().toggle(function() {
+        $("#tree").animate({width: "hide", opacity: "hide"}, "slow");
+    }, function() {
+        $("#tree").animate({width: "show", opacity: "show"}, "slow");
+    });
+
     $("#tree").bind("loaded.jstree", function(event, data) {
         $("#tree").animate({width: "show", opacity: "show"}, "slow");
     }).jstree({
