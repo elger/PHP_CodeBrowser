@@ -117,12 +117,7 @@ body.codebrowser {
 /** end Error types styles **/
 
 .codebrowser .header {
-	height: 2%;
-	color: #ffffff;
-	font-size: 12px;
-	background-color: #343434;
 	padding: 5px 5px 10px 20px;
-	display: none;
 }
 
 .codebrowser .filepath {
