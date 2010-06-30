@@ -149,6 +149,7 @@ class CbViewReview extends CbViewAbstract
         $lines      = $xpath->query('//ol/li');
 
         $lineNumber = 0;
+        $linePlaces = floor(log($lines->length, 10)) + 1;
         foreach ($lines as $line) {
             ++$lineNumber;
             $line->setAttribute('id', 'line_' . $lineNumber);
@@ -174,6 +175,15 @@ class CbViewReview extends CbViewAbstract
                 }
                 $line->setAttribute('title', utf8_encode($message));
             }
+
+            // Add line number
+            $nuSpan = $sourceDom->createElement('span');
+            $nuSpan->setAttribute('class', 'lineNumber');
+            for ($i = 0; $i < $linePlaces - strlen($lineNumber); $i++) {
+                $nuSpan->appendChild($sourceDom->createEntityReference('nbsp'));
+            }
+            $nuSpan->appendChild($sourceDom->createTextNode($lineNumber));
+            $line->insertBefore($nuSpan, $line->firstChild);
 
             //create anchor for the new line
             $anchor = $sourceDom->createElement('a');
