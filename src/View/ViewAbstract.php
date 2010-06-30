@@ -61,8 +61,6 @@
  * @version   Release: @package_version@
  * @link      http://www.phpunit.de/
  * @since     Class available since 1.0
- * 
- * @TODO check for valid path information, throw error if path does not exists
  */
 class CbViewAbstract
 {
