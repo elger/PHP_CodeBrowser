@@ -317,4 +317,23 @@ EOT;
                       );
         $this->_cbViewReview->copyRessourceFolders();
     }
+
+    /**
+     * Test the generateIndex function
+     *
+     * @return void
+     */
+    public function test__generateIndex()
+    {
+        $files = array(
+            "s/A/somefile.php" => new CbFile("s/A/somefile.php"),
+            "s/file.php" => new CbFile("s/file.php"),
+            "s/B/anotherfile.php" => new CbFile("s/B/anotherfile.php")
+        );
+
+        $this->_ioMock->expects($this->once())
+                      ->method('createFile')
+                      ->with($this->logicalAnd($this->stringEndsWith('index.html')));
+        $this->_cbViewReview->generateIndex($files);
+    }
 }
