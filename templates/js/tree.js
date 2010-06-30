@@ -25,8 +25,10 @@ $.History.bind(function (state) {
 $(function() {
     $("#treeToggle").click().toggle(function() {
         $("#tree").animate({width: "hide", opacity: "hide"}, "slow");
+        $("#treeToggle").css('background-image', "url('img/treeToggle-collapsed.png')");
     }, function() {
         $("#tree").animate({width: "show", opacity: "show"}, "slow");
+        $("#treeToggle").css('background-image', "url('img/treeToggle-extended.png')");
     });
 
     $("#tree").bind("loaded.jstree", function(event, data) {

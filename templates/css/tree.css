@@ -19,7 +19,13 @@
 
 #treeToggle {
     display: inline-block;
-    background-image: url(../img/treeToggle.gif);
+    min-height: 200px;
+    -moz-border-radius-bottomright: 10px;
+    -moz-box-shadow: 2px 3px 5px #000000;
+    background-color: $F9F9F9;
+    background-position: center center;
+    background-repeat: no-repeat;
+    padding: 16px;
 }
 
 #treeHeader {

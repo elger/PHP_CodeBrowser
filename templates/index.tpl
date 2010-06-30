@@ -29,7 +29,7 @@
                 </div>
                 <?php echo $treeList; ?>
             </div>
-            <div id="treeToggle"><img src="img/treeToggle.gif"></div>
+            <div id="treeToggle" style="background-image: url('img/treeToggle-extended.png');"></div>
         </div>
         <div id="contentBox" style="display: inline-block; margin: 15px;">
             <div id="loading" style="display: none;"><h1>Loading...</h1></div>
