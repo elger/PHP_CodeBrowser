@@ -250,12 +250,7 @@ class CbCLIController
                 CbLogger::PRIORITY_DEBUG
             );
 
-            $cbViewReview->generate(
-                $issues,
-                $file->name(),
-                $commonPathPrefix,
-                $files
-            );
+            $cbViewReview->generate($issues, $file->name(), $commonPathPrefix);
 
             CbLogger::log(
                 sprintf('completed in %s', PHP_Timer::stop()),

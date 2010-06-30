@@ -114,8 +114,7 @@ class CbViewReview extends CbViewAbstract
      * @see self::_formatSourceCode
      * @see self::_generateJSCode
      */
-    public function generate(Array $issueList, $fileName,
-                             $commonPathPrefix, Array $fileList)
+    public function generate(Array $issueList, $fileName, $commonPathPrefix)
     {
         $issues           = $this->_formatIssues($issueList);
         $shortFilename    = substr($fileName, strlen($commonPathPrefix));
