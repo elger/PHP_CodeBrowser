@@ -10,11 +10,17 @@ function initReview() {
         tracking: true,
         cluetipClass: 'default'
     });
+
     $("div#sidebar").sidebar({
         width:600,
         height: 400,
         open : "click",
         close: "click",
         position: "right"
+    });
+
+    $("div#sidebar a").click(function(event) {
+        event.preventDefault();
+        $(document).scrollTop($(this.hash).offset().top);
     });
 }
