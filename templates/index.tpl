@@ -32,8 +32,6 @@
             <div id="treeToggle" style="background-image: url('img/treeToggle-extended.png');"></div>
         </div>
         <div id="contentBox" style="display: inline-block; margin: 15px;">
-            <div id="loading" style="display: none;"><h1>Loading...</h1></div>
-            <div id="reviewContainer" style="display: none;"></div>
             <div id="fileList">
                 <table border="0" cellspacing="2" cellpadding="3">
                     <tr class="head">

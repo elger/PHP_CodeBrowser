@@ -1,24 +1,21 @@
+function linkClickedFunction(event) {
+    event.preventDefault();
+    target = event.originalTarget.href;
+    $.History.go(target);
+}
+
 $.History.bind(function (state) {
     $('.sidebar-container-right').remove();
     $('#cluetip').remove();
     $('#cluetip-waitimage').remove();
 
-    if (state == '') {
-        $('#reviewContainer').animate({opacity: 'hide'}, 'fast', function() {
-            $('#fileList').animate({opacity: 'show'}, 'slow');
+    if (state == '' || state.match('/index.html$') == '/index.html') {
+        $('#contentBox').html('<h1>Loading...</h1>').load('index.html' + ' #fileList', function() {
+            $('#fileList .fileLink').click(linkClickedFunction);
         });
     } else {
         // Go to specific review
-        $('#fileList').animate({opacity: 'hide'}, 'fast', function() {
-        $('#reviewContainer').animate({opacity: 'hide'}, 'fast', function() {
-            $('#loading').animate({opacity: 'show'}, 'slow');
-            $('#reviewContainer').empty().load(state + ' #review', function() {
-                $('#loading').animate({opacity: 'hide'}, 'fast', function() {
-                    initReview();
-                    $('#reviewContainer').animate({opacity: 'show'}, 'slow');
-                });
-            });
-        })});
+        $('#contentBox').empty().load(state + ' #review', initReview);
     }
 });
 
@@ -44,10 +41,6 @@ $(function() {
     // When the user clicks on a leaf item in the tree (representing a file)
     // or an item in the fileList, want to hide the filelist/the currently
     // shown review and display the correct review.
-    $(".fileLink").click(function(event) {
-        event.preventDefault();
-        target = event.originalTarget.href;
-        $.History.go(target);
-    });
+    $(".fileLink").click(linkClickedFunction);
 });
 
