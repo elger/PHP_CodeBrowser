@@ -25,7 +25,7 @@
         <div id="treeContainer">
             <div id="tree">
                 <div id="treeHeader">
-                    <a href="index.html">CodeBrowser</a>
+                    <a href="index.html" class='fileLink'>CodeBrowser</a>
                 </div>
                 <?php echo $treeList; ?>
             </div>
