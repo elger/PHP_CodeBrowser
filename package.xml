@@ -11,7 +11,7 @@
 
   <channel>pear.phpunit.de</channel>
 
-  <summary>PHP_CodeBrowser for integration in cruisecontrol</summary>
+  <summary>PHP_CodeBrowser for integration in Hudson and CruiseControl</summary>
   <description>PHP_CodeBrowser generates a html view for code browsing with
   higlighted and colored errors, parsed from xml reports generated from codesniffer or
   phpunit.
@@ -23,10 +23,10 @@
     <email>elger.thiele@mayflower.de</email>
     <active>yes</active>
   </lead>
-  <date>2010-04-16</date>
+  <date>2010-06-29</date>
 
   <version>
-    <release>0.1.3</release>
+    <release>0.1.4</release>
     <api>1.0.0</api>
   </version>
 
@@ -167,6 +167,11 @@
       <pearinstaller>
         <min>1.8.1</min>
       </pearinstaller>
+      <package>
+        <name>PHP_Timer</name>
+        <channel>pear.phpunit.de</channel>
+        <min>1.0.0</min>
+      </package>
       <extension>
         <name>dom</name>
       </extension>
@@ -188,11 +193,6 @@
         <name>phpUnderControl</name>
         <channel>pear.phpunit.de</channel>
         <min>0.5.0</min>
-      </package>
-      <package>
-        <name>PHP_Timer</name>
-        <channel>pear.phpunit.de</channel>
-        <min>1.0.0</min>
       </package>
       <package>
         <name>PHP_CodeSniffer</name>
