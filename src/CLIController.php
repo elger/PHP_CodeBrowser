@@ -485,9 +485,13 @@ USAGE;
      */
     public static function printVersion()
     {
+        $version = 'Git version';
+        if (strpos('@package_version@', '@package_version') === false) {
+            $version = 'Version @package_version@, released on @release_date@';
+        }
         print <<<USAGE
 PHP_CodeBrowser by Mayflower GmbH
-Version 1.2  21.Mai.2010
+$version
 
 USAGE;
     }
