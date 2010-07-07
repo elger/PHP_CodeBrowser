@@ -305,7 +305,7 @@ class CbCLIController
                 if (isset($xmlLogDir) || is_array($val)) {
                     error_log('Only one log folder may be given');
                     self::printHelp();
-                    exit();
+                    exit(1);
                 }
                 $xmlLogDir = $val;
                 break;
@@ -315,7 +315,7 @@ class CbCLIController
                 if (isset($htmlOutput) || is_array($val)) {
                     error_log('Only one output folder may be given');
                     self::printHelp();
-                    exit();
+                    exit(1);
                 }
                 $htmlOutput = $val;
                 break;
@@ -330,7 +330,7 @@ class CbCLIController
                 if (is_array($val)) {
                     error_log('Only one logfile may be given');
                     self::printHelp();
-                    exit();
+                    exit(1);
                 }
                 CbLogger::setLogFile($val);
                 break;
@@ -339,7 +339,7 @@ class CbCLIController
                 if (is_array($val)) {
                     error_log('Only one loglevel may be given');
                     self::printHelp();
-                    exit();
+                    exit(1);
                 }
                 $loglevel = $val;
                 break;
@@ -349,7 +349,7 @@ class CbCLIController
                 if (isset($sourceFolder) || is_array($val)) {
                     error_log('Only one source folder may be given');
                     self::printHelp();
-                    exit();
+                    exit(1);
                 }
                 $sourceFolder = $val;
                 break;
@@ -374,7 +374,7 @@ class CbCLIController
                 error_log(
                     "See `{$_SERVER['PHP_SELF']} --help` for more help\n"
                 );
-                exit();
+                exit(1);
             }
         } else {
             CbLogger::setLogLevel(CbLogger::PRIORITY_DEBUG);
@@ -405,7 +405,7 @@ class CbCLIController
                 'Try `' . $_SERVER['PHP_SELF']
                 . " --help` for more information.\n"
             );
-            exit();
+            exit(1);
         }
 
         CbLogger::log(
