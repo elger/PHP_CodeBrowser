@@ -104,7 +104,7 @@ class CbFile
     /**
      * Gets an array containing the issues for this file.
      *
-     * @return ArrayIterator Iterator over the issues.
+     * @return Array of CbIssue The issues.
      */
     public function getIssues()
     {
