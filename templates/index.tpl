@@ -7,13 +7,13 @@
         <link rel="stylesheet" type="text/css" href="css/review.css" />
         <link rel="stylesheet" type="text/css" href="css/tree.css" />
 
-        <script type="text/javascript" src="js/jquery-1.4.2.js"></script>
-        <script type="text/javascript" src="js/jquery.jstree/jquery.jstree.js"></script>
+        <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="js/jquery.jstree/jquery.jstree.min.js"></script>
         <script type="text/javascript" src="js/jquery.sidebar/jquery-ui-1.7.2.custom.min.js"></script>
         <script type="text/javascript" src="js/jquery.sidebar/jquery.sidebar.js"></script>
         <script type="text/javascript" src="js/jquery.cluetip/lib/jquery.hoverIntent.js"></script>
         <script type="text/javascript" src="js/jquery.cluetip/lib/jquery.bgiframe.min.js"></script>
-        <script type="text/javascript" src="js/jquery.cluetip/jquery.cluetip.js"></script>
+        <script type="text/javascript" src="js/jquery.cluetip/jquery.cluetip.min.js"></script>
         <script type="text/javascript" src="js/jquery.history.js"></script>
 
         <script type="text/javascript" src="js/review.js"></script>
