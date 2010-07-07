@@ -44,7 +44,7 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   SVN: $Id$
  * @link      http://www.phpunit.de/
- * @since     File available since 1.2
+ * @since     File available since  0.1.2
  */
 
 /**
@@ -61,7 +61,7 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   Release: @package_version@
  * @link      http://github.com/mayflowergmbh
- * @since     Class available since 1.2
+ * @since     Class available since  0.1.2
  */
 class CbIssue
 {

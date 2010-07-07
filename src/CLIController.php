@@ -43,7 +43,7 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   SVN: $Id$
  * @link      http://www.phpunit.de/
- * @since     File available since 1.0
+ * @since     File available since  0.1.0
  */
 
 if (strpos('@php_dir@', '@php_dir') === false) {
@@ -76,7 +76,7 @@ require_once 'PHP/Timer.php';
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   Release: @package_version@
  * @link      http://www.phpunit.de/
- * @since     Class available since 1.0
+ * @since     Class available since  0.1.0
  */
 class CbCLIController
 {

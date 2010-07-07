@@ -42,7 +42,7 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id$
  * @link       http://www.phpunit.de/
- * @since      File available since 1.0
+ * @since      File available since  0.1.0
  */
 
 require_once realpath(dirname( __FILE__ ) . '/../../AbstractTests.php');
@@ -58,7 +58,7 @@ require_once realpath(dirname( __FILE__ ) . '/../../AbstractTests.php');
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
- * @since      Class available since 1.0
+ * @since      Class available since  0.1.0
  */
 class CbLoggerTest extends CbAbstractTests
 {

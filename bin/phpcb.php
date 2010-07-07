@@ -44,7 +44,7 @@
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   SVN: $Id$
  * @link      http://www.phpunit.de/
- * @since     File available since 1.0
+ * @since     File available since  0.1.0
  */
 
 if (strpos( '@php_dir@', '@php_dir' ) === 0) {

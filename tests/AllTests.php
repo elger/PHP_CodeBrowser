@@ -42,7 +42,7 @@
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id$
  * @link       http://www.phpunit.de/
- * @since      File available since 1.0
+ * @since      File available since  0.1.0
  */
 
 if (!defined('PHPCB_ROOT_DIR')) define('PHPCB_ROOT_DIR', realpath(dirname( __FILE__ ) . '/../'));
@@ -82,7 +82,7 @@ PHPUnit_Util_Filter::addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
  * @link       http://www.phpunit.de/
- * @since      Class available since 1.0
+ * @since      Class available since  0.1.0
  */
 class CbAllTests extends PHPUnit_Framework_TestSuite
 {
