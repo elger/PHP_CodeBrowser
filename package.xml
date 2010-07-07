@@ -174,13 +174,10 @@
               <file name="wait.gif" role="data" />
             </dir> <!-- /images -->
             <dir name="lib">
-              <file name="jquery-1.3.2.js" role="data" />
-              <file name="jquery-1.4.js" role="data" />
               <file name="jquery.bgiframe.min.js" role="data" />
               <file name="jquery.hoverIntent.js" role="data" />
             </dir> <!-- /lib -->
             <file name="jquery.cluetip.css" role="data" />
-            <file name="jquery.cluetip.js" role="data" />
             <file name="jquery.cluetip.min.js" role="data" />
           </dir> <!-- /jquery.cluetip -->
           <dir name="jquery.jstree">
@@ -192,16 +189,10 @@
                 <file name="throbber.gif" role="data" />
               </dir> <!-- /default -->
             </dir> <!-- /themes -->
+            <file name="jquery.jstree.min.js" role="data" />
           </dir> <!-- /jquery.jstree -->
           <dir name="jquery.sidebar">
             <dir name="css">
-              <dir name="blue-glass">
-                <file name="inject-bottom.png" role="data" />
-                <file name="inject-left.png" role="data" />
-                <file name="inject-right.png" role="data" />
-                <file name="inject-top.png" role="data" />
-                <file name="sidebar.css" role="data" />
-              </dir> <!-- /blue-glass -->
               <dir name="codebrowser">
                 <file name="inject-bottom.png" role="data" />
                 <file name="inject-left.png" role="data" />
@@ -209,29 +200,13 @@
                 <file name="inject-top.png" role="data" />
                 <file name="sidebar.css" role="data" />
               </dir> <!-- /codebrowser -->
-              <dir name="dark-glass">
-                <file name="inject-bottom.png" role="data" />
-                <file name="inject-left.png" role="data" />
-                <file name="inject-right.png" role="data" />
-                <file name="inject-top.png" role="data" />
-                <file name="sidebar.css" role="data" />
-              </dir> <!-- /dark-glass -->
-              <dir name="red-glass">
-                <file name="inject-bottom.png" role="data" />
-                <file name="inject-left.png" role="data" />
-                <file name="inject-right.png" role="data" />
-                <file name="inject-top.png" role="data" />
-                <file name="sidebar.css" role="data" />
-              </dir> <!-- /red-glass -->
             </dir> <!-- /css -->
-            <file name="jquery-1.4.min.js" role="data" />
             <file name="jquery.sidebar.js" role="data" />
             <file name="jquery-ui-1.7.2.custom.min.js" role="data" />
           </dir> <!-- /jquery.sidebar -->
-          <file name="jquery-1.4.2.js" role="data" />
+          <file name="jquery-1.4.2.min.js" role="data" />
           <file name="jquery.history.js" role="data" />
           <file name="review.js" role="data" />
-          <file name="side-bar.js" role="data" />
           <file name="tree.js" role="data" />
         </dir> <!-- /js -->
         <file name="index.tpl" role="data" />
