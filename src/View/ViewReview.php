@@ -150,6 +150,12 @@ class CbViewReview extends CbViewAbstract
         $xpath      = new DOMXPath($sourceDom);
         $lines      = $xpath->query('//ol/li');
 
+        // A shortcut to prevent possible trouble with log(0)
+        // Note that this is exactly what will happen anyways.
+        if ($lines->length === 0) {
+            return $sourceDom->saveHTML();
+        }
+
         $lineNumber = 0;
         $linePlaces = floor(log($lines->length, 10)) + 1;
         foreach ($lines as $line) {
