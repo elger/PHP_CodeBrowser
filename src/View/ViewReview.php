@@ -155,7 +155,7 @@ class CbViewReview extends CbViewAbstract
             $line->setAttribute('id', 'line_' . $lineNumber);
 
             $lineClasses = array(
-                $lineNumber % 2 ? 'white' : 'even'
+                ($lineNumber % 2) ? 'white' : 'even'
             );
 
             if (isset($outputIssues[$lineNumber])) {

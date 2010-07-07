@@ -117,7 +117,7 @@ class CbFileTest extends CbAbstractTests
      */
     public function test__construct()
     {
-        $this->assertEquals($this->_cbFile->name(), '/some/file/name.php');
+        $this->assertEquals('/some/file/name.php', $this->_cbFile->name());
 
         $this->_cbFile = new CbFile('/some/file/name.php', $this->_issues);
 

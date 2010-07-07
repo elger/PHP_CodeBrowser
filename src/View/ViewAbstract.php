@@ -168,7 +168,7 @@ class CbViewAbstract
          * This is important so that $curDir doesn't become empty if we go
          * up to the root directory ('/' on linux)
          */
-        $names = array_keys($fileList);
+        $names  = array_keys($fileList);
         $curDir = CbIOHelper::getCommonPathPrefix($names) . DIRECTORY_SEPARATOR;
         $preLen = strlen($curDir);
 
@@ -191,7 +191,7 @@ class CbViewAbstract
             if ($dir !== $curDir) {
                 // File is in a subdir of current directory
                 // relDir has no leading or trailing slash.
-                $relDir = substr($dir, strlen($curDir), -1);
+                $relDir  = substr($dir, strlen($curDir), -1);
                 $relDirs = explode(DIRECTORY_SEPARATOR, $relDir);
 
                 foreach ($relDirs as $dirName) {
@@ -201,7 +201,8 @@ class CbViewAbstract
             }
 
             $shortName = substr($name, $preLen);
-            $fileName = basename($name);
+            $fileName  = basename($name);
+
             $ret .= "<li class='php' ><a class='fileLink' href='$hrefPrefix$shortName.html'>";
             $ret .= "$fileName</a></li>";
         }
