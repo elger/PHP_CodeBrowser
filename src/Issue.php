@@ -118,7 +118,12 @@ class CbIssue
      * @param String  $description The description of the issue.
      * @param String  $severity    
      */
-    public function __construct($fileName, $lineStart, $lineEnd, $foundBy, $description, $severity)
+    public function __construct($fileName,
+                                $lineStart,
+                                $lineEnd,
+                                $foundBy,
+                                $description,
+                                $severity)
     {
         $this->fileName    = $fileName;
         $this->lineStart   = $lineStart;

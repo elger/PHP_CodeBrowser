@@ -76,7 +76,9 @@ class CbErrorCPD extends CbPluginsAbstract
     public function mapIssues(DOMNode $element, $filename)
     {
         $parentNode = $element->parentNode;
-        $files      = $this->issueXml->query('file[@path="'.$filename.'"]', $parentNode);
+        $files      = $this->_issueXml->query(
+            'file[@path="'.$filename.'"]', $parentNode
+        );
         $lineCount  = (int)$parentNode->getAttribute('lines');
 
         $result = array();
@@ -98,8 +100,11 @@ class CbErrorCPD extends CbPluginsAbstract
     public function getFilesWithIssues()
     {
         $filenames = array();
+        $nodes = $this->_issueXml->query(
+            '/*/'.$this->pluginName.'/*/file[@path]'
+        );
 
-        foreach ($this->issueXml->query('/*/'.$this->pluginName.'/*/file[@path]') as $node) {
+        foreach ($nodes as $node) {
             $filenames[] = $node->getAttribute('path');
         }
 
@@ -114,7 +119,7 @@ class CbErrorCPD extends CbPluginsAbstract
      */
     protected function getIssueNodes($filename)
     {
-        return $this->issueXml->query(
+        return $this->_issueXml->query(
             '/*/'.$this->pluginName.'/*/file[@path="'.$filename.'"]'
         );
     }
@@ -123,11 +128,13 @@ class CbErrorCPD extends CbPluginsAbstract
      * We need another version of getDescription, as we need $allNodes
      * to find duplicates.
      */
-    protected function _CPDgetDescription(DOMNodeList $allNodes, DOMNode $currentNode)
+    protected function _CPDgetDescription(DOMNodeList $allNodes,
+                                          DOMNode $currentNode)
     {
         $source = array();
         foreach ($allNodes as $node) {
-            if ($node instanceof DOMElement && !$node->isSameNode($currentNode)) {
+            if ($node instanceof DOMElement
+                    && !$node->isSameNode($currentNode)) {
                 $source[] = sprintf(
                     '%s (%d)',
                     $node->getAttribute('path'),

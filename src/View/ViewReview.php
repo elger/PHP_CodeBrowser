@@ -75,7 +75,7 @@ class CbViewReview extends CbViewAbstract
      *
      * @var Array
      */
-    protected $phpHighlightColorMap;
+    protected $_phpHighlightColorMap;
 
     /**
      * Default constructor
@@ -89,7 +89,7 @@ class CbViewReview extends CbViewAbstract
     public function __construct($templateDir, $outputDir, $ioHelper)
     {
         parent::__construct($templateDir, $outputDir, $ioHelper);
-        $this->phpHighlightColorMap = array(
+        $this->_phpHighlightColorMap = array(
             ini_get('highlight.string')  => 'string',
             ini_get('highlight.comment') => 'comment',
             ini_get('highlight.keyword') => 'keyword',
@@ -107,8 +107,10 @@ class CbViewReview extends CbViewAbstract
      *
      * @param Array  $issueList        The issue list for given file
      * @param String $filePath         The path to file the should be generated
-     * @param String $commonPathPrefix The prefix path all given files have in common
-     * @param Array  $issueCounts      Files with issue counts sorted by severity.
+     * @param String $commonPathPrefix The prefix path all given files have
+     *                                 in common
+     * @param Array  $issueCounts      Files with issue counts sorted by
+     *                                 severity.
      *
      * @return void
      *
@@ -170,7 +172,8 @@ class CbViewReview extends CbViewAbstract
                 $lineClasses[] = 'hasIssues';
                 $message = '|';
                 foreach ($outputIssues[$lineNumber] as $issue) {
-                    $message .= sprintf('
+                    $message .= sprintf(
+                        '
                         <div class="tooltip">
                             <div class="title %s">%s</div>
                             <div class="text">%s</div>
@@ -199,7 +202,9 @@ class CbViewReview extends CbViewAbstract
             $line->appendChild($anchor);
 
             // set li css class depending on line errors
-            switch ($tmp = (isset($outputIssues[$lineNumber]) ? count($outputIssues[$lineNumber]) : 0)) {
+            switch ($tmp = (isset($outputIssues[$lineNumber])
+                    ? count($outputIssues[$lineNumber])
+                    : 0)) {
                 case 0 :
                     break;
                 case 1 :
@@ -280,7 +285,9 @@ class CbViewReview extends CbViewAbstract
                     // apend content to current li element
                     // apend content to urrent li element
                     $span = $targetDom->createElement('span');
-                    $span->nodeValue = htmlspecialchars($sourceChildElement->wholeText);
+                    $span->nodeValue = htmlspecialchars(
+                        $sourceChildElement->wholeText
+                    );
                     $span->setAttribute('class', $elementClass);
                     $li->appendChild($span);
                 }
@@ -299,7 +306,7 @@ class CbViewReview extends CbViewAbstract
     protected function _mapPhpColors($style)
     {
         $color = substr($style, 7);
-        return $this->phpHighlightColorMap[$color];
+        return $this->_phpHighlightColorMap[$color];
     }
 
     /**
@@ -360,8 +367,12 @@ class CbViewReview extends CbViewAbstract
             $doc->loadHTML($highlighter->highlight($sourceCode));
             return $doc;
         } else {
-            $sourceCode = preg_replace('/.*/', '<li>$0</li>', htmlentities($sourceCode));
-            $sourceCode = '<div class="code"><ol class="code">'.$sourceCode.'</ol></div>';
+            $sourceCode = preg_replace(
+                '/.*/', '<li>$0</li>',
+                htmlentities($sourceCode)
+            );
+            $sourceCode = '<div class="code"><ol class="code">'
+                        . $sourceCode.'</ol></div>';
 
             $doc = new DOMDocument();
             $doc->loadHTML($sourceCode);

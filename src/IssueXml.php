@@ -54,8 +54,8 @@ require_once 'PHP/Timer.php';
  *
  * This class is a wrapper around DOMDocument to provide additional features
  * like simple xpath queries.
- * It is used to merge issue XML files and execute plugins against it to retrieve
- * the issues from them.
+ * It is used to merge issue XML files and execute plugins
+ * against it to retrieve the issues from them.
  *
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
@@ -69,12 +69,12 @@ require_once 'PHP/Timer.php';
  */
 class CbIssueXml extends DOMDocument
 {
-	/**
-	 * 
-	 * 
-	 * @var DOMXPath
-	 */
-	protected $_xpath;
+    /**
+     *
+     *
+     * @var DOMXPath
+     */
+    protected $_xpath;
 
     /**
      * Do not preserve white spaces.
@@ -120,11 +120,13 @@ class CbIssueXml extends DOMDocument
         );
 
         foreach ($iterator as $current) {
-            if (!$current->isFile() || ($current->getFilename() === $current->getBasename('.xml')) ) {
-                continue;	
+            if (!$current->isFile()
+                || ($current->getFilename()
+                    === $current->getBasename('.xml'))) {
+                continue;
             }
-            
-          	$realFileName = realpath($current);
+
+            $realFileName = realpath($current);
             CbLogger::log(
                 sprintf('Read file: %s', $realFileName), 
                 CbLogger::PRIORITY_DEBUG
@@ -149,7 +151,10 @@ class CbIssueXml extends DOMDocument
 
         if (!$this->documentElement->hasChildNodes()) {
             throw new Exception(
-                sprintf('Valid xml log files could not be found in "%s"', $directory)
+                sprintf(
+                    'Valid xml log files could not be found in "%s"',
+                    $directory
+                )
             );
         }
         return $this;
@@ -194,10 +199,15 @@ class CbIssueXml extends DOMDocument
         $queryRunTime = PHP_Timer::stop();
         if ($queryRunTime > 0.1) {
             CbLogger::log(
-                sprintf('XPATH: %s %s %ds', 
-                        $expression, 
-                        ($contextNode ? sprintf(' on %s', $contextNode->getNodePath()) : ''),
-                        $queryRunTime),
+                sprintf(
+                    'XPATH: %s %s %ds',
+                    $expression,
+                    ($contextNode
+                        ? sprintf(' on %s', $contextNode->getNodePath())
+                        : ''
+                    ),
+                    $queryRunTime
+                ),
                 CbLogger::PRIORITY_DEBUG
             );
         }

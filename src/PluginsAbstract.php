@@ -76,7 +76,7 @@ abstract class CbPluginsAbstract
      *
      * @var CbIssueXml
      */
-    protected $issueXml;
+    protected $_issueXml;
 
     /**
      * Name of the attribute that holds the number of the first line
@@ -84,36 +84,36 @@ abstract class CbPluginsAbstract
      * 
      * @var String
      */
-    protected $lineStartAttr;
-    
+    protected $_lineStartAttr;
+
     /**
      * Name of the attribute that holds the number of the last line
      * of the issue.
      * 
      * @var String
      */
-    protected $lineEndAttr;
+    protected $_lineEndAttr;
 
     /**
      * Name of the attribute that holds message of the issue.
      * 
      * @var String
      */
-    protected $descriptionAttr;
-    
+    protected $_descriptionAttr;
+
     /**
      * Name of the attribute that holds severity of the issue.
      * 
      * @var String
      */
-    protected $severityAttr;
+    protected $_severityAttr;
 
     /**
      * Default string to use as source for issue.
      * 
      * @var String
      */
-    protected $source;
+    protected $_source;
 
     /**
      * Default Constructor
@@ -122,7 +122,7 @@ abstract class CbPluginsAbstract
      */
     public function __construct(CbIssueXml $issueXml)
     {
-        $this->issueXml = $issueXml;
+        $this->_issueXml = $issueXml;
     }
 
     /**
@@ -150,8 +150,11 @@ abstract class CbPluginsAbstract
     public function getIssuesByFile($filename)
     {
         $issues = array();
-        foreach ($this->getIssueNodes($filename) as $issueNode) {
-            $issues = array_merge($issues, $this->mapIssues($issueNode, $filename));
+        foreach ($this->_getIssueNodes($filename) as $issueNode) {
+            $issues = array_merge(
+                $issues,
+                $this->mapIssues($issueNode, $filename)
+            );
         }
         return $issues;
     }
@@ -164,7 +167,7 @@ abstract class CbPluginsAbstract
     public function getFilesWithIssues()
     {
         $filenames  = array();
-        $issueNodes = $this->issueXml->query(
+        $issueNodes = $this->_issueXml->query(
             sprintf('/*/%s/file[@name]', $this->pluginName)
         );
         foreach ($issueNodes as $node) {
@@ -188,17 +191,17 @@ abstract class CbPluginsAbstract
     public function mapIssues(DomNode $element, $filename)
     {
         $errorList = array();
-        foreach($element->childNodes as $child) {
-            if (!($child instanceof DOMElement)){
+        foreach ($element->childNodes as $child) {
+            if (!($child instanceof DOMElement)) {
                 continue;
             }
             $errorList[] = new CbIssue(
                 $filename,
-                $this->getLineStart($child),
-                $this->getLineEnd($child),
-                $this->getSource($child),
-                $this->getDescription($child),
-                $this->getSeverity($child)
+                $this->_getLineStart($child),
+                $this->_getLineEnd($child),
+                $this->_getSource($child),
+                $this->_getDescription($child),
+                $this->_getSeverity($child)
             );
         }
         return $errorList;
@@ -211,9 +214,9 @@ abstract class CbPluginsAbstract
      * 
      * @return DOMNodeList
      */
-    protected function getIssueNodes($filename)
+    protected function _getIssueNodes($filename)
     {
-        return $this->issueXml->query(
+        return $this->_issueXml->query(
             sprintf('/*/%s/file[@name="%s"]', $this->pluginName, $filename)
         );
     }
@@ -226,9 +229,9 @@ abstract class CbPluginsAbstract
      *
      * @return Integer
      */
-    protected function getLineStart(DOMElement $element)
+    protected function _getLineStart(DOMElement $element)
     {
-        return (int) $element->getAttribute($this->lineStartAttr);
+        return (int) $element->getAttribute($this->_lineStartAttr);
     }
 
     /**
@@ -239,9 +242,9 @@ abstract class CbPluginsAbstract
      *
      * @return Integer
      */
-    protected function getLineEnd(DOMElement $element)
+    protected function _getLineEnd(DOMElement $element)
     {
-        return (int) $element->getAttribute($this->lineEndAttr);
+        return (int) $element->getAttribute($this->_lineEndAttr);
     }
 
     /**
@@ -252,9 +255,9 @@ abstract class CbPluginsAbstract
      *
      * @return String
      */
-    protected function getSource(DOMElement $element)
+    protected function _getSource(DOMElement $element)
     {
-        return $this->source;
+        return $this->_source;
     }
 
     /**
@@ -265,9 +268,9 @@ abstract class CbPluginsAbstract
      *
      * @return String
      */
-    protected function getDescription(DOMElement $element)
+    protected function _getDescription(DOMElement $element)
     {
-        return htmlentities($element->getAttribute($this->descriptionAttr));
+        return htmlentities($element->getAttribute($this->_descriptionAttr));
     }
 
     /**
@@ -278,8 +281,8 @@ abstract class CbPluginsAbstract
      *
      * @return String
      */
-    protected function getSeverity(DOMElement $element)
+    protected function _getSeverity(DOMElement $element)
     {
-        return htmlentities($element->getAttribute($this->severityAttr));
+        return htmlentities($element->getAttribute($this->_severityAttr));
     }
 }

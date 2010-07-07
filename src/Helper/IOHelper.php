@@ -49,8 +49,8 @@
 /**
  * CbIOHelper
  *
- * Input output helper class provides several mehtods for writing and reading files,
- * or directories.
+ * Input output helper class provides several mehtods for writing and
+ * reading files or directories.
  *
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
@@ -225,7 +225,9 @@ class CbIOHelper
                 && $iterator->isDir()
                 && !in_array($item, $exclude)
             ) {
-                self::copyDirectory($source . '/' . $item, $target . '/' . $item);
+                self::copyDirectory(
+                    $source . '/' . $item, $target . '/' . $item
+                );
             }
             $iterator->next();
         }

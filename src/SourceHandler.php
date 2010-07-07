@@ -79,7 +79,7 @@ class CbSourceHandler
      * Plugins to use for parsing the xml.
      * @var array
      */
-    protected $plugins = array();
+    protected $_plugins = array();
 
     /**
      * Files to be included in the report
@@ -91,12 +91,13 @@ class CbSourceHandler
     /**
      * Default constructor
      *
-     * @param CbIssueXml $cbIssueXml The CbIssueXml object providing all known issues
+     * @param CbIssueXml $cbIssueXml The CbIssueXml object providing
+     * all known issues
      */
     public function __construct (CbIssueXml $cbIssueXml, array $plugins)
     {
         $this->cbIssueXml = $cbIssueXml;
-        $this->plugins    = $plugins;
+        $this->_plugins    = $plugins;
 
         foreach ($plugins as $p) {
             $files = $p->getFilelist();
@@ -117,8 +118,7 @@ class CbSourceHandler
      */
     public function addSourceDir($dir)
     {
-        foreach (new CbSourceIterator($dir) as $f)
-        {
+        foreach (new CbSourceIterator($dir) as $f) {
             if (!array_key_exists($f, $this->_files)) {
                 $this->_files[$f] = new CbFile($f);
             }
@@ -162,7 +162,8 @@ class CbSourceHandler
      * @param String $expr The PCRE specifying which files to remove.
      * @return void.
      */
-    public function excludeMatching($expr) {
+    public function excludeMatching($expr)
+    {
         foreach (array_keys($this->_files) as $filename) {
             if (preg_match($expr, $filename)) {
                 unset($this->_files[$filename]);

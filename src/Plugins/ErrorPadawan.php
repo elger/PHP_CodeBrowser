@@ -77,31 +77,31 @@ class CbErrorPadawan extends CbPluginsAbstract
      * of the issue.
      * @var String
      */
-    protected $lineStartAttr = 'line';
+    protected $_lineStartAttr = 'line';
 
     /**
      * Name of the attribute that holds the number of the last line
      * of the issue.
      * @var String
      */
-    protected $lineEndAttr = 'line';
+    protected $_lineEndAttr = 'line';
 
     /**
      * Name of the attribute that holds message of the issue.
      * @var String
      */
-    protected $descriptionAttr = 'message';
+    protected $_descriptionAttr = 'message';
 
     /**
      * Name of the attribute that holds severity of the issue.
      * @var String
      */
-    protected $severityAttr = 'severity';
+    protected $_severityAttr = 'severity';
 
     /**
      * Default string to use as source for issue.
      * @var String
      */
-    protected $source = 'Padawan';
+    protected $_source = 'Padawan';
 
 }

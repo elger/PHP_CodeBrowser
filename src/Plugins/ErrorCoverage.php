@@ -76,21 +76,21 @@ class CbErrorCoverage extends CbPluginsAbstract
      * of the issue.
      * @var String
      */
-    protected $lineStartAttr = 'num';
+    protected $_lineStartAttr = 'num';
 
     /**
      * Name of the attribute that holds the number of the last line
      * of the issue.
      * @var String
      */
-    protected $lineEndAttr = 'num';
+    protected $_lineEndAttr = 'num';
 
     /**
      * Default string to use as source for issue.
      * @var String
      */
-    protected $source = 'CodeCoverage';
-    
+    protected $_source = 'CodeCoverage';
+
     /**
      * The detailed mapper method for each single plugin, returning an array
      * of Issue objects.
@@ -105,26 +105,26 @@ class CbErrorCoverage extends CbPluginsAbstract
     public function mapIssues(DomNode $element, $filename)
     {
         $errorList = array();
-        
-        foreach($element->childNodes as $child) {
-        	
-            if (!($child instanceof DOMElement)){
+
+        foreach ($element->childNodes as $child) {
+
+            if (!($child instanceof DOMElement)) {
                 continue;
             }
             
             if ( 0 < (int) $child->getAttribute('count')) {
-            	continue;
+                continue;
             }
             
             if ('line' != $child->nodeName) {
-            	continue;
+                continue;
             }
             
             $errorList[] = new CbIssue(
                 $filename,
-                $this->getLineStart($child),
-                $this->getLineEnd($child),
-                $this->getSource($child),
+                $this->_getLineStart($child),
+                $this->_getLineEnd($child),
+                $this->_getSource($child),
                 'Not covered',
                 'Notice'
             );
@@ -141,7 +141,7 @@ class CbErrorCoverage extends CbPluginsAbstract
     public function getFilesWithIssues()
     {
         $filenames  = array();
-        $issueNodes = $this->issueXml->query(
+        $issueNodes = $this->_issueXml->query(
             '/*/'.$this->pluginName.'/*/file[@name]'
         );
         
@@ -158,9 +158,9 @@ class CbErrorCoverage extends CbPluginsAbstract
      * @param String $filename Name of the file to get nodes for.
      * @return DOMNodeList
      */
-    protected function getIssueNodes($filename)
+    protected function _getIssueNodes($filename)
     {
-        return $this->issueXml->query(
+        return $this->_issueXml->query(
             '/*/'.$this->pluginName.'/*/file[@name="'.$filename.'"]'
         );
     }

@@ -235,7 +235,7 @@ class CbCLIController
         // Get the path prefix all files have in common
         $commonPathPrefix = $sourceHandler->getCommonPathPrefix();
 
-        foreach($files as $file) {
+        foreach ($files as $file) {
             CbLogger::log(
                 sprintf(
                     'Get issues for "...%s"',
@@ -245,7 +245,8 @@ class CbCLIController
             );
             $issues = $file->getIssues();
 
-            // @TODO Timer::start() only for logging check performace and remove if neccessary
+            // @TODO Timer::start() only for logging check performance
+            // and remove if neccessary
             PHP_Timer::start();
             CbLogger::log(
                 sprintf('Generating source view for [...%s]', $file->name()),
@@ -278,19 +279,22 @@ class CbCLIController
         spl_autoload_register(array(new CbAutoloader(), 'autoload'));
 
         // Parse arguments
-        $opts = getopt('l:o:e:s:hv', array(
-            // Mandatory
-            'log:',
-            'output:',
-            // Optional
-            'exclude:',
-            'log-file:',
-            'log-level:',
-            'source:',
-            // General args
-            'help',
-            'version'
-        ));
+        $opts = getopt(
+            'l:o:e:s:hv',
+            array(
+                // Mandatory
+                'log:',
+                'output:',
+                // Optional
+                'exclude:',
+                'log-file:',
+                'log-level:',
+                'source:',
+                // General args
+                'help',
+                'version'
+            )
+        );
 
         $excludeExpressions = array();
 
@@ -400,7 +404,10 @@ class CbCLIController
             exit();
         }
 
-        CbLogger::log('Generating PHP_CodeBrowser files', CbLogger::PRIORITY_INFO);
+        CbLogger::log(
+            'Generating PHP_CodeBrowser files',
+            CbLogger::PRIORITY_INFO
+        );
 
         // init new CLIController
         $controller = new CbCLIController(
@@ -411,12 +418,14 @@ class CbCLIController
             new CbIOHelper()
         );
 
-        $controller->addErrorPlugins(array(
-            'CbErrorCheckstyle',
-            'CbErrorPMD',
-            'CbErrorCPD',
-            'CbErrorPadawan',
-            'CbErrorCoverage')
+        $controller->addErrorPlugins(
+            array(
+                'CbErrorCheckstyle',
+                'CbErrorPMD',
+                'CbErrorCPD',
+                'CbErrorPadawan',
+                'CbErrorCoverage'
+            )
         );
 
         try {

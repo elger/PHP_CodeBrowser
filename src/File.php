@@ -96,7 +96,9 @@ class CbFile
     public function addIssue($issue)
     {
         if ($issue->fileName !== $this->_name) {
-            throw new InvalidArgumentException('Tried to add issue to wrong file.');
+            throw new InvalidArgumentException(
+                'Tried to add issue to wrong file.'
+            );
         }
         $this->_issues[] = $issue;
     }
@@ -185,7 +187,9 @@ class CbFile
     public function mergeWith($file)
     {
         if ($this->_name !== $file->_name) {
-            throw new InvalidArgumentException('Tried to merge different files');
+            throw new InvalidArgumentException(
+                'Tried to merge different files'
+            );
         }
         $this->_issues = array_merge($this->_issues, $file->_issues);
     }

@@ -121,8 +121,6 @@ class CbViewAbstract
     /**
      * Copy needed resources to output directory
      *
-     * @param boolean $hasErrors Flag to define which index.html will be generated.
-     *
      * @return void
      * @throws Exception
      * @see cbIOHelper->copyFile
@@ -151,7 +149,7 @@ class CbViewAbstract
 
         $this->_ioHelper->createFile(
             $this->_outputDir . '/index.html',
-            $this->_render('index',$data)
+            $this->_render('index', $data)
         );
     }
 
@@ -205,7 +203,8 @@ class CbViewAbstract
             $shortName = substr($name, $preLen);
             $fileName  = basename($name);
 
-            $ret .= "<li class='php' ><a class='fileLink' href='$hrefPrefix$shortName.html'>";
+            $ret .= '<li class="php" ><a class="fileLink" href="';
+            $ret .= $hrefPrefix . $shortName . '.html">';
             $ret .= "$fileName</a></li>";
         }
 
@@ -226,7 +225,8 @@ class CbViewAbstract
      */
     protected function _render($templateName, $data)
     {
-        $filePath = $this->_templateDir . DIRECTORY_SEPARATOR . $templateName . '.tpl';
+        $filePath = $this->_templateDir . DIRECTORY_SEPARATOR
+                  . $templateName . '.tpl';
 
         extract($data, EXTR_SKIP);
 

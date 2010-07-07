@@ -76,13 +76,13 @@ class CbErrorPMD extends CbPluginsAbstract
      * of the issue.
      * @var String
      */
-    protected $lineStartAttr = 'beginline';
+    protected $_lineStartAttr = 'beginline';
     /**
      * Name of the attribute that holds the number of the last line
      * of the issue.
      * @var String
      */
-    protected $lineEndAttr = 'endline';
+    protected $_lineEndAttr = 'endline';
 
     /**
      * Get the source of an issue.

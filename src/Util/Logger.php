@@ -97,7 +97,7 @@ class CbLogger
      *
      * @var Array
      */
-    protected static $priorities = array(
+    protected static $_priorities = array(
         self::PRIORITY_DEBUG => 'DEBUG',
         self::PRIORITY_INFO => 'INFO',
         self::PRIORITY_WARN => 'WARN',
@@ -109,16 +109,16 @@ class CbLogger
      *
      * @var Integer
      */
-    protected static $logLevel = -1;
+    protected static $_logLevel = -1;
 
     /**
      * Optional option logfile
      *
-     * If is set loglevel output will be saved to $logFile
+     * If is set loglevel output will be saved to $_logFile
      *
      * @var String
      */
-    protected static $logFile;
+    protected static $_logFile;
 
     /**
      * Setter for log file.
@@ -129,7 +129,7 @@ class CbLogger
      */
     public static function setLogFile($filename)
     {
-        self::$logFile = fopen($filename, 'w+');
+        self::$_logFile = fopen($filename, 'w+');
     }
 
     /**
@@ -152,11 +152,11 @@ class CbLogger
         if (is_string($priority)
                 && array_key_exists(strtoupper($priority), $levelsByString)) {
             $priority = strtoupper($priority);
-            self::$logLevel = $levelsByString[strtoupper($priority)];
+            self::$_logLevel = $levelsByString[strtoupper($priority)];
         } else if (is_integer($priority)
                    && self::PRIORITY_DEBUG <= $priority
                    && self::PRIORITY_ERROR >= $priority) {
-            self::$logLevel = $priority;
+            self::$_logLevel = $priority;
         } else {
             throw new InvalidArgumentException(
                 "Invalid log level '$priority' given."
@@ -167,31 +167,32 @@ class CbLogger
     /**
      * Method for logging and formatting log information.
      *
-     * In case log file option is set, logging information will be written to log file,
-     * else it will be echoed.
+     * In case log file option is set, logging information will be written
+     * to log file, else it will be echoed.
      *
      * @param String  $message  The message to log
-     * @param Integer $priority The priority of log level, default CbLogger::PRIORITY_INFO
+     * @param Integer $priority The priority of log level,
+     *                          default CbLogger::PRIORITY_INFO
      *
      * @return void
      */
     public static function log($message, $priority = CbLogger::PRIORITY_INFO)
     {
-        if ($priority < self::$logLevel) {
+        if ($priority < self::$_logLevel) {
             return;
         }
         $message = sprintf(
             '%s - %s: %s',
             date('Y-m-d h:i:s'),
-            self::$priorities[$priority],
+            self::$_priorities[$priority],
             $message
         );
 
         $logMessage = sprintf('%s%s', $message, PHP_EOL);
 
         // In case logFile is set write log output to file else echo it
-        if (self::$logFile) {
-            fwrite(self::$logFile, $logMessage);
+        if (self::$_logFile) {
+            fwrite(self::$_logFile, $logMessage);
         } else {
             echo $logMessage;
         }
@@ -204,8 +205,8 @@ class CbLogger
      */
     public function __destruct()
     {
-        if (self::$logFile) {
-            fclose(self::$logFile);
+        if (self::$_logFile) {
+            fclose(self::$_logFile);
         }
     }
 

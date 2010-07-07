@@ -70,12 +70,13 @@ class CbSourceIterator extends FilterIterator
      * 
      * @var array
      */
-    protected $knownExtensions = array('.php');
+    protected $_knownExtensions = array('.php');
 
     /**
      * Default constructor
-     * 
-     * @param String $sourceFolder The source folder that should be parsed for files
+     *
+     * @param String $sourceFolder The source folder that should
+     * be parsed for files
      */
     public function __construct($sourceFolder)
     {
@@ -90,15 +91,15 @@ class CbSourceIterator extends FilterIterator
 
     /**
      * Check if current file from iterator is listed in known extensions.
-     * @see self::$knownExtensions
-     * 
+     * @see self::$_knownExtensions
+     *
      * @return Boolean
      */
     public function accept()
     {
         return in_array(
             strrchr($this->current(), '.'),
-            $this->knownExtensions
+            $this->_knownExtensions
         );
 
     }
