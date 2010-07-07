@@ -389,7 +389,7 @@ class CbCLIController
         }
         if (!isset($htmlOutput)) {
             $errors[] = 'Output folder must be given.';
-        } else if (file_exists($xmlLogDir) && !is_dir($xmlLogDir)) {
+        } else if (file_exists($htmlOutput) && !is_dir($htmlOutput)) {
             $errors[] = 'Output folder exists and is no directory.';
         }
         if (isset($sourceFolder) && !is_dir($sourceFolder)) {
