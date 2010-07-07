@@ -102,7 +102,7 @@ class CbSourceHandler
             $files = $p->getFilelist();
             foreach ($files as $f) {
                 if (array_key_exists($f->name(), $this->_files)) {
-                    $this->_files[$f->name()]->merge($f);
+                    $this->_files[$f->name()]->mergeWith($f);
                 } else {
                     $this->_files[$f->name()] = $f;
                 }
