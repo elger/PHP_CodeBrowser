@@ -303,7 +303,7 @@ class CbCLIController
             case 'l':
             case 'log':
                 if (isset($xmlLogDir) || is_array($val)) {
-                    print 'Only one log folder may be given';
+                    error_log('Only one log folder may be given');
                     self::printHelp();
                     exit();
                 }
@@ -313,7 +313,7 @@ class CbCLIController
             case 'output':
             case 'o':
                 if (isset($htmlOutput) || is_array($val)) {
-                    print 'Only one output folder may be given';
+                    error_log('Only one output folder may be given');
                     self::printHelp();
                     exit();
                 }
@@ -328,7 +328,7 @@ class CbCLIController
 
             case 'log-file':
                 if (is_array($val)) {
-                    print 'Only one logfile may be given';
+                    error_log('Only one logfile may be given');
                     self::printHelp();
                     exit();
                 }
@@ -337,7 +337,7 @@ class CbCLIController
 
             case 'log-level':
                 if (is_array($val)) {
-                    print 'Only one loglevel may be given';
+                    error_log('Only one loglevel may be given');
                     self::printHelp();
                     exit();
                 }
@@ -347,7 +347,7 @@ class CbCLIController
             case 's':
             case 'source':
                 if (isset($sourceFolder) || is_array($val)) {
-                    print 'Only one source folder may be given';
+                    error_log('Only one source folder may be given');
                     self::printHelp();
                     exit();
                 }
@@ -370,8 +370,10 @@ class CbCLIController
             try {
                 CbLogger::setLogLevel($loglevel);
             } catch (InvalidArgumentException $e) {
-                print $e->getMessage() . "\n\n";
-                print "See `{$_SERVER['PHP_SELF']} --help` for more help\n";
+                error_log($e->getMessage() . "\n\n");
+                error_log(
+                    "See `{$_SERVER['PHP_SELF']} --help` for more help\n"
+                );
                 exit();
             }
         } else {
@@ -397,10 +399,12 @@ class CbCLIController
 
         if ($errors) {
             foreach ($errors as $e) {
-                print $e . "\n";
+                error_log($e . "\n");
             }
-            print 'Try `' . $_SERVER['PHP_SELF']
-                . " --help` for more information.\n";
+            error_log(
+                'Try `' . $_SERVER['PHP_SELF']
+                . " --help` for more information.\n"
+            );
             exit();
         }
 
