@@ -23,10 +23,17 @@
     <email>elger.thiele@mayflower.de</email>
     <active>yes</active>
   </lead>
+  <developer>
+    <name>Simon Kohlmeyer</name>
+    <user>simon</user>
+    <email>simon.kohlmeyer@mayflower.de</email>
+    <active>yes</active>
+  </developer>
+
   <date>2010-06-29</date>
 
   <version>
-    <release>0.1.4</release>
+    <release>0.2.0</release>
     <api>1.0.0</api>
   </version>
 
@@ -41,8 +48,16 @@
   <contents> 
     <dir name="/">
       <dir name="src">
+        <dir name="Helper">
+          <file name="IOHelper.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
+        </dir> <!-- /Helper -->
         <dir name="Plugins">
           <file name="ErrorCheckstyle.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
+          <file name="ErrorCoverage.php" role="php">
             <tasks:replace from="@package_version@" to="version" type="package-info" />
           </file>
           <file name="ErrorCPD.php" role="php">
@@ -59,32 +74,39 @@
           <file name="Autoloader.php" role="php">
             <tasks:replace from="@package_version@" to="version" type="package-info" />
           </file>
+          <file name="Logger.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
         </dir> <!-- /Util -->
-        
+        <dir name="View">
+          <file name="ViewAbstract.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
+          <file name="ViewReview.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
+        </dir> <!-- /View -->
         <file name="CLIController.php" role="php">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
           <tasks:replace from="@php_dir@" to="php_dir" type="pear-config" />
           <tasks:replace from="@data_dir@" to="data_dir" type="pear-config" />
         </file>
-        <file name="ErrorHandler.php" role="php">
+        <file name="File.php" role="php">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
-        <file name="FDHandler.php" role="php">
+        <file name="Issue.php" role="php">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
-        <file name="HTMLGenerator.php" role="php">
+        <file name="IssueXml.php" role="php">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
-        <file name="JSGenerator.php" role="php">
+        <file name="PluginsAbstract.php" role="php">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
-        <file name="PluginError.php" role="php">
+        <file name="SourceHandler.php" role="php">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
-        <file name="XMLGenerator.php" role="php">
-          <tasks:replace from="@package_version@" to="version" type="package-info" />
-        </file>
-        <file name="XMLHandler.php" role="php">
+        <file name="SourceIterator.php" role="php">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
       </dir> <!-- /src -->
@@ -92,6 +114,8 @@
       <dir name="templates">
         <dir name="css">
           <file name="cruisecontrol.css" role="data" />
+          <file name="review.css" role="data" />
+          <file name="tree.css" role="data" />
         </dir> <!-- /css -->
         <dir name="img">
           <file name="background.gif" role="data" />
@@ -115,23 +139,103 @@
           <file name="plus.gif" role="data" />
           <file name="plusbottom.gif" role="data" />
           <file name="question.gif" role="data" />
+          <file name="separator.gif" role="data" />
           <file name="slider.gif" role="data" />
           <file name="tab-active.png" role="data" />
           <file name="trash.gif" role="data" />
+          <file name="treeToggle-collapsed.png" role="data" />
+          <file name="treeToggle-extended.png" role="data" />
+          <file name="treeToggle.gif" role="data" />
         </dir> <!-- /img -->
         <dir name="js">
-          <file name="dtree.js" role="data" />
-          <file name="effects.js" role="data" />
-          <file name="prototip.js" role="data" />
-          <file name="prototype.js" role="data" />
+          <dir name="jquery.cluetip">
+            <dir name="images">
+              <file name="arrowdown.gif" role="data" />
+              <file name="arrowleft.gif" role="data" />
+              <file name="arrowright.gif" role="data" />
+              <file name="arrowup.gif" role="data" />
+              <file name="bl.gif" role="data" />
+              <file name="bl.png" role="data" />
+              <file name="br.gif" role="data" />
+              <file name="br.png" role="data" />
+              <file name="darrowdown.gif" role="data" />
+              <file name="darrowleft.gif" role="data" />
+              <file name="darrowright.gif" role="data" />
+              <file name="darrowup.gif" role="data" />
+              <file name="itunes.png" role="data" />
+              <file name="rarrowdown.gif" role="data" />
+              <file name="rarrowleft.gif" role="data" />
+              <file name="rarrowright.gif" role="data" />
+              <file name="rarrowup.gif" role="data" />
+              <file name="tl.gif" role="data" />
+              <file name="tl.png" role="data" />
+              <file name="tr.gif" role="data" />
+              <file name="tr.png" role="data" />
+              <file name="wait.gif" role="data" />
+            </dir> <!-- /images -->
+            <dir name="lib">
+              <file name="jquery-1.3.2.js" role="data" />
+              <file name="jquery-1.4.js" role="data" />
+              <file name="jquery.bgiframe.min.js" role="data" />
+              <file name="jquery.hoverIntent.js" role="data" />
+            </dir> <!-- /lib -->
+            <file name="jquery.cluetip.css" role="data" />
+            <file name="jquery.cluetip.js" role="data" />
+            <file name="jquery.cluetip.min.js" role="data" />
+          </dir> <!-- /jquery.cluetip -->
+          <dir name="jquery.jstree">
+            <dir name="themes">
+              <dir name="default">
+                <file name="dot_for_ie.gif" role="data" />
+                <file name="d.png" role="data" />
+                <file name="style.css" role="data" />
+                <file name="throbber.gif" role="data" />
+              </dir> <!-- /default -->
+            </dir> <!-- /themes -->
+          </dir> <!-- /jquery.jstree -->
+          <dir name="jquery.sidebar">
+            <dir name="css">
+              <dir name="blue-glass">
+                <file name="inject-bottom.png" role="data" />
+                <file name="inject-left.png" role="data" />
+                <file name="inject-right.png" role="data" />
+                <file name="inject-top.png" role="data" />
+                <file name="sidebar.css" role="data" />
+              </dir> <!-- /blue-glass -->
+              <dir name="codebrowser">
+                <file name="inject-bottom.png" role="data" />
+                <file name="inject-left.png" role="data" />
+                <file name="inject-right.png" role="data" />
+                <file name="inject-top.png" role="data" />
+                <file name="sidebar.css" role="data" />
+              </dir> <!-- /codebrowser -->
+              <dir name="dark-glass">
+                <file name="inject-bottom.png" role="data" />
+                <file name="inject-left.png" role="data" />
+                <file name="inject-right.png" role="data" />
+                <file name="inject-top.png" role="data" />
+                <file name="sidebar.css" role="data" />
+              </dir> <!-- /dark-glass -->
+              <dir name="red-glass">
+                <file name="inject-bottom.png" role="data" />
+                <file name="inject-left.png" role="data" />
+                <file name="inject-right.png" role="data" />
+                <file name="inject-top.png" role="data" />
+                <file name="sidebar.css" role="data" />
+              </dir> <!-- /red-glass -->
+            </dir> <!-- /css -->
+            <file name="jquery-1.4.min.js" role="data" />
+            <file name="jquery.sidebar.js" role="data" />
+            <file name="jquery-ui-1.7.2.custom.min.js" role="data" />
+          </dir> <!-- /jquery.sidebar -->
+          <file name="jquery-1.4.2.js" role="data" />
+          <file name="jquery.history.js" role="data" />
+          <file name="review.js" role="data" />
           <file name="side-bar.js" role="data" />
+          <file name="tree.js" role="data" />
         </dir> <!-- /js -->
-        <file name="flatView.tpl" role="data" />
         <file name="index.tpl" role="data" />
-        <file name="page.tpl" role="data" />
-        <file name="reviewView.tpl" role="data" />
-        <file name="tree.tpl" role="data" />
-        <file name="noErrors.tpl" role="data" />
+        <file name="review.tpl" role="data" />
       </dir> <!-- /templates -->
       
       <dir name="bin">
@@ -150,11 +254,6 @@
       <file name="README.markdown" role="doc" />
       <file name="CHANGELOG.markdown" role="doc" />
       <file name="LICENSE" role="doc" />
-      <!--
-      <file name="config.xml" role="doc">
-        <tasks:replace from="@package_version@" to="version" type="package-info" />
-      </file>
-      -->
     </dir> <!-- / -->  
     
   </contents>
@@ -214,38 +313,47 @@
       </os>
     </installconditions>
     <filelist>
+      <install as="PHP_CodeBrowser/Helper/IOHelper.php" name="src/Helper/IOHelper.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCheckstyle.php" name="src/Plugins/ErrorCheckstyle.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorCoverage.php" name="src/Plugins/ErrorCoverage.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCPD.php" name="src/Plugins/ErrorCPD.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPadawan.php" name="src/Plugins/ErrorPadawan.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php" name="src/Plugins/ErrorPMD.php" />
       <install as="PHP_CodeBrowser/Util/Autoloader.php" name="src/Util/Autoloader.php" />
+      <install as="PHP_CodeBrowser/Util/Logger.php" name="src/Util/Logger.php" />
+      <install as="PHP_CodeBrowser/View/ViewReview.php" name="src/View/ViewReview.php" />
+      <install as="PHP_CodeBrowser/View/ViewAbstract.php" name="src/View/ViewAbstract.php" />
       <install as="PHP_CodeBrowser/CLIController.php" name="src/CLIController.php" />
-      <install as="PHP_CodeBrowser/ErrorHandler.php" name="src/ErrorHandler.php" />
-      <install as="PHP_CodeBrowser/FDHandler.php" name="src/FDHandler.php" />
-      <install as="PHP_CodeBrowser/HTMLGenerator.php" name="src/HTMLGenerator.php" />
-      <install as="PHP_CodeBrowser/JSGenerator.php" name="src/JSGenerator.php" />
-      <install as="PHP_CodeBrowser/PluginError.php" name="src/PluginError.php" />
-      <install as="PHP_CodeBrowser/XMLGenerator.php" name="src/XMLGenerator.php" />
-      <install as="PHP_CodeBrowser/XMLHandler.php" name="src/XMLHandler.php" />
+      <install as="PHP_CodeBrowser/File.php" name="src/File.php" />
+      <install as="PHP_CodeBrowser/Issue.php" name="src/Issue.php" />
+      <install as="PHP_CodeBrowser/IssueXml.php" name="src/IssueXml.php" />
+      <install as="PHP_CodeBrowser/PluginsAbstract.php" name="src/PluginsAbstract.php" />
+      <install as="PHP_CodeBrowser/SourceHandler.php" name="src/SourceHandler.php" />
+      <install as="PHP_CodeBrowser/SourceIterator.php" name="src/SourceIterator.php" />
       <install as="phpcb.bat" name="bin/phpcb.bat" />
       <install as="phpcb" name="bin/phpcb.php" />
     </filelist>
   </phprelease>
   <phprelease>
     <filelist>
+      <install as="PHP_CodeBrowser/Helper/IOHelper.php" name="src/Helper/IOHelper.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCheckstyle.php" name="src/Plugins/ErrorCheckstyle.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorCoverage.php" name="src/Plugins/ErrorCoverage.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCPD.php" name="src/Plugins/ErrorCPD.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPadawan.php" name="src/Plugins/ErrorPadawan.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php" name="src/Plugins/ErrorPMD.php" />
       <install as="PHP_CodeBrowser/Util/Autoloader.php" name="src/Util/Autoloader.php" />
+      <install as="PHP_CodeBrowser/Util/Logger.php" name="src/Util/Logger.php" />
+      <install as="PHP_CodeBrowser/View/ViewReview.php" name="src/View/ViewReview.php" />
+      <install as="PHP_CodeBrowser/View/ViewAbstract.php" name="src/View/ViewAbstract.php" />
       <install as="PHP_CodeBrowser/CLIController.php" name="src/CLIController.php" />
-      <install as="PHP_CodeBrowser/ErrorHandler.php" name="src/ErrorHandler.php" />
-      <install as="PHP_CodeBrowser/FDHandler.php" name="src/FDHandler.php" />
-      <install as="PHP_CodeBrowser/HTMLGenerator.php" name="src/HTMLGenerator.php" />
-      <install as="PHP_CodeBrowser/JSGenerator.php" name="src/JSGenerator.php" />
-      <install as="PHP_CodeBrowser/PluginError.php" name="src/PluginError.php" />
-      <install as="PHP_CodeBrowser/XMLGenerator.php" name="src/XMLGenerator.php" />
-      <install as="PHP_CodeBrowser/XMLHandler.php" name="src/XMLHandler.php" />
+      <install as="PHP_CodeBrowser/File.php" name="src/File.php" />
+      <install as="PHP_CodeBrowser/Issue.php" name="src/Issue.php" />
+      <install as="PHP_CodeBrowser/IssueXml.php" name="src/IssueXml.php" />
+      <install as="PHP_CodeBrowser/PluginsAbstract.php" name="src/PluginsAbstract.php" />
+      <install as="PHP_CodeBrowser/SourceHandler.php" name="src/SourceHandler.php" />
+      <install as="PHP_CodeBrowser/SourceIterator.php" name="src/SourceIterator.php" />
+
       <install as="phpcb" name="bin/phpcb.php" />
       <ignore name="bin/phpcb.bat" />
     </filelist>
