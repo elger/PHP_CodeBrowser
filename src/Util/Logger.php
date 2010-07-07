@@ -54,6 +54,7 @@
  * @package   PHP_CodeBrowser
  * @author    Elger Thiele <elger.thiele@mayflower.de>
  * @author    Michel Hartmann <michel.hartmann@mayflower.de>
+ * @author    Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   Release: @package_version@

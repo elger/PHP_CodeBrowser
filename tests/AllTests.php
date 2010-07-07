@@ -38,6 +38,7 @@
  * @package    PHP_CodeBrowser
  * @subpackage PHPUnit
  * @author     Elger Thiele <elger.thiele@mayflower.de>
+ * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  * @copyright  2007-2009 Mayflower GmbH
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id$
@@ -78,6 +79,7 @@ PHPUnit_Util_Filter::addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
  * @package    PHP_CodeBrowser
  * @subpackage PHPUnit
  * @author     Elger Thiele <elger.thiele@mayflower.de>
+ * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
  * @copyright  2007-2009 Mayflower GmbH
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    Release: @package_version@
