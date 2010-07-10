@@ -92,14 +92,23 @@ class CbIssueXml extends DOMDocument
     public $formatOutput = true;
 
     /**
+     * The pear Log object used for logging.
+     *
+     * @var Log
+     */
+    protected $_log;
+
+    /**
      * Default constructor
      * 
+     * @param Log    $log      The pear Log object to use for logging.
      * @param String $version  The version definitio for DomDocument
      * @param String $encoding The used encoding for DomDocument
      */
-    public function __construct($version = '1.0', $encoding = 'UTF-8')
+    public function __construct(Log &$log, $version = '1.0', $encoding = 'UTF-8')
     {
         parent::__construct($version, $encoding);
+        $this->_log =& $log;
         $this->appendChild(
             $this->createElement('codebrowser')
         );
@@ -127,25 +136,25 @@ class CbIssueXml extends DOMDocument
             }
 
             $realFileName = realpath($current);
-            CbLogger::log(
+            $this->_log->log(
                 sprintf('Read file: %s', $realFileName), 
-                CbLogger::PRIORITY_DEBUG
+                PEAR_LOG_DEBUG
             );
             $xml                  = new DOMDocument('1.0', 'UTF-8');
             $xml->validateOnParse = true;
             if (@$xml->load(realpath($current))) {
-                CbLogger::log(
+                $this->_log->log(
                     'ADD file', 
-                    CbLogger::PRIORITY_DEBUG
+                    PEAR_LOG_DEBUG
                 );
                 $this->addXMLFile($xml);
             } else {
-                CbLogger::log(
+                $this->_log->log(
                     sprintf('Could not read file "%s"', $realFileName),
-                    CbLogger::PRIORITY_WARN
+                    PEAR_LOG_WARN
                 );
             }
-            CbLogger::log('DESTROY DOMDocument', CbLogger::PRIORITY_DEBUG);
+            $this->_log->log('DESTROY DOMDocument', PEAR_LOG_DEBUG);
             unset($xml);
         }
 
@@ -198,7 +207,7 @@ class CbIssueXml extends DOMDocument
         
         $queryRunTime = PHP_Timer::stop();
         if ($queryRunTime > 0.1) {
-            CbLogger::log(
+            $this->_log->log(
                 sprintf(
                     'XPATH: %s %s %ds',
                     $expression,
@@ -208,7 +217,7 @@ class CbIssueXml extends DOMDocument
                     ),
                     $queryRunTime
                 ),
-                CbLogger::PRIORITY_DEBUG
+                PEAR_LOG_DEBUG
             );
         }
         return $result;

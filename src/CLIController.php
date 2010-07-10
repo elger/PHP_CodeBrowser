@@ -65,6 +65,7 @@ if (strpos('@php_dir@', '@php_dir') === false) {
 
 require_once dirname(__FILE__) . '/Util/Autoloader.php';
 require_once 'PHP/Timer.php';
+require_once 'Log.php';
 
 /**
  * CbCLIController
@@ -132,6 +133,13 @@ class CbCLIController
     private $_ioHelper;
 
     /**
+     * The pear Log object used for logging.
+     *
+     * @var Log
+     */
+    protected $_log;
+
+    /**
      * The constructor
      *
      * Standard setters are initialized
@@ -145,16 +153,18 @@ class CbCLIController
      *                                 appear in the output.
      * @param CbIOHelper $ioHelper     The CbIOHelper object to be used for
      *                                 filesystem interaction.
+     * @param Log    $log              The pear Log object to use for logging.
      */
     public function __construct($logPath,       $projectSourceDir,
                                 $htmlOutputDir, Array $excludeExpressions,
-                                $ioHelper)
+                                $ioHelper, $log)
     {
         $this->_logDir = $logPath;
         $this->_projectSourceDir = $projectSourceDir;
         $this->_htmlOutputDir = $htmlOutputDir;
         $this->_excludeExpressions = $excludeExpressions;
         $this->_ioHelper = $ioHelper;
+        $this->_log      = $log;
     }
 
     /**
@@ -188,7 +198,7 @@ class CbCLIController
     public function run()
     {
         // init needed classes
-        $cbIssueXml    = new CbIssueXml();
+        $cbIssueXml    = new CbIssueXml($this->_log);
         $cbViewReview  = new CbViewReview(
             PHPCB_TEMPLATE_DIR,
             $this->_htmlOutputDir,
@@ -199,12 +209,12 @@ class CbCLIController
         $this->_ioHelper->deleteDirectory($this->_htmlOutputDir);
         $this->_ioHelper->createDirectory($this->_htmlOutputDir);
 
-        CbLogger::log('Load XML files', CbLogger::PRIORITY_DEBUG);
+        $this->_log->log('Load XML files', PEAR_LOG_DEBUG);
 
         // merge xml files
         $cbIssueXml->addDirectory($this->_logDir);
 
-        CbLogger::log('Load Plugins', CbLogger::PRIORITY_DEBUG);
+        $this->_log->log('Load Plugins', PEAR_LOG_DEBUG);
 
         // conversion of XML file cc to cb format
         $plugins = array();
@@ -214,12 +224,12 @@ class CbCLIController
 
         $sourceHandler = new CbSourceHandler($cbIssueXml, $plugins);
 
-        CbLogger::log(
+        $this->_log->log(
             sprintf(
                 'Found %d files with issues.',
                 count($sourceHandler->getFiles())
             ),
-            CbLogger::PRIORITY_INFO
+            PEAR_LOG_INFO
         );
 
         if (isset($this->_projectSourceDir)) {
@@ -236,28 +246,28 @@ class CbCLIController
         $commonPathPrefix = $sourceHandler->getCommonPathPrefix();
 
         foreach ($files as $file) {
-            CbLogger::log(
+            $this->_log->log(
                 sprintf(
                     'Get issues for "...%s"',
                     substr($file->name(), strlen($commonPathPrefix))
                 ),
-                CbLogger::PRIORITY_DEBUG
+                PEAR_LOG_DEBUG
             );
             $issues = $file->getIssues();
 
             // @TODO Timer::start() only for logging check performance
             // and remove if neccessary
             PHP_Timer::start();
-            CbLogger::log(
+            $this->_log->log(
                 sprintf('Generating source view for [...%s]', $file->name()),
-                CbLogger::PRIORITY_DEBUG
+                PEAR_LOG_DEBUG
             );
 
             $cbViewReview->generate($issues, $file->name(), $commonPathPrefix);
 
-            CbLogger::log(
+            $this->_log->log(
                 sprintf('completed in %s', PHP_Timer::stop()),
-                CbLogger::PRIORITY_DEBUG
+                PEAR_LOG_DEBUG
             );
         }
 
@@ -298,6 +308,12 @@ class CbCLIController
 
         $excludeExpressions = array();
 
+        if (array_key_exists('log-file', $opts)) {
+            $log = Log::factory('file', $opts['log-file']);
+        } else {
+            $log = Log::factory('console');
+        }
+
         foreach ($opts as $opt => $val) switch ($opt) {
             // Mandatory
             case 'l':
@@ -326,14 +342,7 @@ class CbCLIController
                 $excludeExpressions[] = $val;
                 break;
 
-            case 'log-file':
-                if (is_array($val)) {
-                    error_log('Only one logfile may be given');
-                    self::printHelp();
-                    exit(1);
-                }
-                CbLogger::setLogFile($val);
-                break;
+            // Log-file handled above
 
             case 'log-level':
                 if (is_array($val)) {
@@ -341,7 +350,14 @@ class CbCLIController
                     self::printHelp();
                     exit(1);
                 }
-                $loglevel = $val;
+
+                $prio = @Log::stringToPriority($val);
+                if ($prio === null) {
+                    error_log("'$val' is not a valid Priority\n\n");
+                    self::printHelp();
+                    exit(1);
+                }
+                $log->setMask(Log::MIN($prio));
                 break;
 
             case 's':
@@ -364,20 +380,6 @@ class CbCLIController
             case 'version':
                 self::printVersion();
                 exit();
-        }
-
-        if (isset($loglevel)) {
-            try {
-                CbLogger::setLogLevel($loglevel);
-            } catch (InvalidArgumentException $e) {
-                error_log($e->getMessage() . "\n\n");
-                error_log(
-                    "See `{$_SERVER['PHP_SELF']} --help` for more help\n"
-                );
-                exit(1);
-            }
-        } else {
-            CbLogger::setLogLevel(CbLogger::PRIORITY_DEBUG);
         }
 
         // Check if given parameters are valid.
@@ -408,9 +410,9 @@ class CbCLIController
             exit(1);
         }
 
-        CbLogger::log(
+        $log->log(
             'Generating PHP_CodeBrowser files',
-            CbLogger::PRIORITY_INFO
+            PEAR_LOG_INFO
         );
 
         // init new CLIController
@@ -419,7 +421,8 @@ class CbCLIController
             $sourceFolder,
             $htmlOutput,
             $excludeExpressions,
-            new CbIOHelper()
+            new CbIOHelper(),
+            $log
         );
 
         $controller->addErrorPlugins(
@@ -435,12 +438,12 @@ class CbCLIController
         try {
             $controller->run();
         } catch (Exception $e) {
-            CbLogger::log(
+            $log->log(
                 sprintf("PHP-CodeBrowser Error: \n%s\n", $e->getMessage())
             );
         }
 
-        CbLogger::log(PHP_Timer::resourceUsage(), CbLogger::PRIORITY_INFO);
+        $log->log(PHP_Timer::resourceUsage(), PEAR_LOG_INFO);
     }
 
     /**
