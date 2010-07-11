@@ -4,6 +4,7 @@ function switchLine(lineId) {
 
 function initReview() {
     $('.hasIssues').cluetip({
+        positionBy: 'mouse',
         splitTitle: '|',
         activation: 'hover',
         dropShadow: false,
