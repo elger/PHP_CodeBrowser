@@ -45,6 +45,7 @@
  * @since      File available since  0.1.0
  */
 
+require_once 'Log.php';
 require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
 
 /**
@@ -96,6 +97,13 @@ class CbCLIControllerTest extends CbAbstractTests
     protected $_outputDir;
 
     /**
+     * The pear Log object. Let's not clutter the terminal.
+     *
+     * @var Log
+     */
+    protected $_log;
+
+    /**
      * Initialize values.
      */
     public function __construct()
@@ -103,6 +111,7 @@ class CbCLIControllerTest extends CbAbstractTests
         $this->_logDir = realpath(dirname(__FILE__) . '/../testData/testLogs/');
         $this->_projectSourceDir = realpath($this->_logDir . '/../src/');
         $this->_outputDir = realpath($this->_logDir . '/../');
+        $this->_log       = Log::singleton('null');
 
         if (!$this->_logDir) {
             $this->fail('Could not find testData/testLogs directory');
@@ -110,9 +119,6 @@ class CbCLIControllerTest extends CbAbstractTests
         if (!$this->_projectSourceDir) {
             $this->fail('Could not find dummy source directory testData/src');
         }
-
-        // Try not to get our terminal cluttered
-        CbLogger::setLogFile($this->_logDir . '/tmpfile');
     }
 
     /**
@@ -143,7 +149,8 @@ class CbCLIControllerTest extends CbAbstractTests
                                                       $this->_projectSourceDir,
                                                       $this->_outputDir,
                                                       array(),
-                                                      $this->_ioMock);
+                                                      $this->_ioMock,
+                                                      $this->_log);
         $this->_cbCLIController->addErrorPlugins(array('CbErrorCheckstyle'));
     }
 

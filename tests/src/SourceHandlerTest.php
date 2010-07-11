@@ -45,6 +45,8 @@
  * @since      File available since  0.1.0
  */
 
+require_once 'Log.php';
+
 require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
 
 /**
@@ -70,6 +72,21 @@ class CbSourceHandlerTest extends CbAbstractTests
     protected $_cbSourceHandler;
 
     /**
+     * Pear Log object.
+     *
+     * @var Log
+     */
+    protected $_log;
+
+    /**
+     * Initializes common values.
+     */
+    public function __construct()
+    {
+        $this->_log = Log::singleton('null');
+    }
+
+    /**
      * (non-PHPdoc)
      * @see tests/cbAbstractTests#setUp()
      */
@@ -89,7 +106,7 @@ class CbSourceHandlerTest extends CbAbstractTests
  </file>
 </checkstyle>
 HERE;
-        $issueXML = new CbIssueXml();
+        $issueXML = new CbIssueXml($this->_log);
         $xml      = new DOMDocument('1.0', 'UTF-8');
         $xml->validateOnParse = true;
         $xml->loadXML($xmlString);
