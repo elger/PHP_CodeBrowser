@@ -258,7 +258,7 @@ class CbIOHelper
      */
     protected static function _getCommonPathPrefix($currentPrefix, $path)
     {
-        if (strpos($path, $currentPrefix) === 0
+        if (strpos($path, $currentPrefix . DIRECTORY_SEPARATOR) === 0
                 || $currentPrefix == '/'
                 || $currentPrefix == ''
                 || $currentPrefix == '.') {
