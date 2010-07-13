@@ -198,6 +198,10 @@ class CbCLIController
      */
     public function run()
     {
+        // clear and create output directory
+        $this->_ioHelper->deleteDirectory($this->_htmlOutputDir);
+        $this->_ioHelper->createDirectory($this->_htmlOutputDir);
+
         // init needed classes
         $cbIssueXml    = new CbIssueXml($this->_log);
         $cbViewReview  = new CbViewReview(
@@ -205,10 +209,6 @@ class CbCLIController
             $this->_htmlOutputDir,
             $this->_ioHelper
         );
-
-        // clear and create output directory
-        $this->_ioHelper->deleteDirectory($this->_htmlOutputDir);
-        $this->_ioHelper->createDirectory($this->_htmlOutputDir);
 
         $this->_log->log('Load XML files', PEAR_LOG_DEBUG);
 
