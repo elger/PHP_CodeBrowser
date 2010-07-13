@@ -70,7 +70,11 @@ require_once 'PHPUnit/Util/Filter.php';
 //require_once dirname( __FILE__ ) . '/src/Plugins/ErrorCheckstyleTest.php';
 //require_once dirname( __FILE__ ) . '/src/Plugins/ErrorPadawanTest.php';
 
-PHPUnit_Util_Filter::addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
+if (PHPUnit_Runner_Version::id() < 3.5) {
+    PHPUnit_Util_Filter::addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
+} else {
+    PHP_CodeCoverage_Filter::getInstance()->addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
+}
 
 /**
  * CbAlltests
