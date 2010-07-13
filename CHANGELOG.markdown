@@ -4,7 +4,7 @@ PHP_CodeBrowser 0.9.0
 * Added support for CRAP with PHPUnit 3.5
 * Improved performance
 * Now using jQuery as JavaScript framework
-
+* Added --exclude option
 
 PHP_CodeBrowser 0.1.4
 ---------------------
