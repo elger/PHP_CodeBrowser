@@ -74,9 +74,6 @@
           <file name="Autoloader.php" role="php">
             <tasks:replace from="@package_version@" to="version" type="package-info" />
           </file>
-          <file name="Logger.php" role="php">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-          </file>
         </dir> <!-- /Util -->
         <dir name="View">
           <file name="ViewAbstract.php" role="php">
@@ -296,7 +293,6 @@
       <install as="PHP_CodeBrowser/Plugins/ErrorPadawan.php" name="src/Plugins/ErrorPadawan.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php" name="src/Plugins/ErrorPMD.php" />
       <install as="PHP_CodeBrowser/Util/Autoloader.php" name="src/Util/Autoloader.php" />
-      <install as="PHP_CodeBrowser/Util/Logger.php" name="src/Util/Logger.php" />
       <install as="PHP_CodeBrowser/View/ViewReview.php" name="src/View/ViewReview.php" />
       <install as="PHP_CodeBrowser/View/ViewAbstract.php" name="src/View/ViewAbstract.php" />
       <install as="PHP_CodeBrowser/CLIController.php" name="src/CLIController.php" />
@@ -319,7 +315,6 @@
       <install as="PHP_CodeBrowser/Plugins/ErrorPadawan.php" name="src/Plugins/ErrorPadawan.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php" name="src/Plugins/ErrorPMD.php" />
       <install as="PHP_CodeBrowser/Util/Autoloader.php" name="src/Util/Autoloader.php" />
-      <install as="PHP_CodeBrowser/Util/Logger.php" name="src/Util/Logger.php" />
       <install as="PHP_CodeBrowser/View/ViewReview.php" name="src/View/ViewReview.php" />
       <install as="PHP_CodeBrowser/View/ViewAbstract.php" name="src/View/ViewAbstract.php" />
       <install as="PHP_CodeBrowser/CLIController.php" name="src/CLIController.php" />
