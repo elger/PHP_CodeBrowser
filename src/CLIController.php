@@ -65,6 +65,7 @@ if (strpos('@php_dir@', '@php_dir') === false) {
 
 require_once dirname(__FILE__) . '/Util/Autoloader.php';
 require_once 'PHP/Timer.php';
+require_once 'Console/CommandLine.php';
 require_once 'Log.php';
 
 /**
@@ -288,139 +289,34 @@ class CbCLIController
         // register autoloader
         spl_autoload_register(array(new CbAutoloader(), 'autoload'));
 
-        // Parse arguments
-        $opts = getopt(
-            'l:o:e:s:hv',
-            array(
-                // Mandatory
-                'log:',
-                'output:',
-                // Optional
-                'exclude:',
-                'log-file:',
-                'log-level:',
-                'source:',
-                // General args
-                'help',
-                'version'
-            )
-        );
+        $parser = self::createCommandLineParser();
 
-        $excludeExpressions = array();
+        try {
+            $opts = $parser->parse()->options;
+        } catch (Exception $e) {
+            $parser->displayError($e->getMessage());
+        }
 
-        if (array_key_exists('log-file', $opts)) {
-            $log = Log::factory('file', $opts['log-file']);
+        if (isset($opts['logfile'])) {
+            $log = Log::factory('file', $opts['logfile']);
         } else {
             $log = Log::factory('console');
         }
 
-        foreach ($opts as $opt => $val) switch ($opt) {
-            // Mandatory
-            case 'l':
-            case 'log':
-                if (isset($xmlLogDir) || is_array($val)) {
-                    error_log('Only one log folder may be given');
-                    self::printHelp();
-                    exit(1);
-                }
-                $xmlLogDir = $val;
-                break;
-
-            case 'output':
-            case 'o':
-                if (isset($htmlOutput) || is_array($val)) {
-                    error_log('Only one output folder may be given');
-                    self::printHelp();
-                    exit(1);
-                }
-                $htmlOutput = $val;
-                break;
-
-            // Optional
-            case 'e':
-            case 'exclude':
-                $excludeExpressions[] = $val;
-                break;
-
-            // Log-file handled above
-
-            case 'log-level':
-                if (is_array($val)) {
-                    error_log('Only one loglevel may be given');
-                    self::printHelp();
-                    exit(1);
-                }
-
-                $prio = @Log::stringToPriority($val);
-                if ($prio === null) {
-                    error_log("'$val' is not a valid Priority\n\n");
-                    self::printHelp();
-                    exit(1);
-                }
-                $log->setMask(Log::MIN($prio));
-                break;
-
-            case 's':
-            case 'source':
-                if (isset($sourceFolder) || is_array($val)) {
-                    error_log('Only one source folder may be given');
-                    self::printHelp();
-                    exit(1);
-                }
-                $sourceFolder = $val;
-                break;
-
-            // General
-            case 'h':
-            case 'help':
-                self::printHelp();
-                exit();
-
-            case 'v':
-            case 'version':
-                self::printVersion();
-                exit();
-        }
-
-        // Check if given parameters are valid.
-        $errors = array();
-        if (!isset($xmlLogDir)) {
-            $errors[] = 'Log folder must be given.';
-        } else if (!is_dir($xmlLogDir)) {
-            $errors[] = 'Log folder is no directory.';
-        }
-        if (!isset($htmlOutput)) {
-            $errors[] = 'Output folder must be given.';
-        } else if (file_exists($htmlOutput) && !is_dir($htmlOutput)) {
-            $errors[] = 'Output folder exists and is no directory.';
-        }
-        if (isset($sourceFolder) && !is_dir($sourceFolder)) {
-            $errors[] = "Source folder '$sourceFolder' does not exist "
-                      . 'or is no directory';
-        }
-
-        if ($errors) {
+        $errors = self::errorsForOpts($opts);
+        if($errors) {
             foreach ($errors as $e) {
-                error_log($e . "\n");
+                error_log("Error: $e\n");
             }
-            error_log(
-                'Try `' . $_SERVER['PHP_SELF']
-                . " --help` for more information.\n"
-            );
             exit(1);
         }
 
-        $log->log(
-            'Generating PHP_CodeBrowser files',
-            PEAR_LOG_INFO
-        );
-
         // init new CLIController
         $controller = new CbCLIController(
-            $xmlLogDir,
-            $sourceFolder,
-            $htmlOutput,
-            $excludeExpressions,
+            $opts['log'],
+            $opts['source'],
+            $opts['output'],
+            isset($opts['exclude']) ? $opts['exclude'] : array(),
             new CbIOHelper(),
             $log
         );
@@ -448,68 +344,101 @@ class CbCLIController
     }
 
     /**
-     * Print help menu for shell
+     * Checks the given options array for errors.
      *
-     * @return void
+     * @param Array Options as returned by Console_CommandLine->parse()
+     *
+     * @return Array of String Errormessages.
      */
-    public static function printHelp()
+    private static function errorsForOpts($opts)
     {
-        print <<<USAGE
-Usage: phpcb --log <dir> --output <dir> [--source <dir>] [--logfile <dir>]
+        $errors = array();
 
-Mandatory Arguments:
---------------------
--l <dir>    --log <dir>     The path to the xml log files, e.g. generated
-                            from phpunit. Mandatory.
+        if (!isset($opts['log'])) {
+            $errors[] = 'Missing log argument.';
+        } else if (!file_exists($opts['log'])) {
+            $errors[] = 'Log directory does not exist.';
+        } else if (!is_dir($opts['log'])) {
+            $errors[] = 'Log argument must be a directory, a file was given.';
+        }
 
--o <dir>    --output <dir>  Path to the output folder where generated
-                            files should be stored. Mandatory.
+        if (!isset($opts['output'])) {
+            $errors[] = 'Missing output argument.';
+        } else if (file_exists($opts['output']) && !is_dir($opts['output'])) {
+            $errors[] = 'Ouput argument must be a directory, a file was given.';
+        }
 
-Optional Arguments:
--------------------
--e <regexp> --exclude <regexp>
-                            Excludes all files matching the PCRE <regexp>.
-                            This is done after pulling the files in the
-                            source dir in if one is given.
-                            NOTE: The match is run against absolute filenames.
-                            Can be given multiple times.
+        if (isset($opts['source']) && !is_dir($opts['source'])) {
+            $errors[] = 'Source argument must be a directory, a file was given.';
+        }
 
---log-file <dir>            Path of the file to use for logging the output.
-                            If not given, stdout will be used. Optional.
-
---log-level <level>         Specify the log level. Available values for level,
-                            sorted from most to least noise:
-                            DEBUG, INFO, WARN, ERROR.
-                            Comparision is case insensitive.
-                            Defaults to DEBUG in this release.
-
--s <dir>    --source <dir>  Path to the project source code. Parse complete
-                            source directory if set, else only files found
-                            in logs. Optional.
-
-General arguments:
-------------------
---help                  Print this help.
---version               Print actual verison.
-
-USAGE;
+        return $errors;
     }
 
     /**
-     * Print version information to shell
+     * Creates a Console_CommandLine object to parse options.
      *
-     * @return void
+     * @return Console_CommandLine
      */
-    public static function printVersion()
+    private static function createCommandLineParser()
     {
-        $version = 'Git version';
-        if (strpos('@package_version@', '@package_version') === false) {
-            $version = 'Version @package_version@, released on @release_date@';
-        }
-        print <<<USAGE
-PHP_CodeBrowser by Mayflower GmbH
-$version
+        $parser = new Console_CommandLine(array(
+            'description' => 'A Code browser for PHP files with syntax '
+                                . 'highlighting and colored error-sections '
+                                . 'found by quality assurance tools like '
+                                . 'PHPUnit or PHP_CodeSniffer.',
+            'version'     => (strpos('@package_version@', '@') === false)
+                                ? '@package_version@'
+                                : 'from Git'
+        ));
 
-USAGE;
+        $parser->addOption('log', array(
+            'description' => 'The path to the xml log files, e.g. generated '
+                                . 'from PHPUnit.',
+            'short_name'  => '-l',
+            'long_name'   => '--log'
+        ));
+
+        $parser->addOption('output', array(
+            'description' => 'Path to the output folder where generated files '
+                                . 'should be stored.',
+            'short_name'  => '-o',
+            'long_name'   => '--output'
+        ));
+
+        $parser->addOption('source', array(
+            'description' => 'Path to the project source code. Parse complete '
+                                . 'source directory if set, else only files '
+                                . 'found in logs.',
+            'short_name'  => '-s',
+            'long_name'   => '--source'
+        ));
+
+        $parser->addOption('exclude', array(
+            'description' => 'Excludes all files matching the given PCRE. This'
+                                . ' is done after pulling the files in the '
+                                . 'source dir in if one is given. Can be given '
+                                . 'multiple times. Note that the match is run '
+                                . 'against absolute filenames.',
+            'short_name'   => '-e',
+            'long_name'    => '--exclude',
+            'action'       => 'StoreArray'
+        ));
+
+        $parser->addOption('logfile', array(
+            'description' => 'Path of the file to use for logging the output. '
+                                . 'If not given, stdout will be used.',
+            'long_name'    => '--logfile'
+        ));
+
+        $parser->addOption('loglevel', array(
+            'description'     => 'Specify the log level. Defaults to DEBUG in '
+                                . 'this release.',
+            'long_name'       => '--loglevel',
+            'choices'         => array('debug', 'info', 'warn', 'error'),
+            'add_list_option' => true
+        ));
+
+        return $parser;
     }
 }
