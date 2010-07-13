@@ -431,7 +431,8 @@ class CbCLIController
                 'CbErrorPMD',
                 'CbErrorCPD',
                 'CbErrorPadawan',
-                'CbErrorCoverage'
+                'CbErrorCoverage',
+                'CbErrorCRAP'
             )
         );
 
