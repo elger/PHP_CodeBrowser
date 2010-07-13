@@ -1,6 +1,11 @@
-<phpunit bootstrap='tests/bootstrap.php'>
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit backupGlobals="false"
+         backupStaticAttributes="false"
+         syntaxCheck="false"
+         bootstrap="tests/bootstrap.php">
   <testsuites>
-    <testsuite>
+    <testsuite name="PHP_CodeBrowser">
       <directory>tests/src</directory>
     </testsuite>
   </testsuites>
@@ -12,11 +17,15 @@
   </filter>
 
   <logging>
-    <log type='coverage-html' target='coverage' charset='UTF-8' yui='true' highlight='true'/>
+    <log type="coverage-html" target="build/coverage" title="PHP_CodeBrowser"
+         charset="UTF-8" yui="true" highlight="true"
+         lowUpperBound="35" highLowerBound="70"/>
+    <log type="coverage-clover" target="build/logs/clover.xml"/>
+    <log type="junit" target="build/logs/junit.xml" logIncompleteSkipped="false"/>
   </logging>
 
   <php>
     <!--TODO: Remove this when E_STRICT stops crashing the tests -->
-    <ini name='error_reporting' value='E_ALL'/>
+    <ini name="error_reporting" value="E_ALL"/>
   </php>
 </phpunit>
