@@ -1,0 +1,22 @@
+<phpunit bootstrap='tests/bootstrap.php'>
+  <testsuites>
+    <testsuite>
+      <directory>tests/src</directory>
+    </testsuite>
+  </testsuites>
+
+  <filter>
+    <whitelist>
+      <directory suffix='.php'>src</directory>
+    </whitelist>
+  </filter>
+
+  <logging>
+    <log type='coverage-html' target='coverage' charset='UTF-8' yui='true' highlight='true'/>
+  </logging>
+
+  <php>
+    <!--TODO: Remove this when E_STRICT stops crashing the tests -->
+    <ini name='error_reporting' value='E_ALL'/>
+  </php>
+</phpunit>

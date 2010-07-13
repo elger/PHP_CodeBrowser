@@ -1,6 +1,6 @@
 <?php
 /**
- * Test suite
+ * Test bootstrapping
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -37,13 +37,12 @@
  * @category   PHP_CodeBrowser
  * @package    PHP_CodeBrowser
  * @subpackage PHPUnit
- * @author     Elger Thiele <elger.thiele@mayflower.de>
  * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
+ * @copyright  2007-2010 Mayflower GmbH
  * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version    SVN: $Id$
  * @link       http://www.phpunit.de/
- * @since      File available since  0.1.0
+ * @since      File available since  0.9.0
  */
 
 if (!defined('PHPCB_ROOT_DIR')) define('PHPCB_ROOT_DIR', realpath(dirname( __FILE__ ) . '/../'));
@@ -59,53 +58,4 @@ if (PHPUnit_Runner_Version::id() < 3.5) {
     PHP_CodeCoverage_Filter::getInstance()->addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
 }
 
-/**
- * CbAlltests
- *
- * @category   PHP_CodeBrowser
- * @package    PHP_CodeBrowser
- * @subpackage PHPUnit
- * @author     Elger Thiele <elger.thiele@mayflower.de>
- * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
- * @copyright  2007-2009 Mayflower GmbH
- * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version    Release: @package_version@
- * @link       http://www.phpunit.de/
- * @since      Class available since  0.1.0
- */
-class CbAllTests extends PHPUnit_Framework_TestSuite
-{
-    /**
-     * Construct
-     */
-    public function __construct ()
-    {
-        spl_autoload_register(array(new CbAutoloader(), 'autoload'));
-
-        $this->setName('AllTests');
-
-        // tests/src
-        $this->addTestSuite('CbCLIControllerTest');
-        $this->addTestSuite('CbFileTest');
-        $this->addTestSuite('CbIssueTest');
-        $this->addTestSuite('CbSourceHandlerTest');
-        $this->addTestSuite('CbSourceIteratorTest');
-
-        // tests/src/Helper
-        $this->addTestSuite('CbIOHelperTest');
-
-        // tests/src/View
-        $this->addTestSuite('CbViewReviewTest');
-    }
-
-    /**
-     * Suite
-     *
-     * @return void
-     */
-    public static function suite ()
-    {
-        return new self();
-    }
-}
-
+spl_autoload_register(array(new CbAutoloader(), 'autoload'));
