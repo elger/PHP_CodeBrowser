@@ -91,7 +91,7 @@ class CbErrorPMD extends CbPluginsAbstract
      * @param DOMElement $element
      * @return String
      */
-    protected function getSource(DOMElement $element)
+    protected function _getSource(DOMElement $element)
     {
         return $element->getAttribute('rule');
     }
@@ -103,7 +103,7 @@ class CbErrorPMD extends CbPluginsAbstract
      * @param DOMElement $element
      * @return String
      */
-    protected function getSeverity(DOMElement $element)
+    protected function _getSeverity(DOMElement $element)
     {
         return 'error';
     }
@@ -115,7 +115,7 @@ class CbErrorPMD extends CbPluginsAbstract
      * @param DOMElement $element
      * @return String
      */
-    protected function getDescription(DOMElement $element)
+    protected function _getDescription(DOMElement $element)
     {
         return str_replace(
             '&#10;',
