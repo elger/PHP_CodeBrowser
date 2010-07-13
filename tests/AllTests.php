@@ -53,23 +53,6 @@ if (!defined('PHPCB_TEST_OUTPUT')) define('PHPCB_TEST_OUTPUT', PHPCB_TEST_DIR . 
 
 require_once PHPCB_SOURCE . '/Util/Autoloader.php';
 
-require_once 'PHPUnit/Framework/TestSuite.php';
-require_once 'PHPUnit/TextUI/TestRunner.php';
-require_once 'PHPUnit/Util/Filter.php';
-
-//require_once dirname( __FILE__ ) . '/src/JSGeneratorTest.php';
-//require_once dirname( __FILE__ ) . '/src/HTMLGeneratorTest.php';
-//require_once dirname( __FILE__ ) . '/src/ErrorHandlerTest.php';
-//require_once dirname( __FILE__ ) . '/src/XMLGeneratorTest.php';
-//require_once dirname( __FILE__ ) . '/src/XMLHandlerTest.php';
-//require_once dirname( __FILE__ ) . '/src/FDHandlerTest.php';
-//require_once dirname( __FILE__ ) . '/src/PluginErrorTest.php';
-//
-//require_once dirname( __FILE__ ) . '/src/Plugins/ErrorPMDTest.php';
-//require_once dirname( __FILE__ ) . '/src/Plugins/ErrorCPDTest.php';
-//require_once dirname( __FILE__ ) . '/src/Plugins/ErrorCheckstyleTest.php';
-//require_once dirname( __FILE__ ) . '/src/Plugins/ErrorPadawanTest.php';
-
 if (PHPUnit_Runner_Version::id() < 3.5) {
     PHPUnit_Util_Filter::addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
 } else {
@@ -97,30 +80,19 @@ class CbAllTests extends PHPUnit_Framework_TestSuite
      */
     public function __construct ()
     {
-        spl_autoload_register( array( new CbAutoloader(), 'autoload' ) );
+        spl_autoload_register(array(new CbAutoloader(), 'autoload'));
 
         $this->setName('AllTests');
-        // TODO set a directory filter 
 
         // tests/src
         $this->addTestSuite('CbCLIControllerTest');
         $this->addTestSuite('CbFileTest');
         $this->addTestSuite('CbIssueTest');
         $this->addTestSuite('CbSourceHandlerTest');
-        //$this->addTestSuite('CbIssueXmlTest');
         $this->addTestSuite('CbSourceIteratorTest');
 
         // tests/src/Helper
         $this->addTestSuite('CbIOHelperTest');
-
-        // tests/src/Plugins
-        //$this->addTestSuite('CbErrorCPDTest');
-        //$this->addTestSuite('CbErrorCheckstyleTest');
-        //$this->addTestSuite('CbErrorPMDTest');
-        //$this->addTestSuite('CbErrorPadawanTest');
-
-        // tests/src/Util
-        //$this->addTestSuite('CbAutoloaderTest');
 
         // tests/src/View
         $this->addTestSuite('CbViewReviewTest');
