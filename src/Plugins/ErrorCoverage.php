@@ -106,31 +106,56 @@ class CbErrorCoverage extends CbPluginsAbstract
     {
         $errorList = array();
 
-        foreach ($element->childNodes as $child) {
+        $children = $element->childNodes;
+        $childCount = $children->length;
+        $next = 0;
 
-            if (!($child instanceof DOMElement)) {
-                continue;
+        for ($next = 0; $next < $childCount; $next++) {
+            $child = $children->item($next);
+
+            if ($this->representsUncoveredLOC($child)) {
+                $begin = $child->getAttribute('num');
+                $end   = $begin;
+
+                $next += 1;
+                while ($next < $childCount) {
+                    $child = $children->item($next);
+                    if (!$child instanceof DOMElement) {
+                        $next += 1;
+                        continue;
+                    }
+                    if (!$this->representsUncoveredLOC($child)) {
+                        break;
+                    }
+
+                    $end = $child->getAttribute('num');
+                    $next += 1;
+                }
+
+                $errorList[] = new CbIssue(
+                    $filename,
+                    $begin,
+                    $end,
+                    'CodeCoverage',
+                    'Not covered',
+                    'Notice'
+                );
             }
-            
-            if ( 0 < (int) $child->getAttribute('count')) {
-                continue;
-            }
-            
-            if ('line' != $child->nodeName) {
-                continue;
-            }
-            
-            $errorList[] = new CbIssue(
-                $filename,
-                $this->_getLineStart($child),
-                $this->_getLineEnd($child),
-                $this->_getSource($child),
-                'Not covered',
-                'Notice'
-            );
         }
         
         return $errorList;
+    }
+
+    /**
+     * Check if the given object is a DOMElement representing an
+     * uncovered line of code.
+     */
+    private function representsUncoveredLOC($elem)
+    {
+        return ($elem instanceof DOMElement
+             && 0      === (int) $elem->getAttribute('count')
+             && 'line' ===       $elem->nodeName
+             && 'stmt' ===       $elem->getAttribute('type'));
     }
         
     /**
