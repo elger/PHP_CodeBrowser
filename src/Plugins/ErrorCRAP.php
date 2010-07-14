@@ -109,8 +109,10 @@ class CbErrorCRAP extends CbPluginsAbstract
             if ($child instanceof DOMElement
                     && 'line'   === $child->nodeName
                     && 'method' === $child->getAttribute('type')) {
-
                 $crap = $child->getAttribute('crap');
+                if (!$crap) {
+                    continue;
+                }
                 $errorList[] = new CbIssue(
                     $filename,
                     $this->_getLineStart($child),
