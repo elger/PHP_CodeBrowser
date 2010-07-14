@@ -180,4 +180,39 @@ HERE;
         $actualFiles = $this->_cbSourceHandler->getFilesWithIssues();
         $this->assertEquals($expectedFiles, $actualFiles);
     }
+
+    /**
+     * Test getCommonPathPrefix
+     *
+     * @return void
+     */
+    public function test__getCommonPathPrefix()
+    {
+        $expected = '/a';
+        $actual   = $this->_cbSourceHandler->getCommonPathPrefix();
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Test excludeMatching
+     *
+     * @return void
+     */
+    public function test__excludeMatching()
+    {
+        $expected = array(
+            '/a/dir/source.php' => new CbFile(
+                '/a/dir/source.php',
+                array(
+                    new CbIssue(
+                        '/a/dir/source.php',
+                        37, 37, 'Checkstyle',
+                        'm1', 'error'
+                    )
+                )
+            )
+        );
+        $this->_cbSourceHandler->excludeMatching('/^\/a.*src\.php$/');
+        $this->assertEquals($expected, $this->_cbSourceHandler->getFiles());
+    }
 }
