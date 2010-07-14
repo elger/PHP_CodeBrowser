@@ -51,8 +51,9 @@ if (!defined('PHPCB_TEST_DIR')) define('PHPCB_TEST_DIR', realpath(PHPCB_ROOT_DIR
 if (!defined('PHPCB_TEST_OUTPUT')) define('PHPCB_TEST_OUTPUT', PHPCB_TEST_DIR . '/output');
 
 require_once PHPCB_SOURCE . '/Util/Autoloader.php';
+require_once 'PHPUnit/Util/Filter.php';
 
-if (PHPUnit_Runner_Version::id() < 3.5) {
+if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToWhitelist')) {
     PHPUnit_Util_Filter::addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
 } else {
     PHP_CodeCoverage_Filter::getInstance()->addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
