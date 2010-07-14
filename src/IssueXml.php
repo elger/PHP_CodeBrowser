@@ -159,11 +159,9 @@ class CbIssueXml extends DOMDocument
         }
 
         if (!$this->documentElement->hasChildNodes()) {
-            throw new Exception(
-                sprintf(
-                    'Valid xml log files could not be found in "%s"',
-                    $directory
-                )
+            $this->_log->log(
+                'Valid xml log files could not be found in "%s"',
+                PEAR_LOG_WARNING
             );
         }
         return $this;
