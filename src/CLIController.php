@@ -67,6 +67,7 @@ require_once dirname(__FILE__) . '/Util/Autoloader.php';
 require_once 'PHP/Timer.php';
 require_once 'Console/CommandLine.php';
 require_once 'Log.php';
+require_once 'File/Iterator/Factory.php';
 
 /**
  * CbCLIController
@@ -234,7 +235,11 @@ class CbCLIController
         );
 
         if (isset($this->_projectSourceDir)) {
-            $sourceHandler->addSourceDir($this->_projectSourceDir);
+            $sourceHandler->addSourceFiles(
+                File_Iterator_Factory::getFileIterator(
+                    $this->_projectSourceDir, 'php'
+                )
+            );
         }
 
         foreach ($this->_excludeExpressions as $expr) {

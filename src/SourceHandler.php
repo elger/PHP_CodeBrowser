@@ -112,15 +112,22 @@ class CbSourceHandler
     }
 
     /**
-     * Add a source directory to the file list.
+     * Add source files to the list.
      *
-     * @param String $dir The name of the directory to add.
+     * @param Array of SplFileInfo $files The files to add
      */
-    public function addSourceDir($dir)
+    public function addSourceFiles($files)
     {
-        foreach (new CbSourceIterator($dir) as $f) {
-            if (!array_key_exists($f, $this->_files)) {
-                $this->_files[$f] = new CbFile($f);
+        foreach ($files as $f) {
+            if (!$f->isFile()) {
+                throw new Exception(
+                    "{$f->getPathname()} is no regular file"
+                );
+            }
+            $name = $f->getRealPath();
+
+            if (!array_key_exists($name, $this->_files)) {
+                $this->_files[$name] = new CbFile($name);
             }
         }
     }
