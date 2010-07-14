@@ -194,6 +194,7 @@ class CbViewReview extends CbViewAbstract
                 $nuSpan->appendChild($sourceDom->createEntityReference('nbsp'));
             }
             $nuSpan->appendChild($sourceDom->createTextNode($lineNumber));
+            $nuSpan->appendChild($sourceDom->createEntityReference('nbsp'));
             $line->insertBefore($nuSpan, $line->firstChild);
 
             //create anchor for the new line
