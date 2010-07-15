@@ -87,18 +87,23 @@ class CbSourceHandler
      *
      * @param Array $plugins The plugins to get issues from.
      */
-    public function __construct (array $plugins)
+    public function __construct (array $plugins = array())
     {
         $this->_plugins    = $plugins;
+        array_walk($plugins, array($this, 'addPlugin'));
+    }
 
-        foreach ($plugins as $p) {
-            $files = $p->getFilelist();
-            foreach ($files as $f) {
-                if (array_key_exists($f->name(), $this->_files)) {
-                    $this->_files[$f->name()]->mergeWith($f);
-                } else {
-                    $this->_files[$f->name()] = $f;
-                }
+    /**
+     * Add a new plugin to the handler.
+     *
+     * @param CbPluginsAbstract $plugin The plugin to add.
+     */
+    public function addPlugin(CbPluginsAbstract $plugin) {
+        foreach ($plugin->getFilelist() as $file) {
+            if (array_key_exists($file->name(), $this->_files)) {
+                $this->_files[$file->name()]->mergeWith($file);
+            } else {
+                $this->_files[$file->name()] = $file;
             }
         }
     }
