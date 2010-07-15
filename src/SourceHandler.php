@@ -68,13 +68,6 @@
  */
 class CbSourceHandler
 {
-
-    /**
-     * Plugins to use for parsing the xml.
-     * @var array
-     */
-    protected $_plugins = array();
-
     /**
      * Files to be included in the report
      *
@@ -89,7 +82,6 @@ class CbSourceHandler
      */
     public function __construct (array $plugins = array())
     {
-        $this->_plugins    = $plugins;
         array_walk($plugins, array($this, 'addPlugin'));
     }
 
