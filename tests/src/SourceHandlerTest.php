@@ -112,7 +112,7 @@ HERE;
         $xml->loadXML($xmlString);
         $issueXML->addXMLFile($xml);
         $plugins = array(new CbErrorCheckstyle($issueXML));
-        $this->_cbSourceHandler = new CbSourceHandler($issueXML, $plugins);
+        $this->_cbSourceHandler = new CbSourceHandler($plugins);
     }
 
     /**
