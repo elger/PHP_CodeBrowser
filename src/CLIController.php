@@ -93,13 +93,6 @@ class CbCLIController
     private $_logDir;
 
     /**
-     * Path to the generated code browser xml file
-     *
-     * @var string
-     */
-    private $_xmlFile;
-
-    /**
      * Path to the code browser html output folder
      *
      * @var string
@@ -125,7 +118,7 @@ class CbCLIController
      *
      * @var array
      */
-    private $_registeredErrorPlugins;
+    private $_registeredPlugins;
 
     /**
      * The IOHelper used for filesystem interaction.
@@ -180,7 +173,7 @@ class CbCLIController
     public function addErrorPlugins($classNames)
     {
         foreach ((array) $classNames as $className) {
-            $this->_registeredErrorPlugins[] = $className;
+            $this->_registeredPlugins[] = $className;
         }
     }
 
@@ -226,7 +219,7 @@ class CbCLIController
             $this->_log->log('Load Plugins', PEAR_LOG_DEBUG);
 
             // conversion of XML file cc to cb format
-            foreach ($this->_registeredErrorPlugins as $className) {
+            foreach ($this->_registeredPlugins as $className) {
                 $sourceHandler->addPlugin(new $className($cbIssueXml));
             }
 

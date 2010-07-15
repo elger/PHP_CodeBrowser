@@ -207,36 +207,37 @@ class CbFile
     /**
      * Sorting function used in CbFile::sort()
      */
-    protected static function _sort($a, $b)
+    protected static function _sort($first, $second)
     {
-        $a = $a->name();
-        $b = $b->name();
+        $first = $first->name();
+        $second = $second->name();
 
-        $prelen = strlen(CbIOHelper::getCommonPathPrefix(array($a, $b))) + 1;
+        $prefix = CbIOHelper::getCommonPathPrefix(array($first, $second));
+        $prelen = strlen($prefix) + 1;
 
-        $a = substr($a, $prelen);
-        $b = substr($b, $prelen);
+        $first = substr($first, $prelen);
+        $second = substr($second, $prelen);
 
-        $aIsInSubdir = (substr_count($a, DIRECTORY_SEPARATOR) !== 0);
-        $bIsInSubdir = (substr_count($b, DIRECTORY_SEPARATOR) !== 0);
+        $firstIsInSubdir = (substr_count($first, DIRECTORY_SEPARATOR) !== 0);
+        $secondIsInSubdir = (substr_count($second, DIRECTORY_SEPARATOR) !== 0);
 
-        if ($aIsInSubdir) {
-            if ($bIsInSubdir) {
+        if ($firstIsInSubdir) {
+            if ($secondIsInSubdir) {
                 // both are subdirectories
-                return strcmp($a, $b);
+                return strcmp($first, $second);
             } else {
                 // a lies in a subdir of the dir in which b lies,
                 // so b comes later.
                 return -1;
             }
         } else {
-            if ($bIsInSubdir) {
+            if ($secondIsInSubdir) {
                 // b lies in a subdir of the dir in which a lies,
                 // so a comes later.
                 return 1;
             } else {
                 // both are files
-                return strcmp($a, $b);
+                return strcmp($first, $second);
             }
         }
     }
