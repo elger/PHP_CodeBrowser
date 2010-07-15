@@ -72,28 +72,20 @@ class CbSourceHandlerTest extends CbAbstractTests
     protected $_cbSourceHandler;
 
     /**
-     * Pear Log object.
+     * Plugin array populated with example files.
+     * TODO: Mock this
      *
-     * @var Log
+     * @var CbPluginsAbstract
      */
-    protected $_log;
+    protected $_plugin;
+
+    /**
 
     /**
      * Initializes common values.
      */
     public function __construct()
     {
-        $this->_log = Log::singleton('null');
-    }
-
-    /**
-     * (non-PHPdoc)
-     * @see tests/cbAbstractTests#setUp()
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
         $xmlString = <<<HERE
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="1.2.0RC3">
@@ -111,17 +103,17 @@ HERE;
         $xml->validateOnParse = true;
         $xml->loadXML($xmlString);
         $issueXML->addXMLFile($xml);
-        $plugins = array(new CbErrorCheckstyle($issueXML));
-        $this->_cbSourceHandler = new CbSourceHandler($plugins);
+        $this->_plugin = new CbErrorCheckstyle($issueXML);
     }
 
     /**
      * (non-PHPdoc)
-     * @see tests/cbAbstractTests#tearDown()
+     * @see tests/cbAbstractTests#setUp()
      */
-    protected function tearDown()
+    protected function setUp()
     {
-        parent::tearDown();
+        parent::setUp();
+        $this->_cbSourceHandler = new CbSourceHandler();
     }
 
     /**
@@ -131,6 +123,7 @@ HERE;
      */
     public function test__getFiles()
     {
+        $this->_cbSourceHandler->addPlugin($this->_plugin);
         $name1 = '/a/dir/source.php';
         $name1 = '/a/nother/dir/src.php';
         $expected = array(
@@ -173,6 +166,7 @@ HERE;
      */
     public function test__getFilesWithIssues()
     {
+        $this->_cbSourceHandler->addPlugin($this->_plugin);
         $expectedFiles = array (
             '/a/dir/source.php',
             '/a/nother/dir/src.php'
@@ -188,6 +182,7 @@ HERE;
      */
     public function test__getCommonPathPrefix()
     {
+        $this->_cbSourceHandler->addPlugin($this->_plugin);
         $expected = '/a';
         $actual   = $this->_cbSourceHandler->getCommonPathPrefix();
         $this->assertEquals($expected, $actual);
@@ -200,6 +195,7 @@ HERE;
      */
     public function test__excludeMatching()
     {
+        $this->_cbSourceHandler->addPlugin($this->_plugin);
         $expected = array(
             '/a/dir/source.php' => new CbFile(
                 '/a/dir/source.php',
