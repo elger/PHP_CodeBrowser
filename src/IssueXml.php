@@ -47,6 +47,8 @@
  * @since     File available since  0.1.0
  */
 
+require_once 'File/Iterator/Factory.php';
+
 /**
  * CbIssueXML
  *
@@ -113,17 +115,9 @@ class CbIssueXml extends DOMDocument
      */
     public function addDirectory($directory)
     {
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($directory)
-        );
+        $iterator = File_Iterator_Factory::getFileIterator($directory, 'xml');
 
         foreach ($iterator as $current) {
-            if (!$current->isFile()
-                || ($current->getFilename()
-                    === $current->getBasename('.xml'))) {
-                continue;
-            }
-
             $realFileName = realpath($current);
             $xml                  = new DOMDocument('1.0', 'UTF-8');
             $xml->validateOnParse = true;

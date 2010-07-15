@@ -47,6 +47,8 @@
  * @since      File available since  0.1.0
  */
 
+require_once 'File/Iterator/Factory.php';
+
 /**
  * cbAutoloader
  *
@@ -74,16 +76,11 @@ class CbAutoloader
      *
      * Parses this project root directory for all files and its classnames
      */
-    public function __construct ()
+    public function __construct()
     {
-        $files = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator(PHPCB_ROOT_DIR)
-        );
+        $iter = File_Iterator_Factory::getFileIterator(PHPCB_ROOT_DIR, 'php');
 
-        foreach ($files as $file) {
-            if ('php' !== substr($file->getFilename(), -3)) {
-                continue;
-            }
+        foreach ($iter as $file) {
             $this->_classes['Cb' . substr($file->getFilename(), 0, -4)]
                 = realpath($file->getPath() . '/' . $file->getFilename());
         }
@@ -97,7 +94,7 @@ class CbAutoloader
      *
      * @return void
      */
-    public function autoload ($className)
+    public function autoload($className)
     {
         if (isset($this->_classes[$className])) {
             include_once $this->_classes[$className];
