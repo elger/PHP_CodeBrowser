@@ -345,7 +345,12 @@ class CbCLIController
             $controller->run();
         } catch (Exception $e) {
             $log->log(
-                sprintf("PHP-CodeBrowser Error: \n%s\n", $e->getMessage())
+                sprintf(
+                    "PHP-CodeBrowser Error: \n%s\n\n%s",
+                    $e->getMessage(),
+                    $e->getTraceAsString()
+                ),
+                PEAR_LOG_ERR
             );
         }
 
