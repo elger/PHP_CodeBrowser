@@ -200,7 +200,11 @@ class CbCLIController
     public function run()
     {
         // clear and create output directory
-        $this->_ioHelper->deleteDirectory($this->_htmlOutputDir);
+        if (is_dir($this->_htmlOutputDir)) {
+            $this->_ioHelper->deleteDirectory($this->_htmlOutputDir);
+        } else if (is_file($this->_htmlOutputDir)) {
+            $this->_ioHelper->deleteFile($this->_htmlOutputDir);
+        }
         $this->_ioHelper->createDirectory($this->_htmlOutputDir);
 
         // init needed classes
