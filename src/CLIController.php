@@ -208,35 +208,36 @@ class CbCLIController
         $this->_ioHelper->createDirectory($this->_htmlOutputDir);
 
         // init needed classes
-        $cbIssueXml    = new CbIssueXml($this->_log);
         $cbViewReview  = new CbViewReview(
             PHPCB_TEMPLATE_DIR,
             $this->_htmlOutputDir,
             $this->_ioHelper
         );
 
-        $this->_log->log('Load XML files', PEAR_LOG_DEBUG);
+        $sourceHandler = new CbSourceHandler();
 
-        // merge xml files
-        $cbIssueXml->addDirectory($this->_logDir);
+        if (isset($this->_logDir)) {
+            $cbIssueXml    = new CbIssueXml($this->_log);
+            $this->_log->log('Load XML files', PEAR_LOG_DEBUG);
 
-        $this->_log->log('Load Plugins', PEAR_LOG_DEBUG);
+            // merge xml files
+            $cbIssueXml->addDirectory($this->_logDir);
 
-        // conversion of XML file cc to cb format
-        $plugins = array();
-        foreach ($this->_registeredErrorPlugins as $className) {
-            $plugins[] = new $className($cbIssueXml);
+            $this->_log->log('Load Plugins', PEAR_LOG_DEBUG);
+
+            // conversion of XML file cc to cb format
+            foreach ($this->_registeredErrorPlugins as $className) {
+                $sourceHandler->addPlugin(new $className($cbIssueXml));
+            }
+
+            $this->_log->log(
+                sprintf(
+                    'Found %d files with issues.',
+                    count($sourceHandler->getFiles())
+                ),
+                PEAR_LOG_INFO
+            );
         }
-
-        $sourceHandler = new CbSourceHandler($plugins);
-
-        $this->_log->log(
-            sprintf(
-                'Found %d files with issues.',
-                count($sourceHandler->getFiles())
-            ),
-            PEAR_LOG_INFO
-        );
 
         if (isset($this->_projectSourceDir)) {
             $sourceHandler->addSourceFiles(
@@ -369,7 +370,9 @@ class CbCLIController
         $errors = array();
 
         if (!isset($opts['log'])) {
-            $errors[] = 'Missing log argument.';
+            if (!isset($opts['source'])) {
+                $errors[] = 'Missing log or source argument.';
+            }
         } else if (!file_exists($opts['log'])) {
             $errors[] = 'Log directory does not exist.';
         } else if (!is_dir($opts['log'])) {
@@ -408,7 +411,8 @@ class CbCLIController
 
         $parser->addOption('log', array(
             'description' => 'The path to the xml log files, e.g. generated '
-                                . 'from PHPUnit.',
+                                . 'from PHPUnit. Either this or --source must '
+                                . 'be given',
             'short_name'  => '-l',
             'long_name'   => '--log'
         ));
@@ -423,7 +427,8 @@ class CbCLIController
         $parser->addOption('source', array(
             'description' => 'Path to the project source code. Parse complete '
                                 . 'source directory if set, else only files '
-                                . 'found in logs.',
+                                . 'found in logs. Either this or --log must '
+                                . 'be given.',
             'short_name'  => '-s',
             'long_name'   => '--source'
         ));
