@@ -105,7 +105,9 @@ class CbIssueXml extends DOMDocument
      * @param String $version  The version definitio for DomDocument
      * @param String $encoding The used encoding for DomDocument
      */
-    public function __construct(Log &$log, $version = '1.0', $encoding = 'UTF-8')
+    public function __construct(Log &$log,
+                                     $version = '1.0',
+                                     $encoding = 'UTF-8')
     {
         parent::__construct($version, $encoding);
         $this->_log =& $log;

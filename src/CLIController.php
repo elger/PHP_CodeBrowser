@@ -314,7 +314,7 @@ class CbCLIController
         }
 
         $errors = self::errorsForOpts($opts);
-        if($errors) {
+        if ($errors) {
             foreach ($errors as $e) {
                 error_log("Error: $e\n");
             }
@@ -386,7 +386,7 @@ class CbCLIController
         }
 
         if (isset($opts['source']) && !is_dir($opts['source'])) {
-            $errors[] = 'Source argument must be a directory, a file was given.';
+            $errors[] = 'Source argument must be a directory, file given.';
         }
 
         return $errors;
@@ -399,64 +399,86 @@ class CbCLIController
      */
     private static function createCommandLineParser()
     {
-        $parser = new Console_CommandLine(array(
-            'description' => 'A Code browser for PHP files with syntax '
-                                . 'highlighting and colored error-sections '
-                                . 'found by quality assurance tools like '
-                                . 'PHPUnit or PHP_CodeSniffer.',
-            'version'     => (strpos('@package_version@', '@') === false)
-                                ? '@package_version@'
-                                : 'from Git'
-        ));
+        $parser = new Console_CommandLine(
+            array(
+                'description' => 'A Code browser for PHP files with syntax '
+                                    . 'highlighting and colored error-sections '
+                                    . 'found by quality assurance tools like '
+                                    . 'PHPUnit or PHP_CodeSniffer.',
+                'version'     => (strpos('@package_version@', '@') === false)
+                                    ? '@package_version@'
+                                    : 'from Git'
+            )
+        );
 
-        $parser->addOption('log', array(
-            'description' => 'The path to the xml log files, e.g. generated '
-                                . 'from PHPUnit. Either this or --source must '
-                                . 'be given',
-            'short_name'  => '-l',
-            'long_name'   => '--log'
-        ));
+        $parser->addOption(
+            'log',
+            array(
+                'description' => 'The path to the xml log files, e.g. generated'
+                                    . ' from PHPUnit. Either this or --source '
+                                    . 'must be given',
+                'short_name'  => '-l',
+                'long_name'   => '--log'
+            )
+        );
 
-        $parser->addOption('output', array(
-            'description' => 'Path to the output folder where generated files '
-                                . 'should be stored.',
-            'short_name'  => '-o',
-            'long_name'   => '--output'
-        ));
+        $parser->addOption(
+            'output',
+            array(
+                'description' => 'Path to the output folder where generated '
+                                    . 'files should be stored.',
+                'short_name'  => '-o',
+                'long_name'   => '--output'
+            )
+        );
 
-        $parser->addOption('source', array(
-            'description' => 'Path to the project source code. Parse complete '
-                                . 'source directory if set, else only files '
-                                . 'found in logs. Either this or --log must '
-                                . 'be given.',
-            'short_name'  => '-s',
-            'long_name'   => '--source'
-        ));
+        $parser->addOption(
+            'source',
+            array(
+                'description' => 'Path to the project source code. Parse '
+                                    . 'complete source directory if set, else '
+                                    . 'only files found in logs. Either this or'
+                                    . ' --log must be given.',
+                'short_name'  => '-s',
+                'long_name'   => '--source'
+            )
+        );
 
-        $parser->addOption('exclude', array(
-            'description' => 'Excludes all files matching the given PCRE. This'
-                                . ' is done after pulling the files in the '
-                                . 'source dir in if one is given. Can be given '
-                                . 'multiple times. Note that the match is run '
-                                . 'against absolute filenames.',
-            'short_name'   => '-e',
-            'long_name'    => '--exclude',
-            'action'       => 'StoreArray'
-        ));
+        $parser->addOption(
+            'exclude',
+            array(
+                'description' => 'Excludes all files matching the given PCRE. '
+                                    . 'This is done after pulling the files in '
+                                    . 'the source dir in if one is given. Can '
+                                    . 'be given multiple times. Note that the '
+                                    . 'match is run against '
+                                    . 'absolute filenames.',
+                'short_name'   => '-e',
+                'long_name'    => '--exclude',
+                'action'       => 'StoreArray'
+            )
+        );
 
-        $parser->addOption('logfile', array(
-            'description' => 'Path of the file to use for logging the output. '
-                                . 'If not given, stdout will be used.',
-            'long_name'    => '--logfile'
-        ));
+        $parser->addOption(
+            'logfile',
+            array(
+                'description' => 'Path of the file to use for logging the '
+                                    . 'output. If not given, stdout '
+                                    . 'will be used.',
+                'long_name'   => '--logfile'
+            )
+        );
 
-        $parser->addOption('loglevel', array(
-            'description'     => 'Specify the log level. Defaults to DEBUG in '
-                                . 'this release.',
-            'long_name'       => '--loglevel',
-            'choices'         => array('debug', 'info', 'warn', 'error'),
-            'add_list_option' => true
-        ));
+        $parser->addOption(
+            'loglevel',
+            array(
+                'description'     => 'Specify the log level. Defaults to DEBUG '
+                                    . 'in this release.',
+                'long_name'       => '--loglevel',
+                'choices'         => array('debug', 'info', 'warn', 'error'),
+                'add_list_option' => true
+            )
+        );
 
         return $parser;
     }

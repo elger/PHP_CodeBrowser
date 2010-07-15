@@ -90,7 +90,8 @@ class CbSourceHandler
      *
      * @param CbPluginsAbstract $plugin The plugin to add.
      */
-    public function addPlugin(CbPluginsAbstract $plugin) {
+    public function addPlugin(CbPluginsAbstract $plugin)
+    {
         foreach ($plugin->getFilelist() as $file) {
             if (array_key_exists($file->name(), $this->_files)) {
                 $this->_files[$file->name()]->mergeWith($file);
