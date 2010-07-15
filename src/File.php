@@ -160,13 +160,13 @@ class CbFile
      */
     public function getErrorCount()
     {
-        $c = 0;
+        $count = 0;
         foreach ($this->_issues as $issue) {
             if (strcasecmp($issue->severity, 'error') === 0) {
-                $c += 1;
+                $count += 1;
             }
         }
-        return $c;
+        return $count;
     }
 
     /**
