@@ -68,12 +68,6 @@
  */
 class CbSourceHandler
 {
-    /**
-     * CbIssueXml object
-     *
-     * @var CbIssueXml
-     */
-    public $cbIssueXml;
 
     /**
      * Plugins to use for parsing the xml.
@@ -91,12 +85,10 @@ class CbSourceHandler
     /**
      * Default constructor
      *
-     * @param CbIssueXml $cbIssueXml The CbIssueXml object providing
-     * all known issues
+     * @param Array $plugins The plugins to get issues from.
      */
-    public function __construct (CbIssueXml $cbIssueXml, array $plugins)
+    public function __construct (array $plugins)
     {
-        $this->cbIssueXml = $cbIssueXml;
         $this->_plugins    = $plugins;
 
         foreach ($plugins as $p) {

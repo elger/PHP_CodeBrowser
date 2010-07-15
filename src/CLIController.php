@@ -224,7 +224,7 @@ class CbCLIController
             $plugins[] = new $className($cbIssueXml);
         }
 
-        $sourceHandler = new CbSourceHandler($cbIssueXml, $plugins);
+        $sourceHandler = new CbSourceHandler($plugins);
 
         $this->_log->log(
             sprintf(
