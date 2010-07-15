@@ -117,7 +117,7 @@ class CbErrorCPD extends CbPluginsAbstract
      * @param String $filename Name of the file to get nodes for.
      * @return DOMNodeList
      */
-    protected function getIssueNodes($filename)
+    protected function _getIssueNodes($filename)
     {
         return $this->_issueXml->query(
             '/*/'.$this->pluginName.'/*/file[@path="'.$filename.'"]'
@@ -148,7 +148,7 @@ class CbErrorCPD extends CbPluginsAbstract
     /**
      * Make sure this is never called.
      */
-    protected function getDescription(DOMElement $element)
+    protected function _getDescription(DOMElement $element)
     {
         throw new Exception('ErrorCPD does not support getDescription()!');
     }
