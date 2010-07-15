@@ -106,7 +106,7 @@ class CbSourceHandlerTest extends CbAbstractTests
  </file>
 </checkstyle>
 HERE;
-        $issueXML = new CbIssueXml($this->_log);
+        $issueXML = new CbIssueXml();
         $xml      = new DOMDocument('1.0', 'UTF-8');
         $xml->validateOnParse = true;
         $xml->loadXML($xmlString);

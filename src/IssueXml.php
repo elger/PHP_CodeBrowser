@@ -47,8 +47,6 @@
  * @since     File available since  0.1.0
  */
 
-require_once 'PHP/Timer.php';
-
 /**
  * CbIssueXML
  *
@@ -92,25 +90,14 @@ class CbIssueXml extends DOMDocument
     public $formatOutput = true;
 
     /**
-     * The pear Log object used for logging.
-     *
-     * @var Log
-     */
-    protected $_log;
-
-    /**
      * Default constructor
      * 
-     * @param Log    $log      The pear Log object to use for logging.
      * @param String $version  The version definitio for DomDocument
      * @param String $encoding The used encoding for DomDocument
      */
-    public function __construct(Log &$log,
-                                     $version = '1.0',
-                                     $encoding = 'UTF-8')
+    public function __construct($version = '1.0', $encoding = 'UTF-8')
     {
         parent::__construct($version, $encoding);
-        $this->_log =& $log;
         $this->appendChild(
             $this->createElement('codebrowser')
         );
@@ -138,33 +125,21 @@ class CbIssueXml extends DOMDocument
             }
 
             $realFileName = realpath($current);
-            $this->_log->log(
-                sprintf('Read file: %s', $realFileName), 
-                PEAR_LOG_DEBUG
-            );
             $xml                  = new DOMDocument('1.0', 'UTF-8');
             $xml->validateOnParse = true;
             if (@$xml->load(realpath($current))) {
-                $this->_log->log(
-                    'ADD file', 
-                    PEAR_LOG_DEBUG
-                );
                 $this->addXMLFile($xml);
             } else {
-                $this->_log->log(
-                    sprintf('Could not read file "%s"', $realFileName),
-                    PEAR_LOG_WARN
+                error_log(
+                    "Could not read file '$realFileName'. "
+                    . 'Make sure it contains valid xml.'
                 );
             }
-            $this->_log->log('DESTROY DOMDocument', PEAR_LOG_DEBUG);
             unset($xml);
         }
 
         if (!$this->documentElement->hasChildNodes()) {
-            $this->_log->log(
-                'Valid xml log files could not be found in "%s"',
-                PEAR_LOG_WARNING
-            );
+            error_log("Valid xml log files could not be found in '$directory'");
         }
         return $this;
     }
@@ -194,7 +169,6 @@ class CbIssueXml extends DOMDocument
      */
     public function query($expression, DOMNode $contextNode = null)
     {
-        PHP_Timer::start();
         if (!isset($this->_xpath)) {
             $this->_xpath = new DOMXPath($this);
         }
@@ -203,22 +177,6 @@ class CbIssueXml extends DOMDocument
             $result = $this->_xpath->query($expression, $contextNode);
         } else {
             $result = $this->_xpath->query($expression);
-        }
-        
-        $queryRunTime = PHP_Timer::stop();
-        if ($queryRunTime > 0.1) {
-            $this->_log->log(
-                sprintf(
-                    'XPATH: %s %s %ds',
-                    $expression,
-                    ($contextNode
-                        ? sprintf(' on %s', $contextNode->getNodePath())
-                        : ''
-                    ),
-                    $queryRunTime
-                ),
-                PEAR_LOG_DEBUG
-            );
         }
         return $result;
     }

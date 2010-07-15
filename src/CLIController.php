@@ -64,9 +64,7 @@ if (strpos('@php_dir@', '@php_dir') === false) {
 }
 
 require_once dirname(__FILE__) . '/Util/Autoloader.php';
-require_once 'PHP/Timer.php';
 require_once 'Console/CommandLine.php';
-require_once 'Log.php';
 require_once 'File/Iterator/Factory.php';
 
 /**
@@ -128,13 +126,6 @@ class CbCLIController
     private $_ioHelper;
 
     /**
-     * The pear Log object used for logging.
-     *
-     * @var Log
-     */
-    protected $_log;
-
-    /**
      * The constructor
      *
      * Standard setters are initialized
@@ -148,18 +139,16 @@ class CbCLIController
      *                                 appear in the output.
      * @param CbIOHelper $ioHelper     The CbIOHelper object to be used for
      *                                 filesystem interaction.
-     * @param Log    $log              The pear Log object to use for logging.
      */
     public function __construct($logPath,       $projectSourceDir,
                                 $htmlOutputDir, Array $excludeExpressions,
-                                $ioHelper, $log)
+                                $ioHelper)
     {
         $this->_logDir = $logPath;
         $this->_projectSourceDir = $projectSourceDir;
         $this->_htmlOutputDir = $htmlOutputDir;
         $this->_excludeExpressions = $excludeExpressions;
         $this->_ioHelper = $ioHelper;
-        $this->_log      = $log;
     }
 
     /**
@@ -210,26 +199,15 @@ class CbCLIController
         $sourceHandler = new CbSourceHandler();
 
         if (isset($this->_logDir)) {
-            $cbIssueXml    = new CbIssueXml($this->_log);
-            $this->_log->log('Load XML files', PEAR_LOG_DEBUG);
+            $cbIssueXml    = new CbIssueXml();
 
             // merge xml files
             $cbIssueXml->addDirectory($this->_logDir);
-
-            $this->_log->log('Load Plugins', PEAR_LOG_DEBUG);
 
             // conversion of XML file cc to cb format
             foreach ($this->_registeredPlugins as $className) {
                 $sourceHandler->addPlugin(new $className($cbIssueXml));
             }
-
-            $this->_log->log(
-                sprintf(
-                    'Found %d files with issues.',
-                    count($sourceHandler->getFiles())
-                ),
-                PEAR_LOG_INFO
-            );
         }
 
         if (isset($this->_projectSourceDir)) {
@@ -250,28 +228,10 @@ class CbCLIController
         $commonPathPrefix = $sourceHandler->getCommonPathPrefix();
 
         foreach ($files as $file) {
-            $this->_log->log(
-                sprintf(
-                    'Get issues for "...%s"',
-                    substr($file->name(), strlen($commonPathPrefix))
-                ),
-                PEAR_LOG_DEBUG
-            );
-            $issues = $file->getIssues();
-
-            // @TODO Timer::start() only for logging check performance
-            // and remove if neccessary
-            PHP_Timer::start();
-            $this->_log->log(
-                sprintf('Generating source view for [...%s]', $file->name()),
-                PEAR_LOG_DEBUG
-            );
-
-            $cbViewReview->generate($issues, $file->name(), $commonPathPrefix);
-
-            $this->_log->log(
-                sprintf('completed in %s', PHP_Timer::stop()),
-                PEAR_LOG_DEBUG
+            $cbViewReview->generate(
+                $file->getIssues(),
+                $file->name(),
+                $commonPathPrefix
             );
         }
 
@@ -287,8 +247,6 @@ class CbCLIController
      */
     public static function main()
     {
-        PHP_Timer::start();
-
         // register autoloader
         spl_autoload_register(array(new CbAutoloader(), 'autoload'));
 
@@ -298,12 +256,6 @@ class CbCLIController
             $opts = $parser->parse()->options;
         } catch (Exception $e) {
             $parser->displayError($e->getMessage());
-        }
-
-        if (isset($opts['logfile'])) {
-            $log = Log::factory('file', $opts['logfile']);
-        } else {
-            $log = Log::factory('console');
         }
 
         $errors = self::errorsForOpts($opts);
@@ -320,8 +272,7 @@ class CbCLIController
             $opts['source'],
             $opts['output'],
             isset($opts['exclude']) ? $opts['exclude'] : array(),
-            new CbIOHelper(),
-            $log
+            new CbIOHelper()
         );
 
         $controller->addErrorPlugins(
@@ -338,17 +289,15 @@ class CbCLIController
         try {
             $controller->run();
         } catch (Exception $e) {
-            $log->log(
-                sprintf(
-                    "PHP-CodeBrowser Error: \n%s\n\n%s",
-                    $e->getMessage(),
-                    $e->getTraceAsString()
-                ),
-                PEAR_LOG_ERR
+            error_log(
+<<<HERE
+PHP-CodeBrowser Error:
+{$e->getMessage()}
+
+{$e->getTraceAsString()}
+HERE
             );
         }
-
-        $log->log(PHP_Timer::resourceUsage(), PEAR_LOG_INFO);
     }
 
     /**
@@ -449,27 +398,6 @@ class CbCLIController
                 'short_name'   => '-e',
                 'long_name'    => '--exclude',
                 'action'       => 'StoreArray'
-            )
-        );
-
-        $parser->addOption(
-            'logfile',
-            array(
-                'description' => 'Path of the file to use for logging the '
-                                    . 'output. If not given, stdout '
-                                    . 'will be used.',
-                'long_name'   => '--logfile'
-            )
-        );
-
-        $parser->addOption(
-            'loglevel',
-            array(
-                'description'     => 'Specify the log level. Defaults to DEBUG '
-                                    . 'in this release.',
-                'long_name'       => '--loglevel',
-                'choices'         => array('debug', 'info', 'warn', 'error'),
-                'add_list_option' => true
             )
         );
 
