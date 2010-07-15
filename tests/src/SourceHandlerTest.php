@@ -117,6 +117,18 @@ HERE;
     }
 
     /**
+     * Test the constructor.
+     *
+     * @return void.
+     */
+    public function test__construct()
+    {
+        $sourceHandler = new CbSourceHandler(array($this->_plugin));
+        $this->_cbSourceHandler->addPlugin($this->_plugin);
+        $this->assertEquals($this->_cbSourceHandler, $sourceHandler);
+    }
+
+    /**
      * Test getFiles.
      *
      * @return void
@@ -173,6 +185,40 @@ HERE;
         );
         $actualFiles = $this->_cbSourceHandler->getFilesWithIssues();
         $this->assertEquals($expectedFiles, $actualFiles);
+    }
+
+    /**
+     * Test addSourceFiles
+     *
+     * @return void
+     */
+    public function test__addSourceFiles()
+    {
+        $this->_cbSourceHandler->addSourceFiles(
+            array(new SplFileInfo(__FILE__))
+        );
+        $this->assertContains(
+            __FILE__,
+            array_keys($this->_cbSourceHandler->getFiles())
+        );
+    }
+
+    /**
+     * Test if addSourceFile chokes on nonexistant files.
+     *
+     * @return void
+     */
+    public function test__addSourceFilesWithNonexisting()
+    {
+        try {
+            $this->_cbSourceHandler->addSourceFiles(
+                array(new SplFileInfo('/i/do/not/exist'))
+            );
+        } catch (Exception $e) {
+            //expected
+            return;
+        }
+        $this->fail('Expected Exception was not thrown');
     }
 
     /**
