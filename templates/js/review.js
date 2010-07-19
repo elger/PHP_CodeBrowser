@@ -16,7 +16,6 @@ function initReview() {
         width:600,
         height: 400,
         open : "click",
-        close: "click",
         position: "right"
     });
 
