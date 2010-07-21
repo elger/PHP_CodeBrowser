@@ -6,12 +6,12 @@
     |--> src/           Source files for PHP_CodeBrowser
     |   |--> Plugins/   Plugins for different error handling/types
     |
-    |--> templates/     Template files for PHP_CodeBrowser 
+    |--> templates/     Template files for PHP_CodeBrowser
     |   |--> css/       Used CSS by templates, Color definition for errors
     |   |--> img/       Used images for PHP_CodeBrowser
     |   |--> js/        Used javascript for PHP_CodeBrowser
     |
-    |--> tests/         PHPUnit test suite 
+    |--> tests/         PHPUnit test suite
     |
     |--> package.xml    PEAR package information file
     |
@@ -27,7 +27,7 @@
 
 ### Installation with PEAR Installer ###
 
-    $ pear config-set preferred_state alpha
+    $ pear config-set preferred_state beta
     $ pear channel-discover pear.phpunit.de
     $ pear install --alldeps phpunit/PHP_CodeBrowser
 
@@ -38,7 +38,7 @@
     Try ./bin/phpcb.php -h for usage information.
 
 ### Integration in CruiseControl and Hudson ###
-    
+
     ...
     <!-- phpcb should be called after xml file generation -->
     <target name="build" depends="...,phpcb" />
@@ -55,9 +55,9 @@
 ## View the Results ##
 
 ### Webbrowser ###
-    
+
 Open `/path/to/defined/output/index.html`.
-    
+
 ### CruiseControl ###
 
 #### config.xml ####
@@ -66,7 +66,7 @@ Open `/path/to/defined/output/index.html`.
       <artifactspublisher dir="path/to/output" dest="artifacts/${project.name}" subdirectory="PhpCbIdentifier" />
       ...
     </publishers>
-    
+
 #### main.jsp ####
 
     <cruisecontrol:tab name="PHP_CodeBrowser" label="PHP_CodeBrowser">
