@@ -213,7 +213,7 @@ class CbCLIController
         if (isset($this->_projectSourceDir)) {
             $sourceHandler->addSourceFiles(
                 File_Iterator_Factory::getFileIterator(
-                    $this->_projectSourceDir, 'php'
+                    $this->_projectSourceDir, array('php','js','css', 'html')
                 )
             );
         }
