@@ -365,8 +365,7 @@ class CbViewReview extends CbViewAbstract
             $highlighter->setRenderer($renderer);
 
             $doc = new DOMDocument();
-            $html = $highlighter->highlight($sourceCode);
-            $doc->loadHTML('<html><head/><body>' . $html . '</body></html>');
+            $doc->loadHTML($highlighter->highlight($sourceCode));
             return $doc;
         } else {
             $sourceCode = preg_replace(
