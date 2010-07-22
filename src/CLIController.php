@@ -130,8 +130,8 @@ class CbCLIController
      *
      * Standard setters are initialized
      *
-     * @param string $logPath          The (path-to) xml log files
-     * @param string $projectSource    The project source directory
+     * @param string $logPath          The (path-to) xml log files. Can be null.
+     * @param Array  $projectSource    The project sources. Can be null.
      * @param string $htmlOutputDir    The html output dir, where new files will
      *                                 be created
      * @param Array  $excludeExpressions
@@ -140,7 +140,7 @@ class CbCLIController
      * @param CbIOHelper $ioHelper     The CbIOHelper object to be used for
      *                                 filesystem interaction.
      */
-    public function __construct($logPath,       $projectSource,
+    public function __construct($logPath,       Array $projectSource,
                                 $htmlOutputDir, Array $excludeExpressions,
                                 $ioHelper)
     {
@@ -211,14 +211,16 @@ class CbCLIController
         }
 
         if (isset($this->_projectSource)) {
-            if (is_dir($this->_projectSource)) {
-                $sourceHandler->addSourceFiles(
-                    File_Iterator_Factory::getFileIterator(
-                        $this->_projectSource, array('php','js','css', 'html')
-                    )
-                );
-            } else {
-                $sourceHandler->addSourceFile($this->_projectSource);
+            foreach($this->_projectSource as $source) {
+                if (is_dir($source)) {
+                    $sourceHandler->addSourceFiles(
+                        File_Iterator_Factory::getFileIterator(
+                            $source, array('php','js','css', 'html')
+                        )
+                    );
+                } else {
+                    $sourceHandler->addSourceFile($source);
+                }
             }
         }
 
@@ -331,8 +333,12 @@ HERE
             $errors[] = 'Ouput argument must be a directory, a file was given.';
         }
 
-        if (isset($opts['source']) && !is_file($opts['source'])) {
-            $errors[] = "Source '{$opts['source']}' does not exist";
+        if (isset($opts['source'])) {
+            foreach ($opts['source'] as $s) {
+                if (!file_exists($s)) {
+                    $errors[] = "Source '$s' does not exist";
+                }
+            }
         }
 
         return $errors;
@@ -385,9 +391,11 @@ HERE
                                     . 'be a directory or a single file. Parse '
                                     . 'complete source directory if set, else '
                                     . 'only files found in logs. Either this or'
-                                    . ' --log must be given.',
+                                    . ' --log must be given. Can be given '
+                                    . 'multiple times',
                 'short_name'  => '-s',
-                'long_name'   => '--source'
+                'long_name'   => '--source',
+                'action'      => 'StoreArray'
             )
         );
 
