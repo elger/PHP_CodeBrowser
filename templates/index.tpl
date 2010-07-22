@@ -36,9 +36,9 @@
             <div id="fileList">
                 <table border="0" cellspacing="2" cellpadding="3">
                     <tr class="head">
-                        <td><strong>File</strong></td>
-                        <td width="50px" align="center"><strong>Errors</strong></td>
-                        <td width="50px" align="center"><strong>Notices</strong></td>
+                        <th><strong>File</strong></td>
+                        <th width="50px" align="center"><strong>Errors</strong></td>
+                        <th width="50px" align="center"><strong>Notices</strong></td>
                     </tr>
 <?php
 $oddrow = true;
