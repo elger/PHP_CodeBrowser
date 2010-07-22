@@ -31,6 +31,8 @@
     background-position: center center;
     background-repeat: no-repeat;
     padding: 16px;
+    /* IE8 and below. */
+    border: 1px solid black \9;
 }
 
 #treeHeader {
