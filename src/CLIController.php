@@ -102,7 +102,7 @@ class CbCLIController
      *
      * @var string
      */
-    private $_projectSourceDir;
+    private $_projectSource;
 
     /**
      * Array of PCREs. Matching files will not appear in the output.
@@ -131,7 +131,7 @@ class CbCLIController
      * Standard setters are initialized
      *
      * @param string $logPath          The (path-to) xml log files
-     * @param string $projectSourceDir The project source directory
+     * @param string $projectSource    The project source directory
      * @param string $htmlOutputDir    The html output dir, where new files will
      *                                 be created
      * @param Array  $excludeExpressions
@@ -140,12 +140,12 @@ class CbCLIController
      * @param CbIOHelper $ioHelper     The CbIOHelper object to be used for
      *                                 filesystem interaction.
      */
-    public function __construct($logPath,       $projectSourceDir,
+    public function __construct($logPath,       $projectSource,
                                 $htmlOutputDir, Array $excludeExpressions,
                                 $ioHelper)
     {
         $this->_logDir = $logPath;
-        $this->_projectSourceDir = $projectSourceDir;
+        $this->_projectSource = $projectSource;
         $this->_htmlOutputDir = $htmlOutputDir;
         $this->_excludeExpressions = $excludeExpressions;
         $this->_ioHelper = $ioHelper;
@@ -210,12 +210,16 @@ class CbCLIController
             }
         }
 
-        if (isset($this->_projectSourceDir)) {
-            $sourceHandler->addSourceFiles(
-                File_Iterator_Factory::getFileIterator(
-                    $this->_projectSourceDir, array('php','js','css', 'html')
-                )
-            );
+        if (isset($this->_projectSource)) {
+            if (is_dir($this->_projectSource)) {
+                $sourceHandler->addSourceFiles(
+                    File_Iterator_Factory::getFileIterator(
+                        $this->_projectSource, array('php','js','css', 'html')
+                    )
+                );
+            } else {
+                $sourceHandler->addSourceFile($this->_projectSource);
+            }
         }
 
         foreach ($this->_excludeExpressions as $expr) {
@@ -327,8 +331,8 @@ HERE
             $errors[] = 'Ouput argument must be a directory, a file was given.';
         }
 
-        if (isset($opts['source']) && !is_dir($opts['source'])) {
-            $errors[] = 'Source argument must be a directory, file given.';
+        if (isset($opts['source']) && !is_file($opts['source'])) {
+            $errors[] = "Source '{$opts['source']}' does not exist";
         }
 
         return $errors;
@@ -377,7 +381,8 @@ HERE
         $parser->addOption(
             'source',
             array(
-                'description' => 'Path to the project source code. Parse '
+                'description' => 'Path to the project source code. Can either '
+                                    . 'be a directory or a single file. Parse '
                                     . 'complete source directory if set, else '
                                     . 'only files found in logs. Either this or'
                                     . ' --log must be given.',
