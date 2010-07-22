@@ -1,3 +1,9 @@
+.jstree ol,
+.jstree ul,
+.jstree li {
+    border: none;
+}
+
 .jstree li.php a .jstree-icon {
     background-repeat: repeat;
     background-image: url(../img/page.gif);

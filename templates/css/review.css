@@ -19,16 +19,6 @@
     color: #4E4E4E;
 }
 
-#review ol li.even {
-    background-color: #F9F9F9;
-    border-top: 1px solid #E7E7E7;
-}
-
-#review ol li.white {
-    background-color: #FFFFFF;
-    border-top: 1px solid #E7E7E7;
-}
-
 #review ol li.CodeCoverage {
     background-color: #BFE4FF;
 }

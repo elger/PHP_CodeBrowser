@@ -4,6 +4,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <link rel="stylesheet" type="text/css" href="js/jquery.sidebar/css/codebrowser/sidebar.css" />
         <link rel="stylesheet" type="text/css" href="css/cruisecontrol.css" />
+        <link rel="stylesheet" type="text/css" href="css/global.css" />
         <link rel="stylesheet" type="text/css" href="css/review.css" />
         <link rel="stylesheet" type="text/css" href="css/tree.css" />
 
@@ -43,7 +44,7 @@
 $oddrow = true;
 $preLen = strlen(CbIOHelper::getCommonPathPrefix(array_keys($fileList))) + 1;
 foreach ($fileList as $filename => $f) {
-    $tag = $oddrow ? 'oddrow' : 'file';
+    $tag = $oddrow ? 'odd' : 'even';
     $oddrow = !$oddrow;
     $shortName = substr($filename, $preLen);
     $errors = $f->getErrorCount();
