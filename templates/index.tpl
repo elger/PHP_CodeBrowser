@@ -38,7 +38,7 @@
                     <tr class="head">
                         <th><strong>File</strong></td>
                         <th width="50px" align="center"><strong>Errors</strong></td>
-                        <th width="50px" align="center"><strong>Notices</strong></td>
+                        <th width="50px" align="center"><strong>Warnings</strong></td>
                     </tr>
 <?php
 $oddrow = true;
@@ -48,12 +48,12 @@ foreach ($fileList as $filename => $f) {
     $oddrow = !$oddrow;
     $shortName = substr($filename, $preLen);
     $errors = $f->getErrorCount();
-    $notices = $f->getWarningCount();
+    $warnings = $f->getWarningCount();
 
     echo "<tr class='$tag'>";
     echo "<td><a class='fileLink' href='$shortName.html'>$shortName</a></td>";
-    echo "<td align='center'><span class='errors'>$errors</span></td>";
-    echo "<td align='center'><span class='notices'>$notices</span></td>";
+    echo "<td align='center'><span class='errorCount'>$errors</span></td>";
+    echo "<td align='center'><span class='warningCount'>$warnings</span></td>";
     echo "</tr>";
 }
 ?>

@@ -38,3 +38,12 @@ li.odd,
 tr.odd {
     background-color: #FFFFFF;
 }
+
+/* Global Colors */
+.errorCount {
+    color: red;
+}
+
+.warningCount {
+    color: blue;
+}

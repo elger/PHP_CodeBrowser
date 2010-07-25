@@ -198,14 +198,6 @@ body.codebrowser {
 	color: #c30;
 }
 
-.codebrowser span.errors {
-	color: #c30;
-}
-
-.codebrowser span.notices {
-	color: #44c;
-}
-
 .dTreeNode a img {
     margin-left: -2px;
 }
