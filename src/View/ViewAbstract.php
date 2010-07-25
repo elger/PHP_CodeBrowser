@@ -168,12 +168,12 @@ class CbViewAbstract
          * This is important so that $curDir doesn't become empty if we go
          * up to the root directory ('/' on linux)
          */
-        $names  = array_keys($fileList);
-        $curDir = CbIOHelper::getCommonPathPrefix($names) . DIRECTORY_SEPARATOR;
+        $curDir = CbIOHelper::getCommonPathPrefix(array_keys($fileList))
+            . DIRECTORY_SEPARATOR;
         $preLen = strlen($curDir);
 
         $ret = '<ul>';
-        foreach ($names as $name) {
+        foreach ($fileList as $name => $file) {
             $dir = dirname($name) . DIRECTORY_SEPARATOR;
 
             // Go back until the file is somewhere below curDir
@@ -202,10 +202,18 @@ class CbViewAbstract
 
             $shortName = substr($name, $preLen);
             $fileName  = basename($name);
+            $count = '';
+            if ($file->getErrorCount() != 0 || $file->getWarningCount() != 0) {
+                $count .= '(<span class="errorCount">';
+                $count .= $file->getErrorCount();
+                $count .= '</span>|<span class="warningCount">';
+                $count .= $file->getWarningCount();
+                $count .= '</span>)';
+            }
 
             $ret .= '<li class="php" ><a class="fileLink" href="';
             $ret .= $hrefPrefix . $shortName . '.html">';
-            $ret .= "$fileName</a></li>";
+            $ret .= "$fileName $count</a></li>";
         }
 
         $ret .= '</ul>';
