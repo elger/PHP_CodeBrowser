@@ -235,11 +235,11 @@ HERE;
     }
 
     /**
-     * Test excludeMatching
+     * Test excludeMatchingPCRE
      *
      * @return void
      */
-    public function test__excludeMatching()
+    public function test__excludeMatchingPCRE()
     {
         $this->_cbSourceHandler->addPlugin($this->_plugin);
         $expected = array(
@@ -254,7 +254,7 @@ HERE;
                 )
             )
         );
-        $this->_cbSourceHandler->excludeMatching('/^\/a.*src\.php$/');
+        $this->_cbSourceHandler->excludeMatchingPCRE('/^\/a.*src\.php$/');
         $this->assertEquals($expected, $this->_cbSourceHandler->getFiles());
     }
 }

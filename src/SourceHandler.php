@@ -172,7 +172,7 @@ class CbSourceHandler
      * @param String $expr The PCRE specifying which files to remove.
      * @return void.
      */
-    public function excludeMatching($expr)
+    public function excludeMatchingPCRE($expr)
     {
         foreach (array_keys($this->_files) as $filename) {
             if (preg_match($expr, $filename)) {

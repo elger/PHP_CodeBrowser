@@ -225,7 +225,7 @@ class CbCLIController
         }
 
         foreach ($this->_excludeExpressions as $expr) {
-            $sourceHandler->excludeMatching($expr);
+            $sourceHandler->excludeMatchingPCRE($expr);
         }
 
         $files = $sourceHandler->getFiles();
