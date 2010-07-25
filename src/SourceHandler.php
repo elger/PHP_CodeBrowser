@@ -180,4 +180,20 @@ class CbSourceHandler
             }
         }
     }
+
+    /**
+     * Remove all files that match the given shell wildcard pattern
+     * as accepted by fnmatch().
+     *
+     * @param String $pattern The pattern.
+     * @return void.
+     */
+    public function excludeMatchingPattern($pattern)
+    {
+        foreach (array_keys($this->_files) as $filename) {
+            if (fnmatch($pattern, $filename)) {
+                unset($this->_files[$filename]);
+            }
+        }
+    }
 }

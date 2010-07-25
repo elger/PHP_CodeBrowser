@@ -257,4 +257,28 @@ HERE;
         $this->_cbSourceHandler->excludeMatchingPCRE('/^\/a.*src\.php$/');
         $this->assertEquals($expected, $this->_cbSourceHandler->getFiles());
     }
+
+    /**
+     * Test excludeMatchingPattern
+     *
+     * @return void
+     */
+    public function test__excludeMatchingPattern()
+    {
+        $this->_cbSourceHandler->addPlugin($this->_plugin);
+        $expected = array(
+            '/a/dir/source.php' => new CbFile(
+                '/a/dir/source.php',
+                array(
+                    new CbIssue(
+                        '/a/dir/source.php',
+                        37, 37, 'Checkstyle',
+                        'm1', 'error'
+                    )
+                )
+            )
+        );
+        $this->_cbSourceHandler->excludeMatchingPattern('*src.php');
+        $this->assertEquals($expected, $this->_cbSourceHandler->getFiles());
+    }
 }
