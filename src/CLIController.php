@@ -112,6 +112,13 @@ class CbCLIController
     private $_excludeExpressions;
 
     /**
+     * Array of glob patterns. Matching files will not appear in the output.
+     *
+     * @var Array
+     */
+    private $_excludePatterns;
+
+    /**
      * The error plugin classes
      *
      * @var array
@@ -137,18 +144,21 @@ class CbCLIController
      * @param Array  $excludeExpressions
      *                                 A list of PCREs. Files matching will not
      *                                 appear in the output.
+     * @param Array  $excludePatterns  A list of glob patterns. Files matching
+     *                                 will not appear in the output.
      * @param CbIOHelper $ioHelper     The CbIOHelper object to be used for
      *                                 filesystem interaction.
      */
     public function __construct($logPath,       Array $projectSource,
                                 $htmlOutputDir, Array $excludeExpressions,
-                                $ioHelper)
+                                Array $excludePatterns, $ioHelper)
     {
-        $this->_logDir = $logPath;
-        $this->_projectSource = $projectSource;
-        $this->_htmlOutputDir = $htmlOutputDir;
+        $this->_logDir             = $logPath;
+        $this->_projectSource      = $projectSource;
+        $this->_htmlOutputDir      = $htmlOutputDir;
         $this->_excludeExpressions = $excludeExpressions;
-        $this->_ioHelper = $ioHelper;
+        $this->_excludePatterns    = $excludePatterns;
+        $this->_ioHelper           = $ioHelper;
     }
 
     /**
@@ -224,9 +234,14 @@ class CbCLIController
             }
         }
 
-        foreach ($this->_excludeExpressions as $expr) {
-            $sourceHandler->excludeMatchingPCRE($expr);
-        }
+        array_walk(
+            $this->_excludeExpressions,
+            array($sourceHandler, 'excludeMatchingPCRE')
+        );
+        array_walk(
+            $this->_excludePatterns,
+            array($sourceHandler, 'excludeMatchingPattern')
+        );
 
         $files = $sourceHandler->getFiles();
 
@@ -277,7 +292,8 @@ class CbCLIController
             $opts['log'],
             $opts['source'],
             $opts['output'],
-            isset($opts['exclude']) ? $opts['exclude'] : array(),
+            isset($opts['excludePCRE']) ? $opts['excludePCRE'] : array(),
+            isset($opts['excludePattern']) ? $opts['excludePattern'] : array(),
             new CbIOHelper()
         );
 
@@ -400,17 +416,28 @@ HERE
         );
 
         $parser->addOption(
-            'exclude',
+            'excludePattern',
             array(
-                'description' => 'Excludes all files matching the given PCRE. '
-                                    . 'This is done after pulling the files in '
-                                    . 'the source dir in if one is given. Can '
-                                    . 'be given multiple times. Note that the '
-                                    . 'match is run against '
+                'description' => 'Excludes all files matching the given glob '
+                                    . 'pattern. This is done after pulling the '
+                                    . 'files in the source dir in if one is '
+                                    . 'given. Can be given multiple times. Note'
+                                    . ' that the match is run against '
                                     . 'absolute filenames.',
-                'short_name'   => '-e',
-                'long_name'    => '--exclude',
-                'action'       => 'StoreArray'
+                'short_name'  => '-e',
+                'long_name'   => '--exclude',
+                'action'      => 'StoreArray'
+            )
+        );
+
+        $parser->addOption(
+            'excludePCRE',
+            array(
+                'description' => 'Works like -e but takes PCRE instead of '
+                                    . 'glob patterns.',
+                'short_name'  => '-E',
+                'long_name'   => '--excludePCRE',
+                'action'      => 'StoreArray'
             )
         );
 
