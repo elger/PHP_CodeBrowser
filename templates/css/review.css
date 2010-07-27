@@ -18,52 +18,80 @@
     color: #4E4E4E;
 }
 
-#review ol li.CodeCoverage {
-    background-color: #BFE4FF;
-}
-
-#review ol li.Duplication {
-    background-color: #FFBFDC;
-}
-
 #review ol li.moreErrors {
     background-color: #FFB380;
 }
 
-#review ol li.ZendCodeAnalyzer {
-    background-color: #D5BFFF;
+/* Error type colors */
+
+.CodeCoverage {
+    background-color: #BFE4FF;
 }
 
-#review ol li.EfferentCoupling {
-    background-color: #CCFF99;
+.Duplication {
+    background-color: #FFBFDC;
 }
 
-#review ol li.CyclomaticComplexity {
-    background-color: #FFCC80;
-}
-
-#review ol li.ExcessiveMethodLength {
-    background-color: #F2FFBF;
-}
-
-#review ol li.ExcessiveClassLength {
-    background-color: #FF6666;
-}
-
-#review ol li.Checkstyle {
+.Checkstyle {
     background-color: #FFF2BF;
 }
 
-#review ol li.NPathComplexity {
+.Padawan {
     background-color: #E6FF80;
 }
 
-#review ol li.Padawan {
-    background-color: #E6FF80;
-}
-
-#review ol li.CRAP {
+.CRAP {
     background-color: #FFBFEF;
+}
+
+/* phpmd */
+
+.CyclomaticComplexity {
+    background-color: #FFCC80;
+}
+
+.NPathComplexity {
+    background-color: #E6FF80;
+}
+
+.ExcessiveMethodLength {
+    background-color: #F2FFBF;
+}
+
+.ExcessiveClassLength {
+    background-color: #FF6666;
+}
+
+.ExcessiveParameterList,
+.ExcessivePublicCount,
+.TooManyFields,
+.TooManyMethods,
+.ExcessiveClassComplexity,
+.ExitExpression,
+.EvalExpression,
+.NumberOfChildren,
+.DepthOfInheritance,
+.ShortVariable,
+.LongVariable,
+.ShortMethodName,
+.ConstructorWithNameAsEnclosingClass,
+.ConstantNamingConventions,
+.BooleanGetMethodName,
+.UnusedPrivateField,
+.UnusedLocalVariable,
+.UnusedPrivateMethod,
+.UnusedFormalParameter {
+    background-color: #FF6666;
+}
+
+/* Unsorted */
+
+li.ZendCodeAnalyzer {
+    background-color: #D5BFFF;
+}
+
+li.EfferentCoupling {
+    background-color: #CCFF99;
 }
 
 /**

@@ -68,54 +68,6 @@ body.codebrowser {
 }
 /** end Tooltip Styles **/
 
-/** start Error types styles **/
-.codebrowser .CodeCoverage {
-	background-color: #BFE4FF;
-}
-
-.codebrowser .Duplication {
-	background-color: #FFBFDC;	
-}
-
-.codebrowser .moreErrors {
-	background-color: #FFB380;
-}
-
-.codebrowser .ZendCodeAnalyzer {
-	background-color: #D5BFFF;
-}
-
-.codebrowser .EfferentCoupling {
-    background-color: #CCFF99;
-}
-
-.codebrowser .CyclomaticComplexity {
-	background-color: #FFCC80;
-}
-
-.codebrowser .ExcessiveMethodLength {
-	background-color: #F2FFBF;
-}
-
-.codebrowser .ExcessiveClassLength {
-    background-color: #FF6666;
-}
-
- .Checkstyle {
-	background-color: #FFF2BF;
-}
-
- .NPathComplexity {
-	background-color: #E6FF80;
-}
- .Padawan {
-    background-color: #E6FF80;
-}
-.codebrowser .CRAP {
-    background-color: #FFBFEF;
-}
-/** end Error types styles **/
-
 .codebrowser .header {
 	padding: 5px 5px 10px 20px;
 }
