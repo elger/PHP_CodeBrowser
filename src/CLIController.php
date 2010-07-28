@@ -290,7 +290,7 @@ class CbCLIController
         // init new CLIController
         $controller = new CbCLIController(
             $opts['log'],
-            $opts['source'],
+            isset($opts['source']) ? $opts['source'] : array(),
             $opts['output'],
             isset($opts['excludePCRE']) ? $opts['excludePCRE'] : array(),
             isset($opts['excludePattern']) ? $opts['excludePattern'] : array(),
