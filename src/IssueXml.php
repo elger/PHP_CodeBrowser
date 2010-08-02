@@ -133,7 +133,7 @@ class CbIssueXml extends DOMDocument
         }
 
         if (!$this->documentElement->hasChildNodes()) {
-            error_log("[Warning] Valid xml log files could not be found in '$directory'");
+            error_log("[Warning] No valid log files found in '$directory'");
         }
         return $this;
     }

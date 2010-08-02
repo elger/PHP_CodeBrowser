@@ -221,7 +221,7 @@ class CbCLIController
         }
 
         if (isset($this->_projectSource)) {
-            foreach($this->_projectSource as $source) {
+            foreach ($this->_projectSource as $source) {
                 if (is_dir($source)) {
                     $sourceHandler->addSourceFiles(
                         File_Iterator_Factory::getFileIterator(
