@@ -45,7 +45,7 @@
  * @since      File available since  0.1.0
  */
 
-require_once realpath(dirname( __FILE__ ) . '/../../AbstractTests.php');
+require_once realpath(dirname(__FILE__) . '/../../AbstractTests.php');
 
 /**
  * CbIOHelperTest
@@ -74,7 +74,8 @@ class CbIOHelperTest extends CbAbstractTests
     /**
      * Define variables
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->_testDir = realpath(dirname(__FILE__) . '/../../testData/');
         if (!$this->_testDir) {
             $this->fail('Could not find tests/testData directory.');

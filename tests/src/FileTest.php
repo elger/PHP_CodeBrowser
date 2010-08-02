@@ -45,7 +45,7 @@
  * @since      File available since  0.1.0
  */
 
-require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
+require_once realpath(dirname(__FILE__) . '/../AbstractTests.php');
 
 /**
  * CbFileTest
@@ -133,8 +133,10 @@ class CbFileTest extends CbAbstractTests
     public function test__addIssue()
     {
         $this->_cbFile->addIssue($this->_issues[0]);
-        $this->assertEquals(array($this->_issues[0]),
-                            $this->_cbFile->getIssues());
+        $this->assertEquals(
+            array($this->_issues[0]),
+            $this->_cbFile->getIssues()
+        );
     }
 
     /**
@@ -227,16 +229,20 @@ class CbFileTest extends CbAbstractTests
      */
     public function test__mergeWith()
     {
-        $this->_cbFile = new CbFile('/some/file/name.php',
-                                    array($this->_issues[0], $this->_issues[1]));
+        $this->_cbFile = new CbFile(
+            '/some/file/name.php',
+            array($this->_issues[0], $this->_issues[1])
+        );
         $otherFile = new CbFile('/some/file/name.php',
                                 array($this->_issues[2]));
         $this->_cbFile->mergeWith($otherFile);
 
         $this->assertEquals(2, $this->_cbFile->getErrorCount());
         $this->assertEquals(1, $this->_cbFile->getWarningCount());
-        $this->assertEquals(array_values($this->_issues),
-                            array_values($this->_cbFile->getIssues()));
+        $this->assertEquals(
+            array_values($this->_issues),
+            array_values($this->_cbFile->getIssues())
+        );
     }
 
     /**

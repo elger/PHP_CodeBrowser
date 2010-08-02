@@ -45,7 +45,7 @@
  * @since      File available since  0.1.0
  */
 
-require_once realpath(dirname( __FILE__ ) . '/../../AbstractTests.php');
+require_once realpath(dirname(__FILE__) . '/../../AbstractTests.php');
 
 /**
  * CbViewReviewTest
@@ -200,7 +200,7 @@ class CbViewReviewTest extends CbAbstractTests
      */
     public function test__generateWithTextHighlighter()
     {
-        if(!class_exists('Text_Highlighter')) {
+        if (!class_exists('Text_Highlighter')) {
             $this->markTestIncomplete();
         }
 
@@ -279,10 +279,15 @@ EOT;
     {
         $this->_ioMock->expects($this->exactly(3))
                       ->method('copyDirectory')
-                      ->with($this->matchesRegularExpression(
-                          '|^' .  realpath(dirname(__FILE__) .
-                                                  '/../../../templates/') .
-                          '|')
+                      ->with(
+                          $this->matchesRegularExpression(
+                              '|^'
+                              . realpath(
+                                  dirname(__FILE__)
+                                  . '/../../../templates/'
+                              )
+                              . '|'
+                          )
                       );
         $this->_cbViewReview->copyRessourceFolders();
     }
@@ -302,7 +307,11 @@ EOT;
 
         $this->_ioMock->expects($this->once())
                       ->method('createFile')
-                      ->with($this->logicalAnd($this->stringEndsWith('index.html')));
+                      ->with(
+                          $this->logicalAnd(
+                              $this->stringEndsWith('index.html')
+                          )
+                      );
         $this->_cbViewReview->generateIndex($files);
     }
 }

@@ -45,11 +45,21 @@
  * @since      File available since  0.9.0
  */
 
-if (!defined('PHPCB_ROOT_DIR')) define('PHPCB_ROOT_DIR', realpath(dirname( __FILE__ ) . '/../'));
-if (!defined('PHPCB_SOURCE')) define('PHPCB_SOURCE', realpath(PHPCB_ROOT_DIR) . '/src');
-if (!defined('PHPCB_TEST_DIR')) define('PHPCB_TEST_DIR', realpath(PHPCB_ROOT_DIR) . '/tests/testData');
-if (!defined('PHPCB_TEST_LOGS')) define('PHPCB_TEST_LOGS', PHPCB_TEST_DIR . '/logs');
-if (!defined('PHPCB_TEST_OUTPUT')) define('PHPCB_TEST_OUTPUT', PHPCB_TEST_DIR . '/output');
+if (!defined('PHPCB_ROOT_DIR')) {
+ define('PHPCB_ROOT_DIR', realpath(dirname(__FILE__) . '/../'));
+}
+if (!defined('PHPCB_SOURCE')) {
+ define('PHPCB_SOURCE', realpath(PHPCB_ROOT_DIR) . '/src');
+}
+if (!defined('PHPCB_TEST_DIR')) {
+ define('PHPCB_TEST_DIR', realpath(PHPCB_ROOT_DIR) . '/tests/testData');
+}
+if (!defined('PHPCB_TEST_LOGS')) {
+ define('PHPCB_TEST_LOGS', PHPCB_TEST_DIR . '/logs');
+}
+if (!defined('PHPCB_TEST_OUTPUT')) {
+    define('PHPCB_TEST_OUTPUT', PHPCB_TEST_DIR . '/output');
+}
 
 require_once PHPCB_SOURCE . '/Util/Autoloader.php';
 require_once 'PHPUnit/Util/Filter.php';
@@ -57,7 +67,8 @@ require_once 'PHPUnit/Util/Filter.php';
 if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToWhitelist')) {
     PHPUnit_Util_Filter::addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
 } else {
-    PHP_CodeCoverage_Filter::getInstance()->addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
+    PHP_CodeCoverage_Filter::getInstance()
+        ->addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
 }
 
 spl_autoload_register(array(new CbAutoloader(), 'autoload'));

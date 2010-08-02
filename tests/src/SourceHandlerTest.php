@@ -47,7 +47,7 @@
 
 require_once 'Log.php';
 
-require_once realpath(dirname( __FILE__ ) . '/../AbstractTests.php');
+require_once realpath(dirname(__FILE__) . '/../AbstractTests.php');
 
 /**
  * CbSourceHandlerTest
@@ -90,11 +90,14 @@ class CbSourceHandlerTest extends CbAbstractTests
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="1.2.0RC3">
  <file name="/a/dir/source.php">
-  <error line="37" column="1" severity="error" message="m1" source="PEAR.Commenting.FileCommentSniff"/>
+  <error line="37" column="1" severity="error"
+         message="m1" source="PEAR.Commenting.FileCommentSniff"/>
  </file>
  <file name="/a/nother/dir/src.php">
-  <error line="39" column="1" severity="error" message="m3" source="PEAR.Commenting.FileCommentSniff"/>
-  <error line="40" column="1" severity="error" message="m4" source="PEAR.Commenting.FileCommentSniff"/>
+  <error line="39" column="1" severity="error"
+         message="m3" source="PEAR.Commenting.FileCommentSniff"/>
+  <error line="40" column="1" severity="error"
+         message="m4" source="PEAR.Commenting.FileCommentSniff"/>
  </file>
 </checkstyle>
 HERE;
@@ -136,8 +139,6 @@ HERE;
     public function test__getFiles()
     {
         $this->_cbSourceHandler->addPlugin($this->_plugin);
-        $name1 = '/a/dir/source.php';
-        $name1 = '/a/nother/dir/src.php';
         $expected = array(
             '/a/nother/dir/src.php' => new CbFile(
                 '/a/nother/dir/src.php',

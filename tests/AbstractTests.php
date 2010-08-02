@@ -114,7 +114,8 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    protected function setUp() {
+    protected function setUp()
+    {
 
         parent::setUp();
 
@@ -128,7 +129,8 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Global tear down method for all test cases. Cleaning up generated data and output.
+     * Global tear down method for all test cases.
+     * Cleaning up generated data and output.
      *
      * @return void
      */
@@ -141,8 +143,8 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Setup a mock object for cbXMLHandler class, and provide a list of functions
-     * that should be mockable.
+     * Setup a mock object for cbXMLHandler class, and provide
+     * a list of functions that should be mockable.
      *
      * @return object
      */
@@ -156,22 +158,27 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Setup a mock object for cbFDHandler class, and provide a list of functions
-     * that should be mockable.
+     * Setup a mock object for cbFDHandler class, and provide
+     * a list of functions that should be mockable.
      *
      * @return object
      */
     protected function _getMockFDHandler()
     {
-        $functions = array('createFile', 'loadFile', 'copyFile', 'copyDirectory');
+        $functions = array(
+            'createFile',
+            'loadFile',
+            'copyFile',
+            'copyDirectory'
+        );
         $mockFDHandler = $this->getMock('CbFDHandler', $functions);
 
         return $mockFDHandler;
     }
 
     /**
-     * Setup a mock object for cbJSGenerator class, and provide a list of functions
-     * that should be mockable.
+     * Setup a mock object for cbJSGenerator class, and provide
+     * a list of functions that should be mockable.
      *
      * @return object
      */
@@ -185,8 +192,8 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * Setup a mock object for cbErrorHandler class, and provide a list of functions
-     * that should be mockable.
+     * Setup a mock object for cbErrorHandler class, and provide
+     * a list of functions that should be mockable.
      *
      * @return object
      */
@@ -194,7 +201,11 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
     {
         $functions = array('getErrorsByFile');
         $params = array($this->_getMockXMLHandler());
-        $mockErrorHandler = $this->getMock('CbErrorHandler', $functions, $params);
+        $mockErrorHandler = $this->getMock(
+            'CbErrorHandler',
+            $functions,
+            $params
+        );
 
         return $mockErrorHandler;
     }
