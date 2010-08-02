@@ -286,7 +286,7 @@ class CbCLIController
         $errors = self::errorsForOpts($opts);
         if ($errors) {
             foreach ($errors as $e) {
-                error_log("Error: $e\n");
+                error_log("[Error] $e\n");
             }
             exit(1);
         }
@@ -317,8 +317,7 @@ class CbCLIController
         } catch (Exception $e) {
             error_log(
 <<<HERE
-PHP-CodeBrowser Error:
-{$e->getMessage()}
+[Error] {$e->getMessage()}
 
 {$e->getTraceAsString()}
 HERE

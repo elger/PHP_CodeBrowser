@@ -125,7 +125,7 @@ class CbIssueXml extends DOMDocument
                 $this->addXMLFile($xml);
             } else {
                 error_log(
-                    "Could not read file '$realFileName'. "
+                    "[Warning] Could not read file '$realFileName'. "
                     . 'Make sure it contains valid xml.'
                 );
             }
@@ -133,7 +133,7 @@ class CbIssueXml extends DOMDocument
         }
 
         if (!$this->documentElement->hasChildNodes()) {
-            error_log("Valid xml log files could not be found in '$directory'");
+            error_log("[Warning] Valid xml log files could not be found in '$directory'");
         }
         return $this;
     }
