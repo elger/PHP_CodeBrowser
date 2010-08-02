@@ -118,13 +118,7 @@ class CbAbstractTests extends PHPUnit_Framework_TestCase
 
         parent::setUp();
 
-        self::$_ccXMLFile          = PHPCB_TEST_DIR . '/xmllint_codebrowser_merge.xml';
-        self::$_cbXMLFile          = PHPCB_TEST_DIR . '/ccCodeBrowser.xml';
-        self::$_cbXMLBasic         = PHPCB_TEST_DIR . '/basic.xml';
-        self::$_cbTestFile         = PHPCB_TEST_OUTPUT . '/cbTestFile.txt';
-        self::$_cbTestXML          = PHPCB_TEST_OUTPUT . '/cbTestXML.xml';
-        self::$_cbGeneratedXMLTest = PHPCB_TEST_DIR . '/GeneratedXMLTest.xml';
-        self::$_serializedErrors   = PHPCB_TEST_DIR . '/serializedErrors.txt';
+        self::$_cbXMLBasic         = PHPCB_TEST_LOGS . '/basic.xml';
 
         if (is_dir(PHPCB_TEST_OUTPUT)) {
             $this->_cleanUp(PHPCB_TEST_OUTPUT);

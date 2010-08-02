@@ -86,10 +86,7 @@ class CbViewReviewTest extends CbAbstractTests
      */
     public function __construct()
     {
-        $this->_outDir = realpath(dirname(__FILE__) . '/../../testData/');
-        if (!$this->_outDir) {
-            $this->fail('Could not find testData directory');
-        }
+        $this->_outDir = realpath(dirname(__FILE__));
     }
 
     /**
