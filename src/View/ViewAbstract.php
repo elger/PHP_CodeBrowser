@@ -136,6 +136,20 @@ class CbViewAbstract
     }
 
     /**
+     * Copy the noErrors file as index.html to indicate that no
+     * source files were found
+     *
+     * @return void
+     */
+    public function copyNoErrorsIndex()
+    {
+        $this->_ioHelper->createFile(
+            $this->_outputDir . '/index.html',
+            $this->_render('noErrors', array())
+        );
+    }
+
+    /**
      * Creates a javascript-filled index.html
      *
      * @param Array $files The files to show in the sidebar

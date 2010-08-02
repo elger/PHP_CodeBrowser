@@ -245,20 +245,24 @@ class CbCLIController
 
         $files = $sourceHandler->getFiles();
 
-        // Get the path prefix all files have in common
-        $commonPathPrefix = $sourceHandler->getCommonPathPrefix();
+        if (!$files) {
+            $cbViewReview->copyNoErrorsIndex();
+        } else {
+            // Get the path prefix all files have in common
+            $commonPathPrefix = $sourceHandler->getCommonPathPrefix();
 
-        foreach ($files as $file) {
-            $cbViewReview->generate(
-                $file->getIssues(),
-                $file->name(),
-                $commonPathPrefix
-            );
+            foreach ($files as $file) {
+                $cbViewReview->generate(
+                    $file->getIssues(),
+                    $file->name(),
+                    $commonPathPrefix
+                );
+            }
+
+            // Copy needed ressources (eg js libraries) to output directory
+            $cbViewReview->copyRessourceFolders();
+            $cbViewReview->generateIndex($files);
         }
-
-        // Copy needed ressources (eg js libraries) to output directory
-        $cbViewReview->copyRessourceFolders();
-        $cbViewReview->generateIndex($files);
     }
 
     /**
