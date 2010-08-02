@@ -70,24 +70,9 @@ class CbViewReviewTest extends CbAbstractTests
     protected $_cbViewReview;
 
     /**
-     * The test output directory
-     *
-     * @var string
-     */
-    protected $_outDir;
-
-    /**
      * IOHelper mock to simulate filesystem interaction.
      */
     protected $_ioMock;
-
-    /**
-     * Initialize common variables.
-     */
-    public function __construct()
-    {
-        $this->_outDir = realpath(dirname(__FILE__));
-    }
 
     /**
      * (non-PHPdoc)
@@ -99,21 +84,11 @@ class CbViewReviewTest extends CbAbstractTests
 
         $this->_ioMock = $this->getMock('CbIOHelper');
 
-        $templateDir = dirname(__FILE__) . '/../../../templates/';
         $this->_cbViewReview = new CbViewReview(
-            $templateDir,
-            $this->_outDir,
+            PHPCB_ROOT_DIR . '/templates/',
+            PHPCB_TEST_OUTPUT,
             $this->_ioMock
         );
-    }
-
-    /**
-     * (non-PHPdoc)
-     * @see tests/cbAbstractTests#tearDown()
-     */
-    protected function tearDown()
-    {
-        parent::tearDown();
     }
 
     /**
@@ -123,7 +98,7 @@ class CbViewReviewTest extends CbAbstractTests
      */
     public function test__generateNoIssues()
     {
-        $expectedFile = $this->_outDir . '/' . basename(__FILE__) . '.html';
+        $expectedFile = PHPCB_TEST_OUTPUT . '/' . basename(__FILE__) . '.html';
 
         $this->_ioMock->expects($this->once())
                       ->method('loadFile')
@@ -136,8 +111,7 @@ class CbViewReviewTest extends CbAbstractTests
         $this->_cbViewReview->generate(
             array(),
             __FILE__,
-            dirname(__FILE__),
-            array(__FILE__)
+            dirname(__FILE__)
         );
     }
 
@@ -160,7 +134,7 @@ class CbViewReviewTest extends CbAbstractTests
         );
         $file = new CbFile(__FILE__, $issueList);
 
-        $expectedFile = $this->_outDir . '/' . basename(__FILE__) . '.html';
+        $expectedFile = PHPCB_TEST_OUTPUT . '/' . basename(__FILE__) . '.html';
         $this->_ioMock->expects($this->once())
                       ->method('loadFile')
                       ->with($this->equalTo(__FILE__))
@@ -172,8 +146,7 @@ class CbViewReviewTest extends CbAbstractTests
         $this->_cbViewReview->generate(
             $issueList,
             __FILE__,
-            dirname(__FILE__),
-            array($file)
+            dirname(__FILE__)
         );
     }
 
@@ -204,7 +177,7 @@ class CbViewReviewTest extends CbAbstractTests
         );
         $file = new CbFile(__FILE__, $issueList);
 
-        $expectedFile = $this->_outDir . '/' . basename(__FILE__) . '.html';
+        $expectedFile = PHPCB_TEST_OUTPUT . '/' . basename(__FILE__) . '.html';
         $this->_ioMock->expects($this->once())
                       ->method('loadFile')
                       ->with($this->equalTo(__FILE__))
@@ -216,8 +189,7 @@ class CbViewReviewTest extends CbAbstractTests
         $this->_cbViewReview->generate(
             $issueList,
             __FILE__,
-            dirname(__FILE__),
-            array($file)
+            dirname(__FILE__)
         );
     }
 
@@ -245,7 +217,7 @@ EOT;
         $prefix = '/dir';
         $fileName = $prefix . '/file.html';
 
-        $expectedFile = $this->_outDir . '/file.html.html';
+        $expectedFile = PHPCB_TEST_OUTPUT . '/file.html.html';
         $this->_ioMock->expects($this->once())
                       ->method('loadFile')
                       ->with($this->equalTo($fileName))
@@ -263,7 +235,7 @@ EOT;
             )
         );
         $file = new CbFile($fileName, $issues);
-        $this->_cbViewReview->generate($issues, $fileName, $prefix, array($file));
+        $this->_cbViewReview->generate($issues, $fileName, $prefix);
     }
 
     /**
@@ -273,13 +245,9 @@ EOT;
      */
     public function test__generateUnknownType()
     {
-        $prefix = realpath(dirname(__FILE__) . '/../../testData/');
-        $fileName = realpath($prefix . '/basic.xml');
-        if (!$fileName || !$prefix) {
-            $this->fail('Could not find test file.');
-        }
-
-        $expectedFile = $this->_outDir . '/basic.xml.html';
+        $expectedFile = PHPCB_TEST_OUTPUT
+            . DIRECTORY_SEPARATOR .
+            basename(self::$_cbXMLBasic) . '.html';
 
         $this->_ioMock->expects($this->once())
                       ->method('createFile')
@@ -287,15 +255,19 @@ EOT;
 
         $issueList = array(
             new CbIssue(
-                $fileName, 5,
+                self::$_cbXMLBasic, 5,
                 5, 'finder',
                 'description',
                 'severity'
             )
         );
-        $file = new CbFile($fileName, $issueList);
+        $file = new CbFile(self::$_cbXMLBasic, $issueList);
 
-        $this->_cbViewReview->generate($issueList, $fileName, $prefix, array($file));
+        $this->_cbViewReview->generate(
+            $issueList,
+            self::$_cbXMLBasic,
+            dirname(self::$_cbXMLBasic)
+        );
     }
 
     /**
