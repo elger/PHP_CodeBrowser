@@ -85,16 +85,10 @@ class CbErrorPMD extends CbPluginsAbstract
     protected $_lineEndAttr = 'endline';
 
     /**
-     * Get the source of an issue.
-     * Use the rule of PMD as source.
-     *
-     * @param DOMElement $element
-     * @return String
+     * Default string to use as source for issue.
+     * @var String
      */
-    protected function _getSource(DOMElement $element)
-    {
-        return $element->getAttribute('rule');
-    }
+    protected $_source = 'PMD';
 
     /**
      * Get the severity of an issue.

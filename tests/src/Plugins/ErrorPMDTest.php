@@ -132,7 +132,7 @@ HERE;
                         '/some/file',
                         3,
                         4,
-                        'Rule1',
+                        'PMD',
                         'Description 1',
                         'error'
                     ),
@@ -140,7 +140,7 @@ HERE;
                         '/some/file',
                         5,
                         5,
-                        'Rule2',
+                        'PMD',
                         'Description 2',
                         'error'
                     )
@@ -153,7 +153,7 @@ HERE;
                         '/other/file',
                         15,
                         15,
-                        'The third rule',
+                        'PMD',
                         'Description 3',
                         'error'
                     )
