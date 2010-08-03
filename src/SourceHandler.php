@@ -121,13 +121,15 @@ class CbSourceHandler
     public function addSourceFile($file)
     {
         if (is_string($file)) {
-            $file = realpath($file);
+            $filename = $file;
+            $file     = realpath($file);
         } else {
-            $file = $file->getRealPath();
+            $filename = $file->getPathName();
+            $file     = $file->getRealPath();
         }
 
         if (!$file) {
-            throw new Exception("$f is no regular file");
+            throw new Exception("$filename is no regular file");
         }
 
         if (!array_key_exists($file, $this->_files)) {
