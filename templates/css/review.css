@@ -44,47 +44,9 @@
     background-color: #FFBFEF;
 }
 
-/* phpmd */
-
-.CyclomaticComplexity {
+.PMD {
     background-color: #FFCC80;
 }
-
-.NPathComplexity {
-    background-color: #E6FF80;
-}
-
-.ExcessiveMethodLength {
-    background-color: #F2FFBF;
-}
-
-.ExcessiveClassLength {
-    background-color: #FF6666;
-}
-
-.ExcessiveParameterList,
-.ExcessivePublicCount,
-.TooManyFields,
-.TooManyMethods,
-.ExcessiveClassComplexity,
-.ExitExpression,
-.EvalExpression,
-.NumberOfChildren,
-.DepthOfInheritance,
-.ShortVariable,
-.LongVariable,
-.ShortMethodName,
-.ConstructorWithNameAsEnclosingClass,
-.ConstantNamingConventions,
-.BooleanGetMethodName,
-.UnusedPrivateField,
-.UnusedLocalVariable,
-.UnusedPrivateMethod,
-.UnusedFormalParameter {
-    background-color: #FF6666;
-}
-
-/* Unsorted */
 
 li.ZendCodeAnalyzer {
     background-color: #D5BFFF;
