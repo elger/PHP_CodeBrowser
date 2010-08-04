@@ -39,6 +39,10 @@
                         <th><strong>File</strong></td>
                         <th width="50px" align="center"><strong>Errors</strong></td>
                         <th width="50px" align="center"><strong>Warnings</strong></td>
+                        <th width="50px" align="center"><strong>Copy &amp; Paste</strong></td>
+                        <th width="50px" align="center"><strong>Checkstyle</strong></td>
+                        <th width="50px" align="center"><strong>PMD</strong></td>
+                        <th width="50px" align="center"><strong>Padawan</strong></td>
                     </tr>
 <?php
 $oddrow = true;
@@ -50,10 +54,28 @@ foreach ($fileList as $filename => $f) {
     $errors = $f->getErrorCount();
     $warnings = $f->getWarningCount();
 
+    $cpdCount        = 0;
+    $checkstyleCount = 0;
+    $pmdCount        = 0;
+    $padawanCount    = 0;
+
+    foreach ($f->getIssues() as $issue) {
+        switch ($issue->foundBy) {
+        case 'CPD': $cpdCount += 1; break;
+        case 'Checkstyle': $checkstyleCount += 1; break;
+        case 'PMD': $pmdCount += 1; break;
+        case 'Padawan': $padawanCount += 1; break;
+        }
+    }
+
     echo "<tr class='$tag'>";
     echo "<td><a class='fileLink' href='$shortName.html'>$shortName</a></td>";
     echo "<td align='center'><span class='errorCount'>$errors</span></td>";
     echo "<td align='center'><span class='warningCount'>$warnings</span></td>";
+    echo "<td align='center'>$cpdCount</td>";
+    echo "<td align='center'>$checkstyleCount</td>";
+    echo "<td align='center'>$pmdCount</td>";
+    echo "<td align='center'>$padawanCount</td>";
     echo "</tr>";
 }
 ?>
