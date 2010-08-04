@@ -89,7 +89,7 @@ class CbErrorCoverage extends CbPluginsAbstract
      * Default string to use as source for issue.
      * @var String
      */
-    protected $_source = 'CodeCoverage';
+    protected $_source = 'Coverage';
 
     /**
      * The detailed mapper method for each single plugin, returning an array
@@ -136,7 +136,7 @@ class CbErrorCoverage extends CbPluginsAbstract
                     $filename,
                     $begin,
                     $end,
-                    'CodeCoverage',
+                    'Coverage',
                     'Not covered',
                     'Notice'
                 );
