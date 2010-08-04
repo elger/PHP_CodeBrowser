@@ -35,18 +35,38 @@
         <div id="contentBox" style="display: inline-block; margin: 15px;">
             <div id="fileList">
                 <table border="0" cellspacing="2" cellpadding="3">
-                    <tr class="head">
-                        <th><strong>File</strong></td>
-                        <th width="50px" align="center"><strong>Errors</strong></td>
-                        <th width="50px" align="center"><strong>Warnings</strong></td>
-                        <th width="50px" align="center"><strong>Copy &amp; Paste</strong></td>
-                        <th width="50px" align="center"><strong>Checkstyle</strong></td>
-                        <th width="50px" align="center"><strong>PMD</strong></td>
-                        <th width="50px" align="center"><strong>Padawan</strong></td>
-                    </tr>
 <?php
 $oddrow = true;
 $preLen = strlen(CbIOHelper::getCommonPathPrefix(array_keys($fileList))) + 1;
+
+// Find out which types of errors have been found
+$occuringErrorTypes = array (
+    'CPD'        => false,
+    'CRAP'       => false,
+    'Checkstyle' => false,
+    'Coverage'   => false,
+    'PMD'        => false,
+    'Padawan'    => false
+);
+
+foreach ($fileList as $file) foreach ($file->getIssues() as $issue) {
+    $occuringErrorTypes[$issue->foundBy] = true;
+}
+
+$occuringErrorTypes = array_keys(array_filter($occuringErrorTypes));
+
+// Print the tables head
+echo '<tr class="head">';
+echo '<th><strong>File</strong></td>';
+echo '<th width="50px" align="center"><strong>Errors</strong></td>';
+echo '<th width="50px" align="center"><strong>Warnings</strong></td>';
+
+foreach ($occuringErrorTypes as $errorType) {
+    echo "<th width='70px' align='center'><strong>$errorType</strong></td>";
+}
+echo '</tr>';
+
+// Print the file table
 foreach ($fileList as $filename => $f) {
     $tag = $oddrow ? 'odd' : 'even';
     $oddrow = !$oddrow;
@@ -54,28 +74,20 @@ foreach ($fileList as $filename => $f) {
     $errors = $f->getErrorCount();
     $warnings = $f->getWarningCount();
 
-    $cpdCount        = '';
-    $checkstyleCount = '';
-    $pmdCount        = '';
-    $padawanCount    = '';
+    $counts = array_fill_keys($occuringErrorTypes, '');
 
     foreach ($f->getIssues() as $issue) {
-        switch ($issue->foundBy) {
-        case 'CPD': $cpdCount += 1; break;
-        case 'Checkstyle': $checkstyleCount += 1; break;
-        case 'PMD': $pmdCount += 1; break;
-        case 'Padawan': $padawanCount += 1; break;
-        }
+        $counts[$issue->foundBy] += 1;
     }
 
     echo "<tr class='$tag'>";
     echo "<td><a class='fileLink' href='$shortName.html'>$shortName</a></td>";
     echo "<td align='center'><span class='errorCount'>$errors</span></td>";
     echo "<td align='center'><span class='warningCount'>$warnings</span></td>";
-    echo "<td align='center'>$cpdCount</td>";
-    echo "<td align='center'>$checkstyleCount</td>";
-    echo "<td align='center'>$pmdCount</td>";
-    echo "<td align='center'>$padawanCount</td>";
+
+    foreach ($counts as $count) {
+        echo "<td align='center'>$count</td>";
+    }
     echo "</tr>";
 }
 ?>
