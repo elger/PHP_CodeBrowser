@@ -54,10 +54,10 @@ foreach ($fileList as $filename => $f) {
     $errors = $f->getErrorCount();
     $warnings = $f->getWarningCount();
 
-    $cpdCount        = 0;
-    $checkstyleCount = 0;
-    $pmdCount        = 0;
-    $padawanCount    = 0;
+    $cpdCount        = '';
+    $checkstyleCount = '';
+    $pmdCount        = '';
+    $padawanCount    = '';
 
     foreach ($f->getIssues() as $issue) {
         switch ($issue->foundBy) {
