@@ -24,35 +24,51 @@
 
 /* Error type colors */
 
-.CodeCoverage {
+#cluetip .CodeCoverage,
+#sidebar .CodeCoverage,
+#review  .CodeCoverage {
     background-color: #BFE4FF;
 }
 
-.Duplication {
+#cluetip .Duplication,
+#sidebar .Duplication,
+#review  .Duplication {
     background-color: #FFBFDC;
 }
 
-.Checkstyle {
+#cluetip .Checkstyle,
+#sidebar .Checkstyle,
+#review  .Checkstyle {
     background-color: #FFF2BF;
 }
 
-.Padawan {
+#cluetip .Padawan,
+#sidebar .Padawan,
+#review  .Padawan {
     background-color: #E6FF80;
 }
 
-.CRAP {
+#cluetip .CRAP,
+#sidebar .CRAP,
+#review  .CRAP {
     background-color: #FFBFEF;
 }
 
-.PMD {
+#cluetip .PMD,
+#sidebar .PMD,
+#review  .PMD {
     background-color: #FFCC80;
 }
 
-li.ZendCodeAnalyzer {
+#cluetip .ZendCodeAnalyzer,
+#sidebar .ZendCodeAnalyzer,
+#review  .ZendCodeAnalyzer {
     background-color: #D5BFFF;
 }
 
-li.EfferentCoupling {
+#cluetip .EfferentCoupling,
+#sidebar .EfferentCoupling,
+#review  .EfferentCoupling {
     background-color: #CCFF99;
 }
 
