@@ -142,7 +142,7 @@ HERE;
                         '/partly/tested',
                         10,
                         14,
-                        'CodeCoverage',
+                        'Coverage',
                         'Not covered',
                         'Notice'
                     )
@@ -159,7 +159,7 @@ HERE;
                         '/not/tested',
                         212,
                         225,
-                        'CodeCoverage',
+                        'Coverage',
                         'Not covered',
                         'Notice'
                     )
