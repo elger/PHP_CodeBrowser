@@ -105,7 +105,7 @@ class CbErrorCRAP extends CbPluginsAbstract
         $errorList = array();
 
         foreach ($element->childNodes as $child) {
-            
+
             if ($child instanceof DOMElement
                     && 'line'   === $child->nodeName
                     && 'method' === $child->getAttribute('type')) {
@@ -123,10 +123,10 @@ class CbErrorCRAP extends CbPluginsAbstract
                 );
             }
         }
-        
+
         return $errorList;
     }
-        
+
     /**
      * Get an array with all files that have issues.
      *
@@ -138,14 +138,14 @@ class CbErrorCRAP extends CbPluginsAbstract
         $issueNodes = $this->_issueXml->query(
             '/*/'.$this->pluginName.'/*/file[@name]'
         );
-        
+
         foreach ($issueNodes as $node) {
             $filenames[] = $node->getAttribute('name');
         }
-        
+
         return array_unique($filenames);
     }
-    
+
     /**
      * Get all DOMNodes that represent issues for a specific file.
      *

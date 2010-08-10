@@ -1,5 +1,5 @@
 @echo off
- 
+
 REM PHP_CodeBrowser shell script Wrapper for WIN
 REM Bash file called from the command line
 REM

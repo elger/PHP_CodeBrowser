@@ -6,7 +6,7 @@
                       http://pear.php.net/dtd/tasks-1.0.xsd
                       http://pear.php.net/dtd/package-2.0
                       http://pear.php.net/dtd/package-2.0.xsd">
-  
+
   <name>PHP_CodeBrowser</name>
 
   <channel>pear.phpunit.de</channel>
@@ -45,7 +45,7 @@
   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
   <notes>http://github.com/mayflowergmbh/PHP_CodeBrowser/blob/master/CHANGELOG.markdown</notes>
 
-  <contents> 
+  <contents>
     <dir name="/">
       <dir name="src">
         <dir name="Helper">
@@ -105,7 +105,7 @@
           <tasks:replace from="@package_version@" to="version" type="package-info" />
         </file>
       </dir> <!-- /src -->
-      
+
       <dir name="templates">
         <dir name="css">
           <file name="cruisecontrol.css" role="data" />
@@ -207,7 +207,7 @@
         <file name="index.tpl" role="data" />
         <file name="review.tpl" role="data" />
       </dir> <!-- /templates -->
-      
+
       <dir name="bin">
         <file name="phpcb.bat" role="script">
           <tasks:replace from="@bin_dir@" to="bin_dir" type="pear-config" />
@@ -220,12 +220,12 @@
           <tasks:replace from="@php_dir@" to="php_dir" type="pear-config" />
         </file>
       </dir> <!-- /scripts -->
-      
+
       <file name="README.markdown" role="doc" />
       <file name="CHANGELOG.markdown" role="doc" />
       <file name="LICENSE" role="doc" />
-    </dir> <!-- / -->  
-    
+    </dir> <!-- / -->
+
   </contents>
 
   <dependencies>

@@ -33,17 +33,17 @@ body.codebrowser {
 	position: absolute;
 }
 
-.codebrowser .prototip .effectWrapper { 
-	position: relative; 
+.codebrowser .prototip .effectWrapper {
+	position: relative;
 }
 
-.codebrowser .prototip .tooltip { 
-	position: relative; 
+.codebrowser .prototip .tooltip {
+	position: relative;
 }
 
 .codebrowser .prototip .toolbar {
 	position: relative;
-	display: block;	
+	display: block;
 }
 
 .codebrowser .prototip .tooltip .title, .tooltip .message {
@@ -80,8 +80,8 @@ body.codebrowser {
 	padding: 5px 20px 5px 30px;
 	background-image: url(./../img/page.gif);
 	background-repeat: no-repeat;
-	background-position: 4px center;	
-	margin: 5px;	
+	background-position: 4px center;
+	margin: 5px;
 }
 
 .codebrowser .sourcecode {
@@ -90,7 +90,7 @@ body.codebrowser {
 	width: 98%;
 }
 
-.codebrowser .filelist {	
+.codebrowser .filelist {
 	margin: 5px;
 }
 

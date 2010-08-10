@@ -49,8 +49,8 @@
 
 /**
  * CbIssue
- * 
- * Object Model for issues. 
+ *
+ * Object Model for issues.
  * This object is used for working with common issues types.
  *
  * @category  PHP_CodeBrowser
@@ -74,14 +74,14 @@ class CbIssue
 
     /**
      * Starting Line of the Issue.
-     * 
+     *
      * @var string
      */
     public $lineStart;
 
     /**
      * Ending Line of the Issue.
-     * 
+     *
      * @var string
      */
     public $lineEnd;
@@ -89,21 +89,21 @@ class CbIssue
     /**
      * Name of the Plugin that found the Issue.
      * It is also used for CSS class definitions.
-     * 
+     *
      * @var string
      */
     public $foundBy;
 
     /**
      * Issue Description text.
-     * 
+     *
      * @var string
      */
     public $description;
 
     /**
      * Severity of the issue.
-     * 
+     *
      * @var string
      */
     public $severity;
@@ -111,12 +111,12 @@ class CbIssue
     /**
      * Default constructor
      *
-     * @param String  $fileName    The source file name the issue was found in. 
+     * @param String  $fileName    The source file name the issue was found in.
      * @param Integer $lineStart   The starting line of the issue.
      * @param Integer $lineEnd     The ending line of registered issue.
      * @param String  $foundBy     The plugin name definition.
      * @param String  $description The description of the issue.
-     * @param String  $severity    
+     * @param String  $severity
      */
     public function __construct($fileName,
                                 $lineStart,

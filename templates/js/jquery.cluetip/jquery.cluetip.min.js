@@ -8,7 +8,7 @@
  * http://www.gnu.org/licenses/gpl.html
  *
  */
- 
+
 /*
  *
  * Full list of options/settings can be found at the bottom of this file and at http://plugins.learningjquery.com/cluetip/

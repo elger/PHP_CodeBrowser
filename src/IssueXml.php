@@ -83,17 +83,17 @@ class CbIssueXml extends DOMDocument
      * @var Boolean
      */
     public $preserveWhiteSpace = false;
-    
+
     /**
      * Provide nice output.
-     * 
+     *
      * @var Boolean
      */
     public $formatOutput = true;
 
     /**
      * Default constructor
-     * 
+     *
      * @param String $version  The version definitio for DomDocument
      * @param String $encoding The used encoding for DomDocument
      */
@@ -106,8 +106,8 @@ class CbIssueXml extends DOMDocument
     }
 
     /**
-     * Parses directory for XML report files, generating a single DomDocument 
-     * inheritting all files and issues. 
+     * Parses directory for XML report files, generating a single DomDocument
+     * inheritting all files and issues.
      *
      * @param String $directory The path to directory where xml files are stored
      *
@@ -142,7 +142,7 @@ class CbIssueXml extends DOMDocument
      * Add xml file to merge
      *
      * @param DOMDocument $domDocument The DOMDocument to merge.
-     * 
+     *
      * @return void
      */
     public function addXMLFile(DOMDocument $domDocument)
@@ -155,10 +155,10 @@ class CbIssueXml extends DOMDocument
     /**
      * Perform a XPath-Query on the document.
      * @see DOMXPath::query
-     * 
+     *
      * @param String  $expression  Xpath expression to query for.
      * @param DOMNode $contextNode Node to use as context (optional)
-     * 
+     *
      * @return DOMNodeList         List of all matching nodes.
      */
     public function query($expression, DOMNode $contextNode = null)

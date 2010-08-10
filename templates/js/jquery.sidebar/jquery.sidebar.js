@@ -9,11 +9,11 @@
  */
 //Side Bar Plugin
 (function($) {
-		
+
 	$.fn.sidebar = function(options){
 		return this.each(function(){
 			options = options || {};
-			
+
 			//default setting
 			options = $.extend({
 				position: "left",
@@ -42,7 +42,7 @@
 					width: options.injectWidth
 				};
 				ccss.top = ($(window).height()/2) - (options.height/2) + "px";
-				
+
 			} else {
 				m = options.height - options.injectWidth;
                 icss = {
@@ -57,21 +57,21 @@
 			};
 			var e = {};
 			var l = {};
-			
+
 			ccss[options.position] = "-" + m + "px";
 			icss[options.position] = m + "px";
 			e[options.position] = 0;
 			l[options.position] = "-" + m;
-			
+
 			//container
 			var c = $("<div><div/>").attr("id", "jquerySideBar" + new Date().getTime()).addClass("sidebar-container-" + options.position).css(ccss);
-			
+
 			//inject
 			var i = $("<div><div/>").addClass("sidebar-inject-" + options.position).css(icss);
-			
+
 			//body
 			var b = $("<div><div/>").addClass("sidebar-body").css(bcss).hide();
-			
+
 			//menu events
             var isEnter;
 			$(this).addClass("sidebar-menu").find("li,li *").mouseenter(function(){
@@ -80,7 +80,7 @@
 			}).mouseleave(function(){
 				$(this).animate(options.liMouseOut, 250);
 			});
-			
+
 			//container events
 			var isProcessing;
 			c.bind(options.open,function(){
@@ -114,7 +114,7 @@
 					}
 				});
 			});
-			
+
 			//append to body
 			b.append(this);
 			c.append(b);

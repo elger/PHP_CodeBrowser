@@ -110,7 +110,7 @@ class CbErrorCPD extends CbPluginsAbstract
 
         return array_unique($filenames);
     }
-    
+
     /**
      * Get all DOMNodes that represent issues for a specific file.
      *

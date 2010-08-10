@@ -1,6 +1,6 @@
 <?php
 /**
- * Coverage 
+ * Coverage
  *
  * PHP Version 5.3.2
  *
@@ -142,7 +142,7 @@ class CbErrorCoverage extends CbPluginsAbstract
                 );
             }
         }
-        
+
         return $errorList;
     }
 
@@ -157,7 +157,7 @@ class CbErrorCoverage extends CbPluginsAbstract
              && 'line' ===       $elem->nodeName
              && 'stmt' ===       $elem->getAttribute('type'));
     }
-        
+
     /**
      * Get an array with all files that have issues.
      *
@@ -169,14 +169,14 @@ class CbErrorCoverage extends CbPluginsAbstract
         $issueNodes = $this->_issueXml->query(
             '/*/'.$this->pluginName.'/*/file[@name]'
         );
-        
+
         foreach ($issueNodes as $node) {
             $filenames[] = $node->getAttribute('name');
         }
-        
+
         return array_unique($filenames);
     }
-    
+
     /**
      * Get all DOMNodes that represent issues for a specific file.
      *

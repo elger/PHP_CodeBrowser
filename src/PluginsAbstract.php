@@ -81,7 +81,7 @@ abstract class CbPluginsAbstract
     /**
      * Name of the attribute that holds the number of the first line
      * of the issue.
-     * 
+     *
      * @var String
      */
     protected $_lineStartAttr;
@@ -89,28 +89,28 @@ abstract class CbPluginsAbstract
     /**
      * Name of the attribute that holds the number of the last line
      * of the issue.
-     * 
+     *
      * @var String
      */
     protected $_lineEndAttr;
 
     /**
      * Name of the attribute that holds message of the issue.
-     * 
+     *
      * @var String
      */
     protected $_descriptionAttr;
 
     /**
      * Name of the attribute that holds severity of the issue.
-     * 
+     *
      * @var String
      */
     protected $_severityAttr;
 
     /**
      * Default string to use as source for issue.
-     * 
+     *
      * @var String
      */
     protected $_source;
@@ -144,7 +144,7 @@ abstract class CbPluginsAbstract
      * error to the Issue objects format.
      *
      * @param String $filename  Name of the file to parse the errors for.
-     * 
+     *
      * @return array
      */
     public function getIssuesByFile($filename)
@@ -206,12 +206,12 @@ abstract class CbPluginsAbstract
         }
         return $errorList;
     }
-    
+
     /**
      * Get all DOMNodes that represent issues for a specific file.
      *
      * @param String $filename      Name of the file to get nodes for.
-     * 
+     *
      * @return DOMNodeList
      */
     protected function _getIssueNodes($filename)
