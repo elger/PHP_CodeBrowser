@@ -30,7 +30,7 @@
     <active>yes</active>
   </developer>
 
-  <date>2010-06-29</date>
+  <date>2010-08-12</date>
 
   <version>
     <release>0.9.0</release>
@@ -54,19 +54,22 @@
           </file>
         </dir> <!-- /Helper -->
         <dir name="Plugins">
+          <file name="ErrorCPD.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
+          <file name="ErrorCRAP.php" role="php">
+            <tasks:replace from="@package_version@" to="version" type="package-info" />
+          </file>
           <file name="ErrorCheckstyle.php" role="php">
             <tasks:replace from="@package_version@" to="version" type="package-info" />
           </file>
           <file name="ErrorCoverage.php" role="php">
             <tasks:replace from="@package_version@" to="version" type="package-info" />
           </file>
-          <file name="ErrorCPD.php" role="php">
+          <file name="ErrorPMD.php" role="php">
             <tasks:replace from="@package_version@" to="version" type="package-info" />
           </file>
           <file name="ErrorPadawan.php" role="php">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-          </file>
-          <file name="ErrorPMD.php" role="php">
             <tasks:replace from="@package_version@" to="version" type="package-info" />
           </file>
         </dir> <!-- /Plugins -->
@@ -109,6 +112,7 @@
       <dir name="templates">
         <dir name="css">
           <file name="cruisecontrol.css" role="data" />
+          <file name="global.css" role="data" />
           <file name="review.css" role="data" />
           <file name="tree.css" role="data" />
         </dir> <!-- /css -->
@@ -178,8 +182,8 @@
           <dir name="jquery.jstree">
             <dir name="themes">
               <dir name="default">
-                <file name="dot_for_ie.gif" role="data" />
                 <file name="d.png" role="data" />
+                <file name="dot_for_ie.gif" role="data" />
                 <file name="style.css" role="data" />
                 <file name="throbber.gif" role="data" />
               </dir> <!-- /default -->
@@ -205,6 +209,7 @@
           <file name="tree.js" role="data" />
         </dir> <!-- /js -->
         <file name="index.tpl" role="data" />
+        <file name="noErrors.tpl" role="data" />
         <file name="review.tpl" role="data" />
       </dir> <!-- /templates -->
 
@@ -221,9 +226,9 @@
         </file>
       </dir> <!-- /scripts -->
 
-      <file name="README.markdown" role="doc" />
       <file name="CHANGELOG.markdown" role="doc" />
       <file name="LICENSE" role="doc" />
+      <file name="README.markdown" role="doc" />
     </dir> <!-- / -->
 
   </contents>
@@ -259,6 +264,11 @@
 
     <optional>
       <package>
+        <name>Text_Highlighter</name>
+        <channel>pear.php.net</channel>
+        <min>0.7.1</min>
+      </package>
+      <package>
         <name>PHPUnit</name>
         <channel>pear.phpunit.de</channel>
         <min>3.4.0</min>
@@ -288,43 +298,44 @@
       </os>
     </installconditions>
     <filelist>
-      <install as="PHP_CodeBrowser/Helper/IOHelper.php" name="src/Helper/IOHelper.php" />
+      <install as="PHP_CodeBrowser/Helper/IOHelper.php"         name="src/Helper/IOHelper.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorCPD.php"        name="src/Plugins/ErrorCPD.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorCheckstyle.php" name="src/Plugins/ErrorCRAP.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCheckstyle.php" name="src/Plugins/ErrorCheckstyle.php" />
-      <install as="PHP_CodeBrowser/Plugins/ErrorCoverage.php" name="src/Plugins/ErrorCoverage.php" />
-      <install as="PHP_CodeBrowser/Plugins/ErrorCPD.php" name="src/Plugins/ErrorCPD.php" />
-      <install as="PHP_CodeBrowser/Plugins/ErrorPadawan.php" name="src/Plugins/ErrorPadawan.php" />
-      <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php" name="src/Plugins/ErrorPMD.php" />
-      <install as="PHP_CodeBrowser/Util/Autoloader.php" name="src/Util/Autoloader.php" />
-      <install as="PHP_CodeBrowser/View/ViewReview.php" name="src/View/ViewReview.php" />
-      <install as="PHP_CodeBrowser/View/ViewAbstract.php" name="src/View/ViewAbstract.php" />
-      <install as="PHP_CodeBrowser/CLIController.php" name="src/CLIController.php" />
-      <install as="PHP_CodeBrowser/File.php" name="src/File.php" />
-      <install as="PHP_CodeBrowser/Issue.php" name="src/Issue.php" />
-      <install as="PHP_CodeBrowser/IssueXml.php" name="src/IssueXml.php" />
-      <install as="PHP_CodeBrowser/PluginsAbstract.php" name="src/PluginsAbstract.php" />
-      <install as="PHP_CodeBrowser/SourceHandler.php" name="src/SourceHandler.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorCoverage.php"   name="src/Plugins/ErrorCoverage.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php"        name="src/Plugins/ErrorPMD.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorPadawan.php"    name="src/Plugins/ErrorPadawan.php" />
+      <install as="PHP_CodeBrowser/Util/Autoloader.php"         name="src/Util/Autoloader.php" />
+      <install as="PHP_CodeBrowser/View/ViewReview.php"         name="src/View/ViewReview.php" />
+      <install as="PHP_CodeBrowser/View/ViewAbstract.php"       name="src/View/ViewAbstract.php" />
+      <install as="PHP_CodeBrowser/CLIController.php"           name="src/CLIController.php" />
+      <install as="PHP_CodeBrowser/File.php"                    name="src/File.php" />
+      <install as="PHP_CodeBrowser/Issue.php"                   name="src/Issue.php" />
+      <install as="PHP_CodeBrowser/IssueXml.php"                name="src/IssueXml.php" />
+      <install as="PHP_CodeBrowser/PluginsAbstract.php"         name="src/PluginsAbstract.php" />
+      <install as="PHP_CodeBrowser/SourceHandler.php"           name="src/SourceHandler.php" />
       <install as="phpcb.bat" name="bin/phpcb.bat" />
-      <install as="phpcb" name="bin/phpcb.php" />
+      <install as="phpcb"     name="bin/phpcb.php" />
     </filelist>
   </phprelease>
   <phprelease>
     <filelist>
-      <install as="PHP_CodeBrowser/Helper/IOHelper.php" name="src/Helper/IOHelper.php" />
+      <install as="PHP_CodeBrowser/Helper/IOHelper.php"         name="src/Helper/IOHelper.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorCPD.php"        name="src/Plugins/ErrorCPD.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorCheckstyle.php" name="src/Plugins/ErrorCRAP.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCheckstyle.php" name="src/Plugins/ErrorCheckstyle.php" />
-      <install as="PHP_CodeBrowser/Plugins/ErrorCoverage.php" name="src/Plugins/ErrorCoverage.php" />
-      <install as="PHP_CodeBrowser/Plugins/ErrorCPD.php" name="src/Plugins/ErrorCPD.php" />
-      <install as="PHP_CodeBrowser/Plugins/ErrorPadawan.php" name="src/Plugins/ErrorPadawan.php" />
-      <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php" name="src/Plugins/ErrorPMD.php" />
-      <install as="PHP_CodeBrowser/Util/Autoloader.php" name="src/Util/Autoloader.php" />
-      <install as="PHP_CodeBrowser/View/ViewReview.php" name="src/View/ViewReview.php" />
-      <install as="PHP_CodeBrowser/View/ViewAbstract.php" name="src/View/ViewAbstract.php" />
-      <install as="PHP_CodeBrowser/CLIController.php" name="src/CLIController.php" />
-      <install as="PHP_CodeBrowser/File.php" name="src/File.php" />
-      <install as="PHP_CodeBrowser/Issue.php" name="src/Issue.php" />
-      <install as="PHP_CodeBrowser/IssueXml.php" name="src/IssueXml.php" />
-      <install as="PHP_CodeBrowser/PluginsAbstract.php" name="src/PluginsAbstract.php" />
-      <install as="PHP_CodeBrowser/SourceHandler.php" name="src/SourceHandler.php" />
-
+      <install as="PHP_CodeBrowser/Plugins/ErrorCoverage.php"   name="src/Plugins/ErrorCoverage.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php"        name="src/Plugins/ErrorPMD.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorPadawan.php"    name="src/Plugins/ErrorPadawan.php" />
+      <install as="PHP_CodeBrowser/Util/Autoloader.php"         name="src/Util/Autoloader.php" />
+      <install as="PHP_CodeBrowser/View/ViewReview.php"         name="src/View/ViewReview.php" />
+      <install as="PHP_CodeBrowser/View/ViewAbstract.php"       name="src/View/ViewAbstract.php" />
+      <install as="PHP_CodeBrowser/CLIController.php"           name="src/CLIController.php" />
+      <install as="PHP_CodeBrowser/File.php"                    name="src/File.php" />
+      <install as="PHP_CodeBrowser/Issue.php"                   name="src/Issue.php" />
+      <install as="PHP_CodeBrowser/IssueXml.php"                name="src/IssueXml.php" />
+      <install as="PHP_CodeBrowser/PluginsAbstract.php"         name="src/PluginsAbstract.php" />
+      <install as="PHP_CodeBrowser/SourceHandler.php"           name="src/SourceHandler.php" />
       <install as="phpcb" name="bin/phpcb.php" />
       <ignore name="bin/phpcb.bat" />
     </filelist>
@@ -415,16 +426,17 @@
         <api>1.0.0</api>
       </version>
       <stability>
-        <release>alpha</release>
-        <api>alpha</api>
+        <release>beta</release>
+        <api>beta</api>
       </stability>
-      <date>2010-07-31</date>
+      <date>2010-08-12</date>
       <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
       <notes>
-      - Added support for CRAP with PHPUnit 3.5
+      - Added support for CRAP when using logs from PHPUnit 3.5
       - Improved performance
       - Now using jQuery as JavaScript framework
-      - Added --exclude option
+      - Added --exclude and --excludePCRE option
+      - Allowed multiple --source options
       </notes>
     </release>
   </changelog>
