@@ -24,9 +24,9 @@
 
 /* Error type colors */
 
-#cluetip .CodeCoverage,
-#sidebar .CodeCoverage,
-#review  .CodeCoverage {
+#cluetip .Coverage,
+#sidebar .Coverage,
+#review  .Coverage {
     background-color: #BFE4FF;
 }
 
