@@ -75,9 +75,9 @@ class CbSourceHandlerTest extends CbAbstractTests
      * Plugin array populated with example files.
      * TODO: Mock this
      *
-     * @var CbPluginsAbstract
+     * @var Array of CbPluginsAbstract
      */
-    protected $_plugin;
+    protected $_plugins;
 
     /**
 
@@ -86,27 +86,45 @@ class CbSourceHandlerTest extends CbAbstractTests
      */
     public function __construct()
     {
-        $xmlString = <<<HERE
+        $xmlStrings = array(
+            <<<HERE
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd version="0.2.6" timestamp="2010-08-12T00:00:00+02:000">
+    <file name='/a/nother/dir/src.php'>
+        <violation beginline="291" endline="291" rule="ExitExpression"
+            ruleset="Design Rules"
+            externalInfoUrl="http://example.com" priority="1">descr</violation>
+    </file>
+</pmd>
+HERE
+,
+            <<<HERE
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="1.2.0RC3">
- <file name="/a/dir/source.php">
-  <error line="37" column="1" severity="error"
-         message="m1" source="PEAR.Commenting.FileCommentSniff"/>
- </file>
- <file name="/a/nother/dir/src.php">
-  <error line="39" column="1" severity="error"
-         message="m3" source="PEAR.Commenting.FileCommentSniff"/>
-  <error line="40" column="1" severity="error"
-         message="m4" source="PEAR.Commenting.FileCommentSniff"/>
- </file>
+    <file name="/a/dir/source.php">
+        <error line="37" column="1" severity="error"
+            message="m1" source="PEAR.Commenting.FileCommentSniff"/>
+    </file>
+    <file name="/a/nother/dir/src.php">
+        <error line="39" column="1" severity="error"
+            message="m3" source="PEAR.Commenting.FileCommentSniff"/>
+        <error line="40" column="1" severity="error"
+            message="m4" source="PEAR.Commenting.FileCommentSniff"/>
+    </file>
 </checkstyle>
-HERE;
+HERE
+        );
         $issueXML = new CbIssueXml();
-        $xml      = new DOMDocument('1.0', 'UTF-8');
-        $xml->validateOnParse = true;
-        $xml->loadXML($xmlString);
-        $issueXML->addXMLFile($xml);
-        $this->_plugin = new CbErrorCheckstyle($issueXML);
+        foreach ($xmlStrings as $xmlString) {
+            $xml      = new DOMDocument('1.0', 'UTF-8');
+            $xml->validateOnParse = true;
+            $xml->loadXML($xmlString);
+            $issueXML->addXMLFile($xml);
+        }
+        $this->_plugins = array(
+            new CbErrorCheckstyle($issueXML),
+            new CbErrorPMD($issueXML)
+        );
     }
 
     /**
@@ -117,6 +135,10 @@ HERE;
     {
         parent::setUp();
         $this->_cbSourceHandler = new CbSourceHandler();
+        array_walk(
+            $this->_plugins,
+            array($this->_cbSourceHandler, 'addPlugin')
+        );
     }
 
     /**
@@ -126,8 +148,7 @@ HERE;
      */
     public function test__construct()
     {
-        $sourceHandler = new CbSourceHandler(array($this->_plugin));
-        $this->_cbSourceHandler->addPlugin($this->_plugin);
+        $sourceHandler = new CbSourceHandler($this->_plugins);
         $this->assertEquals($this->_cbSourceHandler, $sourceHandler);
     }
 
@@ -138,7 +159,6 @@ HERE;
      */
     public function test__getFiles()
     {
-        $this->_cbSourceHandler->addPlugin($this->_plugin);
         $expected = array(
             '/a/nother/dir/src.php' => new CbFile(
                 '/a/nother/dir/src.php',
@@ -152,6 +172,11 @@ HERE;
                         '/a/nother/dir/src.php',
                         40, 40, 'Checkstyle',
                         'm4', 'error'
+                    ),
+                    new CbIssue(
+                        '/a/nother/dir/src.php',
+                        291, 291, 'PMD',
+                        'descr', 'error'
                     )
                 )
             ),
@@ -179,7 +204,6 @@ HERE;
      */
     public function test__getFilesWithIssues()
     {
-        $this->_cbSourceHandler->addPlugin($this->_plugin);
         $expectedFiles = array (
             '/a/dir/source.php',
             '/a/nother/dir/src.php'
@@ -196,7 +220,10 @@ HERE;
     public function test__addSourceFiles()
     {
         $this->_cbSourceHandler->addSourceFiles(
-            array(new SplFileInfo(__FILE__))
+            array(
+                new SplFileInfo(__FILE__),
+                __FILE__
+            )
         );
         $this->assertContains(
             __FILE__,
@@ -229,7 +256,6 @@ HERE;
      */
     public function test__getCommonPathPrefix()
     {
-        $this->_cbSourceHandler->addPlugin($this->_plugin);
         $expected = '/a';
         $actual   = $this->_cbSourceHandler->getCommonPathPrefix();
         $this->assertEquals($expected, $actual);
@@ -242,7 +268,6 @@ HERE;
      */
     public function test__excludeMatchingPCRE()
     {
-        $this->_cbSourceHandler->addPlugin($this->_plugin);
         $expected = array(
             '/a/dir/source.php' => new CbFile(
                 '/a/dir/source.php',
@@ -266,7 +291,6 @@ HERE;
      */
     public function test__excludeMatchingPattern()
     {
-        $this->_cbSourceHandler->addPlugin($this->_plugin);
         $expected = array(
             '/a/dir/source.php' => new CbFile(
                 '/a/dir/source.php',

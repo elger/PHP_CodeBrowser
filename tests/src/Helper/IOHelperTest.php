@@ -62,25 +62,12 @@ require_once realpath(dirname(__FILE__) . '/../../AbstractTests.php');
  */
 class CbIOHelperTest extends CbAbstractTests
 {
-    protected $_testDir;
-
     /**
      * The CbIOHelper object under test.
      *
      * @var CbIOHelper
      */
     protected $_ioHelper;
-
-    /**
-     * Define variables
-     */
-    public function __construct()
-    {
-        $this->_testDir = realpath(dirname(__FILE__) . '/../../testData/');
-        if (!$this->_testDir) {
-            $this->fail('Could not find tests/testData directory.');
-        }
-    }
 
     /**
      * (non-PHPdoc)
@@ -100,7 +87,7 @@ class CbIOHelperTest extends CbAbstractTests
      */
     public function test__createFile()
     {
-        $filename = $this->_testDir . '/tmpfile';
+        $filename = PHPCB_TEST_OUTPUT . '/tmpfile';
         $content  = 'Lorem ipsum';
 
         if (file_exists($filename)) {
@@ -121,7 +108,7 @@ class CbIOHelperTest extends CbAbstractTests
      */
     public function test__createFileWithPath()
     {
-        $dirname = $this->_testDir . '/tmpdir';
+        $dirname = PHPCB_TEST_OUTPUT . '/tmpdir';
         $filename = $dirname . '/tmpfile';
         $content  = 'Lorem ipsum';
 
@@ -148,7 +135,7 @@ class CbIOHelperTest extends CbAbstractTests
      */
     public function test__deleteFile()
     {
-        $filename = $this->_testDir . '/tmpfile';
+        $filename = PHPCB_TEST_OUTPUT . '/tmpfile';
 
         if (!file_exists($filename)) {
             file_put_contents($filename, 'Lorem ipsum');
@@ -159,14 +146,33 @@ class CbIOHelperTest extends CbAbstractTests
     }
 
     /**
+     * Test deleteDirectory function
+     *
+     * @return void
+     */
+    public function test__deleteDirectory()
+    {
+        $dir = PHPCB_TEST_OUTPUT . '/dir';
+        $file = $dir . '/file';
+        $subdir = $dir . '/subdir';
+
+        mkdir($dir);
+        mkdir($subdir);
+        touch($file);
+
+        $this->_ioHelper->deleteDirectory($dir);
+        $this->assertFileNotExists($dir);
+    }
+
+    /**
      * Test copyFile function
      *
      * @return void
      */
     public function test__copyFile()
     {
-        $srcFile = $this->_testDir . '/tmpfile';
-        $dstDir = $this->_testDir . '/tmpdir';
+        $srcFile = PHPCB_TEST_OUTPUT . '/tmpfile';
+        $dstDir = PHPCB_TEST_OUTPUT . '/tmpdir';
         $dstFile = $dstDir . '/tmpfile';
         $content = 'Lorem ipsum';
 
@@ -192,14 +198,34 @@ class CbIOHelperTest extends CbAbstractTests
     }
 
     /**
+     * Test loadFile function for nonexisting file.
+     *
+     * @return void
+     */
+    public function test__loadFileWithNonexistantFile()
+    {
+        $sourceFile = PHPCB_TEST_OUTPUT . '/idontexist';
+        if (file_exists($sourceFile)) {
+            unlink(PHPCB_TEST_OUTPUT . '/idontexist');
+        }
+        try {
+            $this->_ioHelper->loadFile($sourceFile);
+            $this->fail();
+        } catch (Exception $e) {
+            // expected
+        }
+    }
+
+
+    /**
      * Test copyFile function for nonexisting source file
      *
      * @return void
      */
     public function test__copyFileNonexisting()
     {
-        $file = $this->_testDir . '/tmpfile';
-        $dstDir = $this->_testDir . '/tmpdir';
+        $file = PHPCB_TEST_OUTPUT . '/tmpfile';
+        $dstDir = PHPCB_TEST_OUTPUT . '/tmpdir';
 
         if (file_exists($file)) {
             unlink($file);
@@ -211,5 +237,18 @@ class CbIOHelperTest extends CbAbstractTests
             return;
         }
         $this->fail('Expected exception was not thrown.');
+    }
+
+    /**
+     * Test getCommonPathPrefix with empty filelist.
+     *
+     * @return void
+     */
+    public function test__getCommonPathPrefixForNoFiles()
+    {
+        $this->assertEquals(
+            '/',
+            $this->_ioHelper->getCommonPathPrefix(array())
+        );
     }
 }
