@@ -147,9 +147,12 @@ class CbErrorCPD extends CbPluginsAbstract
 
     /**
      * Make sure this is never called.
+     * @codeCoverageIgnoreStart
+     * This cannot be called because of other overridden methods in this class.
      */
     protected function _getDescription(DOMElement $element)
     {
         throw new Exception('ErrorCPD does not support getDescription()!');
     }
+    //@codeCoverageIgnoreEnd
 }
