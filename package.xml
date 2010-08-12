@@ -300,7 +300,7 @@
     <filelist>
       <install as="PHP_CodeBrowser/Helper/IOHelper.php"         name="src/Helper/IOHelper.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCPD.php"        name="src/Plugins/ErrorCPD.php" />
-      <install as="PHP_CodeBrowser/Plugins/ErrorCheckstyle.php" name="src/Plugins/ErrorCRAP.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorCRAP.php" name="src/Plugins/ErrorCRAP.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCheckstyle.php" name="src/Plugins/ErrorCheckstyle.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCoverage.php"   name="src/Plugins/ErrorCoverage.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php"        name="src/Plugins/ErrorPMD.php" />
@@ -322,7 +322,7 @@
     <filelist>
       <install as="PHP_CodeBrowser/Helper/IOHelper.php"         name="src/Helper/IOHelper.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCPD.php"        name="src/Plugins/ErrorCPD.php" />
-      <install as="PHP_CodeBrowser/Plugins/ErrorCheckstyle.php" name="src/Plugins/ErrorCRAP.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorCRAP.php" name="src/Plugins/ErrorCRAP.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCheckstyle.php" name="src/Plugins/ErrorCheckstyle.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCoverage.php"   name="src/Plugins/ErrorCoverage.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php"        name="src/Plugins/ErrorPMD.php" />
