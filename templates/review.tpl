@@ -27,7 +27,7 @@
         <hr/>
         <div id="review">
             <div class="filepath">
-                <?php echo $filepath; ?>
+                <?php echo str_replace('\\', '/', $filepath); ?>
             </div>
 
             <?php echo $source; ?>

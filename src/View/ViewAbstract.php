@@ -214,7 +214,7 @@ class CbViewAbstract
                 $curDir = $dir;
             }
 
-            $shortName = substr($name, $preLen);
+            $shortName = substr(str_replace('\\', '/', $name), $preLen);
             $fileName  = basename($name);
             $count = '';
             if ($file->getErrorCount() != 0 || $file->getWarningCount() != 0) {

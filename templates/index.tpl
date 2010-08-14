@@ -71,6 +71,7 @@ foreach ($fileList as $filename => $f) {
     $tag = $oddrow ? 'odd' : 'even';
     $oddrow = !$oddrow;
     $shortName = substr($filename, $preLen);
+    $shortName = str_replace('\\', '/', $shortName);
     $errors = $f->getErrorCount();
     $warnings = $f->getWarningCount();
 

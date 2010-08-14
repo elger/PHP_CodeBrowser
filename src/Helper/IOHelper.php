@@ -152,7 +152,7 @@ class CbIOHelper
         if (DIRECTORY_SEPARATOR == substr($target, - 1, 1)) {
             $target = substr($target, 0, -1);
         }
-        $dirs = explode('/', $target);
+        $dirs = explode(DIRECTORY_SEPARATOR, $target);
         $path = '';
         foreach ($dirs as $folder) {
             if (!is_dir($path = $path . $folder . DIRECTORY_SEPARATOR)) {
