@@ -261,7 +261,8 @@ class CbIOHelper
         if (strpos($path, $currentPrefix . DIRECTORY_SEPARATOR) === 0
                 || $currentPrefix == '/'
                 || $currentPrefix == ''
-                || $currentPrefix == '.') {
+                || $currentPrefix == '.'
+                || preg_match('/^[A-Z]\:\\\\\$/', $currentPrefix) === 1) {
             return $currentPrefix;
         }
         return self::_getCommonPathPrefix(dirname($currentPrefix), $path);
