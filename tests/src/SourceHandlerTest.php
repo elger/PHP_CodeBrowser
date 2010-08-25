@@ -256,7 +256,7 @@ HERE
      */
     public function test__getCommonPathPrefix()
     {
-        $expected = '/a';
+        $expected = '/a/';
         $actual   = $this->_cbSourceHandler->getCommonPathPrefix();
         $this->assertEquals($expected, $actual);
     }

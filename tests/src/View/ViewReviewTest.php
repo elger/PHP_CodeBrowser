@@ -111,7 +111,7 @@ class CbViewReviewTest extends CbAbstractTests
         $this->_cbViewReview->generate(
             array(),
             __FILE__,
-            dirname(__FILE__)
+            dirname(__FILE__) . DIRECTORY_SEPARATOR
         );
     }
 
@@ -146,7 +146,7 @@ class CbViewReviewTest extends CbAbstractTests
         $this->_cbViewReview->generate(
             $issueList,
             __FILE__,
-            dirname(__FILE__)
+            dirname(__FILE__) . DIRECTORY_SEPARATOR
         );
     }
 
@@ -189,7 +189,7 @@ class CbViewReviewTest extends CbAbstractTests
         $this->_cbViewReview->generate(
             $issueList,
             __FILE__,
-            dirname(__FILE__)
+            dirname(__FILE__) . DIRECTORY_SEPARATOR
         );
     }
 
@@ -214,8 +214,8 @@ class CbViewReviewTest extends CbAbstractTests
     </body>
 </html>
 EOT;
-        $prefix = '/dir';
-        $fileName = $prefix . '/file.html';
+        $prefix = '/dir/';
+        $fileName = $prefix . 'file.html';
 
         $expectedFile = PHPCB_TEST_OUTPUT . '/file.html.html';
         $this->_ioMock->expects($this->once())
@@ -266,7 +266,7 @@ EOT;
         $this->_cbViewReview->generate(
             $issueList,
             self::$_cbXMLBasic,
-            dirname(self::$_cbXMLBasic)
+            dirname(self::$_cbXMLBasic) . DIRECTORY_SEPARATOR
         );
     }
 
