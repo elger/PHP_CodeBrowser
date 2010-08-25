@@ -114,6 +114,7 @@ class CbViewAbstract
             throw new Exception("Specified output directory '$outputDir'"
                                 . 'does not exist');
         }
+        $this->_outputDir .= DIRECTORY_SEPARATOR;
 
         $this->_ioHelper = $ioHelper;
     }
@@ -182,8 +183,7 @@ class CbViewAbstract
          * This is important so that $curDir doesn't become empty if we go
          * up to the root directory ('/' on linux)
          */
-        $curDir = CbIOHelper::getCommonPathPrefix(array_keys($fileList))
-            . DIRECTORY_SEPARATOR;
+        $curDir = CbIOHelper::getCommonPathPrefix(array_keys($fileList));
         $preLen = strlen($curDir);
 
         $ret = '<ul>';
@@ -214,7 +214,8 @@ class CbViewAbstract
                 $curDir = $dir;
             }
 
-            $shortName = substr(str_replace('\\', '/', $name), $preLen);
+            $name = str_replace('\\', '/', $name);
+            $shortName = substr($name, $preLen);
             $fileName  = basename($name);
             $count = '';
             if ($file->getErrorCount() != 0 || $file->getWarningCount() != 0) {

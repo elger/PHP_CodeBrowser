@@ -247,6 +247,10 @@ class CbIOHelper
         foreach ($filenames as $filename) {
             $prefix = self::_getCommonPathPrefix($prefix, $filename);
         }
+
+        if (substr($prefix, -1, 1) !== DIRECTORY_SEPARATOR) {
+            $prefix .= DIRECTORY_SEPARATOR;
+        }
         return $prefix;
     }
 

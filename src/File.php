@@ -213,7 +213,7 @@ class CbFile
         $second = $second->name();
 
         $prefix = CbIOHelper::getCommonPathPrefix(array($first, $second));
-        $prelen = strlen($prefix) + 1;
+        $prelen = strlen($prefix);
 
         $first = substr($first, $prelen);
         $second = substr($second, $prelen);

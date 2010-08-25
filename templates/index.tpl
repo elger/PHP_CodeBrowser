@@ -37,7 +37,7 @@
                 <table border="0" cellspacing="2" cellpadding="3">
 <?php
 $oddrow = true;
-$preLen = strlen(CbIOHelper::getCommonPathPrefix(array_keys($fileList))) + 1;
+$preLen = strlen(CbIOHelper::getCommonPathPrefix(array_keys($fileList)));
 
 // Find out which types of errors have been found
 $occuringErrorTypes = array (
@@ -82,7 +82,7 @@ foreach ($fileList as $filename => $f) {
     }
 
     echo "<tr class='$tag'>";
-    echo "<td><a class='fileLink' href='$shortName.html'>$shortName</a></td>";
+    echo "<td><a class='fileLink' href='./$shortName.html'>$shortName</a></td>";
     echo "<td align='center'><span class='errorCount'>$errors</span></td>";
     echo "<td align='center'><span class='warningCount'>$warnings</span></td>";
 
