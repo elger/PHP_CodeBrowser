@@ -209,9 +209,26 @@ class CbViewAbstract
                 $relDirs = explode(DIRECTORY_SEPARATOR, $relDir);
 
                 foreach ($relDirs as $dirName) {
-                    $ret .= "<li><a class='treeDir'>$dirName</a><ul>";
+                    $curDir .= $dirName . DIRECTORY_SEPARATOR;
+                    // Check how many errors/warnings are in this dir.
+                    //TODO: Optimize this. Counts get recalculated for subdirs.
+                    $errors   = 0;
+                    $warnings = 0;
+                    foreach (array_keys($fileList) as $fName) {
+                        if (strncmp($fName, $curDir, strlen($curDir)) === 0) {
+                            $errors   += $fileList[$fName]->getErrorCount();
+                            $warnings += $fileList[$fName]->getWarningCount();
+                        }
+                    }
+                    $count = '';
+                    if ($errors != 0 || $warnings != 0) {
+                        $count .= '(<span class="errorCount">';
+                        $count .= $errors;
+                        $count .= '</span>|<span class="warningCount">';
+                        $count .= $warnings . '</span>)';
+                    }
+                    $ret .= "<li><a class='treeDir'>$dirName $count</a><ul>";
                 }
-                $curDir = $dir;
             }
 
             $name = str_replace('\\', '/', $name);
