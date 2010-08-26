@@ -66,6 +66,7 @@ if (strpos('@php_dir@', '@php_dir') === false) {
 require_once dirname(__FILE__) . '/Util/Autoloader.php';
 require_once 'Console/CommandLine.php';
 require_once 'File/Iterator/Factory.php';
+require_once 'Log.php';
 
 /**
  * CbCLIController
@@ -133,6 +134,13 @@ class CbCLIController
     private $_ioHelper;
 
     /**
+     * Pear Log object where debug output should go to.
+     *
+     * @var Log
+     */
+    private $_debugLog;
+
+    /**
      * The constructor
      *
      * Standard setters are initialized
@@ -151,7 +159,7 @@ class CbCLIController
      */
     public function __construct($logPath,       Array $projectSource,
                                 $htmlOutputDir, Array $excludeExpressions,
-                                Array $excludePatterns, $ioHelper)
+                                Array $excludePatterns, $ioHelper, $debugLog)
     {
         $this->_logDir             = $logPath;
         $this->_projectSource      = $projectSource;
@@ -159,6 +167,7 @@ class CbCLIController
         $this->_excludeExpressions = $excludeExpressions;
         $this->_excludePatterns    = $excludePatterns;
         $this->_ioHelper           = $ioHelper;
+        $this->_debugLog        = $debugLog;
     }
 
     /**
@@ -206,7 +215,7 @@ class CbCLIController
             $this->_ioHelper
         );
 
-        $sourceHandler = new CbSourceHandler();
+        $sourceHandler = new CbSourceHandler($this->_debugLog);
 
         if (isset($this->_logDir)) {
             $cbIssueXml    = new CbIssueXml();
@@ -298,7 +307,10 @@ class CbCLIController
             $opts['output'],
             isset($opts['excludePCRE']) ? $opts['excludePCRE'] : array(),
             isset($opts['excludePattern']) ? $opts['excludePattern'] : array(),
-            new CbIOHelper()
+            new CbIOHelper(),
+            $opts['debugExcludes']
+                ? Log::factory('console', '', 'PHPCB')
+                : Log::factory('null')
         );
 
         $controller->addErrorPlugins(
@@ -441,6 +453,16 @@ HERE
                 'short_name'  => '-E',
                 'long_name'   => '--excludePCRE',
                 'action'      => 'StoreArray'
+            )
+        );
+
+        $parser->addOption(
+            'debugExcludes',
+            array(
+                'description' => 'Print which files are excluded by which '
+                                    . 'expressions and patterns.',
+                'long_name'   => '--debugExcludes',
+                'action'      => 'StoreTrue'
             )
         );
 
