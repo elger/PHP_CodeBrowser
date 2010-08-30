@@ -266,7 +266,7 @@ class CbIOHelper
                 || $currentPrefix == '/'
                 || $currentPrefix == ''
                 || $currentPrefix == '.'
-                || preg_match('/^[A-Z]\:\\\\\$/', $currentPrefix) === 1) {
+                || preg_match('/^[A-Z]\:\\\\$/', $currentPrefix) === 1) {
             return $currentPrefix;
         }
         return self::_getCommonPathPrefix(dirname($currentPrefix), $path);
