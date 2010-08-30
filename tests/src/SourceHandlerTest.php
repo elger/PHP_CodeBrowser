@@ -134,7 +134,7 @@ HERE
     protected function setUp()
     {
         parent::setUp();
-        $this->_cbSourceHandler = new CbSourceHandler();
+        $this->_cbSourceHandler = new CbSourceHandler(Log::singleton('null'));
         array_walk(
             $this->_plugins,
             array($this->_cbSourceHandler, 'addPlugin')
@@ -148,7 +148,10 @@ HERE
      */
     public function test__construct()
     {
-        $sourceHandler = new CbSourceHandler($this->_plugins);
+        $sourceHandler = new CbSourceHandler(
+            Log::singleton('null'),
+            $this->_plugins
+        );
         $this->assertEquals($this->_cbSourceHandler, $sourceHandler);
     }
 

@@ -76,7 +76,8 @@ class CLIControllerTest extends CbAbstractTests
       PHPCB_TEST_OUTPUT,
       array(),
       array(),
-      new CbIOHelper()
+      new CbIOHelper(),
+      Log::singleton('null')
     );
 
     $controller->addErrorPlugins(
