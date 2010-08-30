@@ -28,7 +28,7 @@
                 <div id="treeHeader">
                     <a href="index.html" class='fileLink'>CodeBrowser</a>
                 </div>
-                <?php echo $treeList; ?>
+<?php echo $treeList; ?>
             </div>
             <div id="treeToggle" style="background-image: url('img/treeToggle-extended.png');"></div>
         </div>
@@ -56,15 +56,18 @@ foreach ($fileList as $file) foreach ($file->getIssues() as $issue) {
 $occuringErrorTypes = array_keys(array_filter($occuringErrorTypes));
 
 // Print the tables head
-echo '<tr class="head">';
-echo '<th><strong>File</strong></td>';
-echo '<th width="50px" align="center"><strong>Errors</strong></td>';
-echo '<th width="50px" align="center"><strong>Warnings</strong></td>';
+echo '                    <tr class="head">';
+echo '                        <th><strong>File</strong></th>' . PHP_EOL;
+echo '                        <th width="50px" align="center"><strong>Errors'
+    . '</strong></th>' . PHP_EOL;
+echo '                        <th width="50px" align="center"><strong>Warnings'
+    . '</strong></th>' . PHP_EOL;
 
 foreach ($occuringErrorTypes as $errorType) {
-    echo "<th width='70px' align='center'><strong>$errorType</strong></td>";
+    echo "                        <th width='70px' align='center'><strong>"
+        . "$errorType</strong></th>" . PHP_EOL;
 }
-echo '</tr>';
+echo '                    </tr>' . PHP_EOL;
 
 // Print the file table
 foreach ($fileList as $filename => $f) {
@@ -81,19 +84,22 @@ foreach ($fileList as $filename => $f) {
         $counts[$issue->foundBy] += 1;
     }
 
-    echo "<tr class='$tag'>";
-    echo "<td><a class='fileLink' href='./$shortName.html'>$shortName</a></td>";
-    echo "<td align='center'><span class='errorCount'>$errors</span></td>";
-    echo "<td align='center'><span class='warningCount'>$warnings</span></td>";
+    echo "                    <tr class='$tag'>" . PHP_EOL;
+    echo "                        <td><a class='fileLink' "
+        . "href='./$shortName.html'>$shortName</a></td>" . PHP_EOL;
+    echo "                        <td align='center'><span class='errorCount'>"
+        . "$errors</span></td>" . PHP_EOL;
+    echo "                        <td align='center'>"
+        . "<span class='warningCount'>$warnings</span></td>" . PHP_EOL;
 
     foreach ($counts as $count) {
-        echo "<td align='center'>$count</td>";
+        echo "                        <td align='center'>$count</td>" . PHP_EOL;
     }
-    echo "</tr>";
+    echo "                    </tr>" . PHP_EOL;
 }
 ?>
                 </table>
-            </div
+            </div>
         </div>
     </body>
 </html>

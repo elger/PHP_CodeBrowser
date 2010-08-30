@@ -59,17 +59,15 @@
 
                         <tr class="<?php print $issue->foundBy; ?>">
                             <td align="center">
-                                <a href="#line_<?php print $issue->lineStart;?>" onClick="switchLine('line_<?php print $issue->lineStart;?>')">
+                                <a href="#line_<?php print $issue->lineStart;?>" onclick="switchLine('line_<?php print $issue->lineStart;?>')">
                                 <?php print $issue->lineStart; ?></a>
                             </td>
                             <td align="center">
-                                <a href="#line_<?php print $issue->lineEnd;?>" onClick="switchLine('line_<?php print $issue->lineStart;?>')"
-                                    onclick="new Effect.Highlight('line_<?php print $issue->lineStart."-".$issue->lineEnd; ?>', {duration: 1.5}); return false">
+                                <a href="#line_<?php print $issue->lineEnd;?>" onclick="switchLine('line_<?php print $issue->lineStart;?>'); new Effect.Highlight('line_<?php print $issue->lineStart."-".$issue->lineEnd; ?>', {duration: 1.5}); return false">
                                 <?php print $issue->lineEnd;?></a>
                             </td>
                             <td>
-                                <a href="#line_<?php print $issue->lineStart; ?>" onClick="switchLine('line_<?php print $issue->lineStart;?>')"
-                                    onclick="new Effect.Highlight('line_<?php print $issue->lineStart."-".$issue->lineEnd; ?>', {duration: 1.5}); return false">
+                                <a href="#line_<?php print $issue->lineStart; ?>" onclick="switchLine('line_<?php print $issue->lineStart;?>'); new Effect.Highlight('line_<?php print $issue->lineStart."-".$issue->lineEnd; ?>', {duration: 1.5}); return false">
                                 <?php print (string)$issue->description;?></a>
                             </td>
                             <td>
@@ -83,7 +81,7 @@
                     </tbody>
                 </table>
             </div>
-            <script language="javascript">
+            <script type="text/javascript" language="javascript">
                 $(initReview);
             </script>
             <?php endif; // div sidebar ?>

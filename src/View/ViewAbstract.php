@@ -186,7 +186,9 @@ class CbViewAbstract
         $curDir = CbIOHelper::getCommonPathPrefix(array_keys($fileList));
         $preLen = strlen($curDir);
 
-        $ret = '<ul>';
+        $indentStep = 4;
+        $indent     = $indentStep;
+        $ret        = '<ul>' . PHP_EOL;
         foreach ($fileList as $name => $file) {
             $dir = dirname($name) . DIRECTORY_SEPARATOR;
 
@@ -199,7 +201,11 @@ class CbViewAbstract
                     strrpos($curDir, DIRECTORY_SEPARATOR, -2) + 1
                     //strrpos($curDir, DIRECTORY_SEPARATOR)
                 );
-                $ret .= '</ul></li>';
+                $ret    .= str_pad(' ', $indent);
+                $ret    .= '</ul>' . PHP_EOL;
+                $indent -= $indentStep;
+                $ret    .= str_pad(' ', $indent);
+                $ret    .= '</li>' . PHP_EOL;
             }
 
             if ($dir !== $curDir) {
@@ -227,7 +233,12 @@ class CbViewAbstract
                         $count .= '</span>|<span class="warningCount">';
                         $count .= $warnings . '</span>)';
                     }
-                    $ret .= "<li><a class='treeDir'>$dirName $count</a><ul>";
+                    $ret    .= str_pad(' ', $indent);
+                    $ret    .= "<li><a class='treeDir'>$dirName $count</a>"
+                        . PHP_EOL;
+                    $indent += $indentStep;
+                    $ret    .= str_pad(' ', $indent);
+                    $ret    .= '<ul>' . PHP_EOL;
                 }
             }
 
@@ -243,12 +254,22 @@ class CbViewAbstract
                 $count .= '</span>)';
             }
 
-            $ret .= '<li class="php" ><a class="fileLink" href="';
+            $ret .= str_pad(' ', $indent);
+            $ret .= '<li class="php"><a class="fileLink" href="';
             $ret .= $hrefPrefix . $shortName . '.html">';
-            $ret .= "$fileName $count</a></li>";
+            $ret .= "$fileName $count</a></li>" . PHP_EOL;
         }
 
-        $ret .= '</ul>';
+        while ($indent > $indentStep) {
+            $indent -= $indentStep;
+            $ret    .= str_pad(' ', $indent);
+            $ret    .= '</ul>' . PHP_EOL;
+            $indent -= $indentStep;
+            $ret    .= str_pad(' ', $indent);
+            $ret    .= '</li>' . PHP_EOL;
+        }
+
+        $ret .= '</ul>' . PHP_EOL;
         return $ret;
     }
 
