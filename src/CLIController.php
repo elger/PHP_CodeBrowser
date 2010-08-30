@@ -167,7 +167,7 @@ class CbCLIController
         $this->_excludeExpressions = $excludeExpressions;
         $this->_excludePatterns    = $excludePatterns;
         $this->_ioHelper           = $ioHelper;
-        $this->_debugLog        = $debugLog;
+        $this->_debugLog           = $debugLog;
     }
 
     /**

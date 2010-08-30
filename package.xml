@@ -251,6 +251,11 @@
         <channel>pear.phpunit.de</channel>
         <min>1.2.1</min>
       </package>
+      <package>
+        <name>Log</name>
+        <channel>pear.php.net</channel>
+        <min>1.12.1</min>
+      </package>
       <extension>
         <name>dom</name>
       </extension>
