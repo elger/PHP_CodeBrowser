@@ -1,3 +1,11 @@
+PHP_CodeBrowser 0.9.1
+---------------------
+
+* Fixed various Windows-related issues.
+* Added error/warning count to the file tree.
+* Added a commandline switch to debug exclude options.
+* Made XHTML output W3C-compliant.
+
 PHP_CodeBrowser 0.9.0
 ---------------------
 

@@ -30,10 +30,10 @@
     <active>yes</active>
   </developer>
 
-  <date>2010-08-12</date>
+  <date>2010-09-02</date>
 
   <version>
-    <release>0.9.0</release>
+    <release>0.9.1</release>
     <api>1.0.0</api>
   </version>
 
@@ -442,6 +442,24 @@
       - Now using jQuery as JavaScript framework
       - Added --exclude and --excludePCRE option
       - Allowed multiple --source options
+      </notes>
+    </release>
+    <release>
+      <version>
+        <release>0.9.1</release>
+        <api>1.0.0</api>
+      </version>
+      <stability>
+        <release>beta</release>
+        <api>beta</api>
+      </stability>
+      <date>2010-09-02</date>
+      <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
+      <notes>
+      - Fixed various Windows-related issues.
+      - Added error/warning count to the file tree.
+      - Added a commandline switch to debug exclude options.
+      - Made XHTML output W3C-compliant.
       </notes>
     </release>
   </changelog>
