@@ -369,9 +369,10 @@ class CbViewReview extends CbViewAbstract
             return $doc;
         } else {
             $sourceCode = preg_replace(
-                '/.*/', '<li>$0</li>',
+                '/.+/', '<li>$0</li>',
                 htmlentities($sourceCode)
             );
+            $sourceCode = preg_replace('/ /', '&nbsp;', $sourceCode);
             $sourceCode = '<div class="code"><ol class="code">'
                         . $sourceCode.'</ol></div>';
 
