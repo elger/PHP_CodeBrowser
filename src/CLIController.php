@@ -300,13 +300,27 @@ class CbCLIController
             exit(1);
         }
 
+        // Convert the --ignore arguments to patterns
+        if (array_key_exists('ignore', $opts)) {
+            $dirSep = preg_quote(DIRECTORY_SEPARATOR, '/');
+            foreach (explode(',', $opts['ignore']) as $ignore) {
+                $ig = realpath($ignore);
+                if (!$ignore) {
+                    error_log("[Warning] $ignore does not exists");
+                } else {
+                    $ig = preg_quote($ig, '/');
+                    $opts['excludePCRE'][] = "/^$ig($dirSep|$)/";
+                }
+            }
+        }
+
         // init new CLIController
         $controller = new CbCLIController(
             $opts['log'],
-            isset($opts['source']) ? $opts['source'] : array(),
+            $opts['source'] ? $opts['source'] : array(),
             $opts['output'],
-            isset($opts['excludePCRE']) ? $opts['excludePCRE'] : array(),
-            isset($opts['excludePattern']) ? $opts['excludePattern'] : array(),
+            $opts['excludePCRE'] ? $opts['excludePCRE'] : array(),
+            $opts['excludePattern'] ? $opts['excludePattern'] : array(),
             new CbIOHelper(),
             $opts['debugExcludes']
                 ? Log::factory('console', '', 'PHPCB')
@@ -427,6 +441,17 @@ HERE
                 'short_name'  => '-s',
                 'long_name'   => '--source',
                 'action'      => 'StoreArray'
+            )
+        );
+
+        $parser->addOption(
+            'ignore',
+            array(
+                'description' => 'Comma separated string of files or '
+                                    . 'directories that will be ignored during'
+                                    . 'the parsing process.',
+                'short_name'  => '-i',
+                'long_name'   => '--ignore',
             )
         );
 
