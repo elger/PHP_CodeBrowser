@@ -301,11 +301,11 @@ class CbCLIController
         }
 
         // Convert the --ignore arguments to patterns
-        if (array_key_exists('ignore', $opts)) {
+        if (null !== $opts['ignore']) {
             $dirSep = preg_quote(DIRECTORY_SEPARATOR, '/');
             foreach (explode(',', $opts['ignore']) as $ignore) {
                 $ig = realpath($ignore);
-                if (!$ignore) {
+                if (!$ig) {
                     error_log("[Warning] $ignore does not exists");
                 } else {
                     $ig = preg_quote($ig, '/');
