@@ -30,16 +30,16 @@
     <active>yes</active>
   </developer>
 
-  <date>2010-09-02</date>
+  <date>2010-12-13</date>
 
   <version>
-    <release>0.9.1</release>
+    <release>1.0.0</release>
     <api>1.0.0</api>
   </version>
 
   <stability>
-    <release>beta</release>
-    <api>beta</api>
+    <release>stable</release>
+    <api>stable</api>
   </stability>
 
   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
@@ -460,6 +460,23 @@
       - Added error/warning count to the file tree.
       - Added a commandline switch to debug exclude options.
       - Made XHTML output W3C-compliant.
+      </notes>
+    </release>
+    <release>
+      <version>
+        <release>1.0.0</release>
+        <api>1.0.0</api>
+      </version>
+      <stability>
+        <release>stable</release>
+        <api>stable</api>
+      </stability>
+      <date>2010-12-13</date>
+      <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
+      <notes>
+      - Added --ignore option.
+      - Fixed a few bugs.
+      - Improved windows support.
       </notes>
     </release>
   </changelog>

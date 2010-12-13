@@ -1,3 +1,10 @@
+PHP_CodeBrowser 1.0
+-------------------
+
+* Added --ignore option.
+* Fixed a few bugs.
+* Improved windows support.
+
 PHP_CodeBrowser 0.9.1
 ---------------------
 

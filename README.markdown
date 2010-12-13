@@ -27,7 +27,6 @@
 
 ### Installation with PEAR Installer ###
 
-    $ pear config-set preferred_state beta
     $ pear channel-discover pear.phpunit.de
     $ pear install --alldeps phpunit/PHP_CodeBrowser
 
