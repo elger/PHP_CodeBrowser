@@ -328,16 +328,27 @@ class CbCLIController
                 : Log::factory('null')
         );
 
-        $controller->addErrorPlugins(
-            array(
-                'CbErrorCheckstyle',
-                'CbErrorPMD',
-                'CbErrorCPD',
-                'CbErrorPadawan',
-                'CbErrorCoverage',
-                'CbErrorCRAP'
-            )
+        $plugins = array(
+            'CbErrorCheckstyle',
+            'CbErrorPMD',
+            'CbErrorCPD',
+            'CbErrorPadawan',
+            'CbErrorCoverage',
+            'CbErrorCRAP'
         );
+        if ($opts['disablePlugin']) {
+            foreach ($opts['disablePlugin'] as $idx => $val) {
+                $opts['disablePlugin'][$idx] = strtolower($val);
+            }
+            foreach ($plugins as $pluginKey => $plugin) {
+                $name = substr($plugin, strlen('CbError'));
+                if (in_array(strtolower($name), $opts['disablePlugin'])) {
+                    // Remove it from the plugins list
+                    unset($plugins[$pluginKey]);
+                }
+            }
+        }
+        $controller->addErrorPlugins($plugins);
 
         try {
             $controller->run();
@@ -489,6 +500,15 @@ HERE
                                     . 'expressions and patterns.',
                 'long_name'   => '--debugExcludes',
                 'action'      => 'StoreTrue'
+            )
+        );
+
+        $parser->addOption(
+            'disablePlugin',
+            array(
+                'description' => 'Disable single Plugins. Can be one of ',
+                'long_name'   => '--disablePlugin',
+                'action'      => 'StoreArray'
             )
         );
 
