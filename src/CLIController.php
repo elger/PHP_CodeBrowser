@@ -168,6 +168,7 @@ class CbCLIController
         $this->_excludePatterns    = $excludePatterns;
         $this->_ioHelper           = $ioHelper;
         $this->_debugLog           = $debugLog;
+        $this->_registeredPlugins  = array();
     }
 
     /**
