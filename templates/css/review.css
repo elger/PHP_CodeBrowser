@@ -108,7 +108,7 @@
   width: 43px;
   height: 11px;
   position: absolute;
-  background-image: url(images/wait.gif);
+  background-image: url(../js/jquery.cluetip/images/wait.gif);
 }
 .cluetip-arrows {
   display: none;
