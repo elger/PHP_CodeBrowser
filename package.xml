@@ -11,11 +11,8 @@
 
   <channel>pear.phpunit.de</channel>
 
-  <summary>PHP_CodeBrowser for integration in Hudson and CruiseControl</summary>
-  <description>PHP_CodeBrowser generates a html view for code browsing with
-  higlighted and colored errors, parsed from xml reports generated from codesniffer or
-  phpunit.
-  </description>
+  <summary>A code browser that augments the code with information from various QA tools.</summary>
+  <description>A code browser that augments the code with information from various QA tools.</description>
 
   <lead>
     <name>Elger Thiele</name>
