@@ -15,7 +15,7 @@ $.History.bind(function (state) {
         });
     } else {
         // Go to specific review
-        $('#contentBox').empty().load(state + ' #review', initReview);
+        $('#contentBox').empty().load(encodeURI(state) + ' #review', initReview);
     }
 });
 
