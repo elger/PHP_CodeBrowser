@@ -77,7 +77,7 @@ Open `/path/to/defined/output/index.html`.
 
 ### Hudson ###
 
-Have a look at the [standard template for Hudson jobs for PHP projects](http://github.com/sebastianbergmann/php-hudson-template) to see how PHP_CodeBrowser can be used together with Hudson.
+Have a look at the [standard template for Jenkins jobs for PHP projects](https://github.com/sebastianbergmann/php-jenkins-template) to see how PHP_CodeBrowser can be used together with Jenkins.
 
 ## Contact Information ##
 
