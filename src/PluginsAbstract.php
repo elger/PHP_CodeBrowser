@@ -116,13 +116,22 @@ abstract class CbPluginsAbstract
     protected $_source;
 
     /**
+     * Plugin-specific options.
+     *
+     * @var array
+     */
+    protected $_options;
+
+    /**
      * Default Constructor
      *
      * @param CbIssueXml $issueXml The cc XML document.
+     * @param array      $options  Optional plugin-specific options.
      */
-    public function __construct(CbIssueXml $issueXml)
+    public function __construct(CbIssueXml $issueXml, $options = array())
     {
         $this->_issueXml = $issueXml;
+        $this->_options  = $options;
     }
 
     /**
