@@ -71,14 +71,14 @@ class CLIControllerTest extends CbAbstractTests
   public function test__main()
   {
     $controller = new CbCLIController(
-      null,
-      array(PHPCB_SOURCE),
-      PHPCB_TEST_OUTPUT,
-      array(),
-      array(),
-      array(),
-      new CbIOHelper(),
-      Log::singleton('null')
+        null,
+        array(PHPCB_SOURCE),
+        PHPCB_TEST_OUTPUT,
+        array(),
+        array(),
+        array(),
+        new CbIOHelper(),
+        Log::singleton('null')
     );
 
     $controller->addErrorPlugins(

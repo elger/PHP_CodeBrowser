@@ -165,7 +165,7 @@ class CbViewReviewTest extends CbAbstractTests
                 'finder',
                 'description',
                 'severe'
-                ),
+            ),
             new CbIssue(
                 __FILE__,
                 80,

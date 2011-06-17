@@ -192,8 +192,10 @@ class CbFileTest extends CbAbstractTests
         $this->_cbFile->addIssue($this->_issues[0]);
         $this->assertEquals(1, $this->_cbFile->getIssueCount());
 
-        $this->_cbFile = new CbFile('/some/file/name.php',
-                                    array($this->_issues[0]));
+        $this->_cbFile = new CbFile(
+            '/some/file/name.php',
+            array($this->_issues[0])
+        );
         $this->assertEquals(1, $this->_cbFile->getIssueCount());
 
         $this->_cbFile->addIssue($this->_issues[1]);
@@ -233,8 +235,10 @@ class CbFileTest extends CbAbstractTests
             '/some/file/name.php',
             array($this->_issues[0], $this->_issues[1])
         );
-        $otherFile = new CbFile('/some/file/name.php',
-                                array($this->_issues[2]));
+        $otherFile = new CbFile(
+            '/some/file/name.php',
+            array($this->_issues[2])
+        );
         $this->_cbFile->mergeWith($otherFile);
 
         $this->assertEquals(2, $this->_cbFile->getErrorCount());

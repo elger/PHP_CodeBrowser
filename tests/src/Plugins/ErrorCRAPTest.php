@@ -177,8 +177,8 @@ HERE;
         $xml->loadXML($this->_testXml);
         $issueXML->addXMLFile($xml);
         $this->_cbErrorCrap = new CbErrorCRAP(
-          $issueXML,
-          array('threshold' => 30)
+            $issueXML,
+            array('threshold' => 30)
         );
 
         $expected = array(
