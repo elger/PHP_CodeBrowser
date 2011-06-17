@@ -141,6 +141,16 @@ class CbCLIController
     private $_debugLog;
 
     /**
+     * Plugin-specific options. Formatted like
+     *  array(
+     *      'CbErrorCRAP' => array(
+     *          'threshold' => 2
+     *      )
+     *  )
+     */
+    private $_pluginOptions = array();
+
+    /**
      * The constructor
      *
      * Standard setters are initialized
@@ -152,6 +162,8 @@ class CbCLIController
      * @param Array  $excludeExpressions
      *                                 A list of PCREs. Files matching will not
      *                                 appear in the output.
+     * @param Array  $pluginOptions    Array of Arrays with plugin-specific
+     *                                 options
      * @param Array  $excludePatterns  A list of glob patterns. Files matching
      *                                 will not appear in the output.
      * @param CbIOHelper $ioHelper     The CbIOHelper object to be used for
@@ -159,13 +171,17 @@ class CbCLIController
      */
     public function __construct($logPath,       Array $projectSource,
                                 $htmlOutputDir, Array $excludeExpressions,
-                                Array $excludePatterns, $ioHelper, $debugLog)
+                                Array $excludePatterns, Array $pluginOptions,
+                                $ioHelper, $debugLog)
     {
         $this->_logDir             = $logPath;
         $this->_projectSource      = $projectSource;
         $this->_htmlOutputDir      = $htmlOutputDir;
         $this->_excludeExpressions = $excludeExpressions;
         $this->_excludePatterns    = $excludePatterns;
+        foreach ($pluginOptions as $plugin => $options) {
+            $this->_pluginOptions["CbError$plugin"] = $options;
+        }
         $this->_ioHelper           = $ioHelper;
         $this->_debugLog           = $debugLog;
         $this->_registeredPlugins  = array();
@@ -226,7 +242,15 @@ class CbCLIController
 
             // conversion of XML file cc to cb format
             foreach ($this->_registeredPlugins as $className) {
-                $sourceHandler->addPlugin(new $className($cbIssueXml));
+                if (array_key_exists($className, $this->_pluginOptions)) {
+                    $plugin = new $className(
+                        $cbIssueXml,
+                        $this->_pluginOptions[$className]
+                    );
+                } else {
+                    $plugin = new $className($cbIssueXml);
+                }
+                $sourceHandler->addPlugin($plugin);
             }
         }
 
@@ -322,6 +346,7 @@ class CbCLIController
             $opts['output'],
             $opts['excludePCRE'] ? $opts['excludePCRE'] : array(),
             $opts['excludePattern'] ? $opts['excludePattern'] : array(),
+            array(),
             new CbIOHelper(),
             $opts['debugExcludes']
                 ? Log::factory('console', '', 'PHPCB')
