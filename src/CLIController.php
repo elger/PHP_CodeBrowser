@@ -328,14 +328,8 @@ class CbCLIController
                 : Log::factory('null')
         );
 
-        $plugins = array(
-            'CbErrorCheckstyle',
-            'CbErrorPMD',
-            'CbErrorCPD',
-            'CbErrorPadawan',
-            'CbErrorCoverage',
-            'CbErrorCRAP'
-        );
+        $plugins = self::getAvailablePlugins();
+
         if ($opts['disablePlugin']) {
             foreach ($opts['disablePlugin'] as $idx => $val) {
                 $opts['disablePlugin'][$idx] = strtolower($val);
@@ -361,6 +355,25 @@ class CbCLIController
 HERE
             );
         }
+    }
+
+    /**
+     * Returns a list of available plugins.
+     *
+     * Currently hard-coded.
+     *
+     * @return array of string Classnames of error plugins
+     */
+    public static function getAvailablePlugins()
+    {
+        return array(
+            'CbErrorCheckstyle',
+            'CbErrorPMD',
+            'CbErrorCPD',
+            'CbErrorPadawan',
+            'CbErrorCoverage',
+            'CbErrorCRAP'
+        );
     }
 
     /**
@@ -503,10 +516,18 @@ HERE
             )
         );
 
+        $plugins = array_map(
+            function($class) {
+                return '"' . substr($class, strlen('CbError')) . '"';
+            },
+            self::getAvailablePlugins()
+        );
+
         $parser->addOption(
             'disablePlugin',
             array(
-                'description' => 'Disable single Plugins. Can be one of ',
+                'description' => 'Disable single Plugins. Can be one of '
+                                    . implode(', ', $plugins),
                 'long_name'   => '--disablePlugin',
                 'action'      => 'StoreArray'
             )
