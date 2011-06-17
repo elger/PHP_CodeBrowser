@@ -105,14 +105,16 @@ class CbViewAbstract
     {
         $this->_templateDir = realpath($templateDir);
         if (!$this->_templateDir) {
-            throw new Exception("Specified template directory '$templateDir'"
-                                . 'does not exist');
+            throw new Exception(
+                "Specified template directory '$templateDir' does not exist"
+            );
         }
 
         $this->_outputDir = realpath($outputDir);
         if (!$this->_outputDir) {
-            throw new Exception("Specified output directory '$outputDir'"
-                                . 'does not exist');
+            throw new Exception(
+                "Specified output directory '$outputDir' does not exist"
+            );
         }
         $this->_outputDir .= DIRECTORY_SEPARATOR;
 

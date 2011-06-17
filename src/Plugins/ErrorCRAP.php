@@ -116,12 +116,12 @@ class CbErrorCRAP extends CbPluginsAbstract
 
                 if ($crap > 30) {
                     $errorList[] = new CbIssue(
-                      $filename,
-                      $this->_getLineStart($child),
-                      $this->_getLineEnd($child),
-                      $this->_getSource($child),
-                      $crap,
-                      'Error'
+                        $filename,
+                        $this->_getLineStart($child),
+                        $this->_getLineEnd($child),
+                        $this->_getSource($child),
+                        $crap,
+                        'Error'
                     );
                 }
             }

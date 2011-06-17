@@ -336,31 +336,33 @@ class CbViewReview extends CbViewAbstract
             return $this->_highlightPhpCode($sourceCode);
         } else if (class_exists('Text_Highlighter', false)
         && isset($highlightMap[$extension])) {
-            $renderer = new Text_Highlighter_Renderer_Html(array(
-                'numbers' => HL_NUMBERS_LI,
-                'tabsize' => 4,
-                'class_map' => array(
-                    'comment'    => 'comment',
-                    'main'       => 'code',
-                    'table'      => 'table',
-                    'gutter'     => 'gutter',
-                    'brackets'   => 'brackets',
-                    'builtin'    => 'keyword',
-                    'code'       => 'code',
-                    'default'    => 'default',
-                    'identifier' => 'default',
-                    'inlinedoc'  => 'inlinedoc',
-                    'inlinetags' => 'inlinetags',
-                    'mlcomment'  => 'mlcomment',
-                    'number'     => 'number',
-                    'quotes'     => 'string',
-                    'reserved'   => 'keyword',
-                    'special'    => 'special',
-                    'string'     => 'string',
-                    'url'        => 'url',
-                    'var'        => 'var',
+            $renderer = new Text_Highlighter_Renderer_Html(
+                array(
+                    'numbers' => HL_NUMBERS_LI,
+                    'tabsize' => 4,
+                    'class_map' => array(
+                        'comment'    => 'comment',
+                        'main'       => 'code',
+                        'table'      => 'table',
+                        'gutter'     => 'gutter',
+                        'brackets'   => 'brackets',
+                        'builtin'    => 'keyword',
+                        'code'       => 'code',
+                        'default'    => 'default',
+                        'identifier' => 'default',
+                        'inlinedoc'  => 'inlinedoc',
+                        'inlinetags' => 'inlinetags',
+                        'mlcomment'  => 'mlcomment',
+                        'number'     => 'number',
+                        'quotes'     => 'string',
+                        'reserved'   => 'keyword',
+                        'special'    => 'special',
+                        'string'     => 'string',
+                        'url'        => 'url',
+                        'var'        => 'var',
+                    )
                 )
-            ));
+            );
             $highlighter = Text_Highlighter::factory($highlightMap[$extension]);
             $highlighter->setRenderer($renderer);
 

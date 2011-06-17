@@ -186,7 +186,9 @@ class CbSourceHandler
     {
         foreach (array_keys($this->_files) as $filename) {
             if (preg_match($expr, $filename)) {
-                $this->_debugLog->debug("Excluding $filename, it matches PCRE $expr");
+                $this->_debugLog->debug(
+                    "Excluding $filename, it matches PCRE $expr"
+                );
                 unset($this->_files[$filename]);
             }
         }
@@ -203,7 +205,9 @@ class CbSourceHandler
     {
         foreach (array_keys($this->_files) as $filename) {
             if (fnmatch($pattern, $filename)) {
-                $this->_debugLog->debug("Excluding $filename, it matches pattern $pattern");
+                $this->_debugLog->debug(
+                    "Excluding $filename, it matches pattern $pattern"
+                );
                 unset($this->_files[$filename]);
             }
         }
