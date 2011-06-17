@@ -346,11 +346,13 @@ class CbCLIController
             $opts['output'],
             $opts['excludePCRE'] ? $opts['excludePCRE'] : array(),
             $opts['excludePattern'] ? $opts['excludePattern'] : array(),
-            array(),
+            $opts['crapThreshold'] ? array('CRAP' => array(
+                                        'threshold' => $opts['crapThreshold'])
+                                     )
+                                   : array(),
             new CbIOHelper(),
-            $opts['debugExcludes']
-                ? Log::factory('console', '', 'PHPCB')
-                : Log::factory('null')
+            $opts['debugExcludes'] ? Log::factory('console', '', 'PHPCB')
+                                   : Log::factory('null')
         );
 
         $plugins = self::getAvailablePlugins();
@@ -563,6 +565,20 @@ HERE
                 'long_name'   => '--disablePlugin',
                 'action'      => 'StoreArray',
                 'help_name'   => '<plugin>'
+            )
+        );
+
+        $parser->addOption(
+            'crapThreshold',
+            array(
+                'description' => 'The minimum value for CRAP errors to be '
+                                    . 'recognized. Defaults to 0. Regardless '
+                                    . 'of this setting, values below 30 will '
+                                    . 'be considered notices, those above '
+                                    . 'warnings.',
+                'long_name'   => '--crapThreshold',
+                'action'      => 'StoreInt',
+                'help_name'   => '<threshold>'
             )
         );
 
