@@ -114,14 +114,15 @@ class CbErrorCRAP extends CbPluginsAbstract
                     continue;
                 }
 
-                if ($crap > 30) {
+                if (!array_key_exists('threshold', $this->_options)
+                        || $crap > $this->_options['threshold']) {
                     $errorList[] = new CbIssue(
                         $filename,
                         $this->_getLineStart($child),
                         $this->_getLineEnd($child),
                         $this->_getSource($child),
                         $crap,
-                        'Error'
+                        $crap >= 30 ? 'Error' : 'Notice'
                     );
                 }
             }

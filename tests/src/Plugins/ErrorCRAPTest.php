@@ -165,4 +165,43 @@ HERE;
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * Test getFilelist with limit set
+     *
+     * @return  void
+     */
+    public function test__getFilelistWithLimit()
+    {
+        $issueXML = new CbIssueXML();
+        $xml = new DOMDocument('1.0', 'UTF-8');
+        $xml->loadXML($this->_testXml);
+        $issueXML->addXMLFile($xml);
+        $this->_cbErrorCrap = new CbErrorCRAP(
+          $issueXML,
+          array('threshold' => 30)
+        );
+
+        $expected = array(
+            new CbFile(
+                '/test/file',
+                array(
+                    new CbIssue(
+                        '/test/file',
+                        162,
+                        162,
+                        'CRAP',
+                        '100',
+                        'Error'
+                    )
+                )
+            ),
+            new CbFile(
+                '/has/no/crap',
+                array()
+            )
+        );
+        $actual = $this->_cbErrorCrap->getFilelist();
+        $this->assertEquals($expected, $actual);
+    }
+
 }
