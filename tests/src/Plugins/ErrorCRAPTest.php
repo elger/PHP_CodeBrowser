@@ -46,6 +46,7 @@
  */
 
 require_once realpath(dirname(__FILE__) . '/../../AbstractTests.php');
+require_once realpath(dirname(__FILE__) . '/../../../src/IssueXml.php');
 
 /**
  * CbErrorCRAPTest
