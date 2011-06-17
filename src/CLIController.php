@@ -440,7 +440,8 @@ HERE
                                     . ' from PHPUnit. Either this or --source '
                                     . 'must be given',
                 'short_name'  => '-l',
-                'long_name'   => '--log'
+                'long_name'   => '--log',
+                'help_name'   => '<directory>'
             )
         );
 
@@ -450,7 +451,8 @@ HERE
                 'description' => 'Path to the output folder where generated '
                                     . 'files should be stored.',
                 'short_name'  => '-o',
-                'long_name'   => '--output'
+                'long_name'   => '--output',
+                'help_name'   => '<directory>'
             )
         );
 
@@ -465,7 +467,8 @@ HERE
                                     . 'multiple times',
                 'short_name'  => '-s',
                 'long_name'   => '--source',
-                'action'      => 'StoreArray'
+                'action'      => 'StoreArray',
+                'help_name'   => '<dir|file>'
             )
         );
 
@@ -477,6 +480,7 @@ HERE
                                     . 'the parsing process.',
                 'short_name'  => '-i',
                 'long_name'   => '--ignore',
+                'help_name'   => '<files>'
             )
         );
 
@@ -491,7 +495,8 @@ HERE
                                     . 'absolute filenames.',
                 'short_name'  => '-e',
                 'long_name'   => '--exclude',
-                'action'      => 'StoreArray'
+                'action'      => 'StoreArray',
+                'help_name'   => '<pattern>'
             )
         );
 
@@ -502,7 +507,8 @@ HERE
                                     . 'glob patterns.',
                 'short_name'  => '-E',
                 'long_name'   => '--excludePCRE',
-                'action'      => 'StoreArray'
+                'action'      => 'StoreArray',
+                'help_name'   => '<expression>'
             )
         );
 
@@ -528,8 +534,10 @@ HERE
             array(
                 'description' => 'Disable single Plugins. Can be one of '
                                     . implode(', ', $plugins),
+                'choices'     => $plugins,
                 'long_name'   => '--disablePlugin',
-                'action'      => 'StoreArray'
+                'action'      => 'StoreArray',
+                'help_name'   => '<plugin>'
             )
         );
 
