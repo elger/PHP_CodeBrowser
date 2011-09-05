@@ -61,7 +61,7 @@ if (!defined('PHPCB_TEST_OUTPUT')) {
     define('PHPCB_TEST_OUTPUT', PHPCB_TEST_DIR . '/output');
 }
 
-require_once PHPCB_SOURCE . '/Util/Autoloader.php';
+require_once PHPCB_SOURCE . '/Autoload.php';
 require_once 'PHPUnit/Util/Filter.php';
 
 if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToWhitelist')) {
@@ -70,5 +70,3 @@ if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToWhitelist')) {
     PHP_CodeCoverage_Filter::getInstance()
         ->addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
 }
-
-spl_autoload_register(array(new CbAutoloader(), 'autoload'));

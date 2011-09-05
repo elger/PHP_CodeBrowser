@@ -63,9 +63,9 @@ if (strpos('@php_dir@', '@php_dir') === false) {
     }
 }
 
-require_once dirname(__FILE__) . '/Util/Autoloader.php';
+require_once dirname(__FILE__) . '/Autoload.php';
 require_once 'Console/CommandLine.php';
-require_once 'File/Iterator/Factory.php';
+require_once 'File/Iterator/Autoload.php';
 require_once 'Log.php';
 
 /**
@@ -310,9 +310,6 @@ class CbCLIController
      */
     public static function main()
     {
-        // register autoloader
-        spl_autoload_register(array(new CbAutoloader(), 'autoload'));
-
         $parser = self::createCommandLineParser();
 
         try {

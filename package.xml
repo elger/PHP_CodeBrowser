@@ -70,11 +70,6 @@
             <tasks:replace from="@package_version@" to="version" type="package-info" />
           </file>
         </dir> <!-- /Plugins -->
-        <dir name="Util">
-          <file name="Autoloader.php" role="php">
-            <tasks:replace from="@package_version@" to="version" type="package-info" />
-          </file>
-        </dir> <!-- /Util -->
         <dir name="View">
           <file name="ViewAbstract.php" role="php">
             <tasks:replace from="@package_version@" to="version" type="package-info" />
@@ -83,6 +78,9 @@
             <tasks:replace from="@package_version@" to="version" type="package-info" />
           </file>
         </dir> <!-- /View -->
+        <file name="Autoload.php" role="php">
+          <tasks:replace from="@package_version@" to="version" type="package-info" />
+        </file>
         <file name="CLIController.php" role="php">
           <tasks:replace from="@package_version@" to="version" type="package-info" />
           <tasks:replace from="@php_dir@" to="php_dir" type="pear-config" />
@@ -297,44 +295,44 @@
     <filelist>
       <install as="PHP_CodeBrowser/Helper/IOHelper.php"         name="src/Helper/IOHelper.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCPD.php"        name="src/Plugins/ErrorCPD.php" />
-      <install as="PHP_CodeBrowser/Plugins/ErrorCRAP.php" name="src/Plugins/ErrorCRAP.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorCRAP.php"       name="src/Plugins/ErrorCRAP.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCheckstyle.php" name="src/Plugins/ErrorCheckstyle.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCoverage.php"   name="src/Plugins/ErrorCoverage.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php"        name="src/Plugins/ErrorPMD.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPadawan.php"    name="src/Plugins/ErrorPadawan.php" />
-      <install as="PHP_CodeBrowser/Util/Autoloader.php"         name="src/Util/Autoloader.php" />
       <install as="PHP_CodeBrowser/View/ViewReview.php"         name="src/View/ViewReview.php" />
       <install as="PHP_CodeBrowser/View/ViewAbstract.php"       name="src/View/ViewAbstract.php" />
+      <install as="PHP_CodeBrowser/Autoload.php"                name="src/Autoload.php" />
       <install as="PHP_CodeBrowser/CLIController.php"           name="src/CLIController.php" />
       <install as="PHP_CodeBrowser/File.php"                    name="src/File.php" />
       <install as="PHP_CodeBrowser/Issue.php"                   name="src/Issue.php" />
       <install as="PHP_CodeBrowser/IssueXml.php"                name="src/IssueXml.php" />
       <install as="PHP_CodeBrowser/PluginsAbstract.php"         name="src/PluginsAbstract.php" />
       <install as="PHP_CodeBrowser/SourceHandler.php"           name="src/SourceHandler.php" />
-      <install as="phpcb.bat" name="bin/phpcb.bat" />
-      <install as="phpcb"     name="bin/phpcb.php" />
+      <install as="phpcb.bat"                                   name="bin/phpcb.bat" />
+      <install as="phpcb"                                       name="bin/phpcb.php" />
     </filelist>
   </phprelease>
   <phprelease>
     <filelist>
       <install as="PHP_CodeBrowser/Helper/IOHelper.php"         name="src/Helper/IOHelper.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCPD.php"        name="src/Plugins/ErrorCPD.php" />
-      <install as="PHP_CodeBrowser/Plugins/ErrorCRAP.php" name="src/Plugins/ErrorCRAP.php" />
+      <install as="PHP_CodeBrowser/Plugins/ErrorCRAP.php"       name="src/Plugins/ErrorCRAP.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCheckstyle.php" name="src/Plugins/ErrorCheckstyle.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorCoverage.php"   name="src/Plugins/ErrorCoverage.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPMD.php"        name="src/Plugins/ErrorPMD.php" />
       <install as="PHP_CodeBrowser/Plugins/ErrorPadawan.php"    name="src/Plugins/ErrorPadawan.php" />
-      <install as="PHP_CodeBrowser/Util/Autoloader.php"         name="src/Util/Autoloader.php" />
       <install as="PHP_CodeBrowser/View/ViewReview.php"         name="src/View/ViewReview.php" />
       <install as="PHP_CodeBrowser/View/ViewAbstract.php"       name="src/View/ViewAbstract.php" />
+      <install as="PHP_CodeBrowser/Autoload.php"                name="src/Autoload.php" />
       <install as="PHP_CodeBrowser/CLIController.php"           name="src/CLIController.php" />
       <install as="PHP_CodeBrowser/File.php"                    name="src/File.php" />
       <install as="PHP_CodeBrowser/Issue.php"                   name="src/Issue.php" />
       <install as="PHP_CodeBrowser/IssueXml.php"                name="src/IssueXml.php" />
       <install as="PHP_CodeBrowser/PluginsAbstract.php"         name="src/PluginsAbstract.php" />
       <install as="PHP_CodeBrowser/SourceHandler.php"           name="src/SourceHandler.php" />
-      <install as="phpcb" name="bin/phpcb.php" />
-      <ignore name="bin/phpcb.bat" />
+      <install as="phpcb"                                       name="bin/phpcb.php" />
+      <ignore                                                   name="bin/phpcb.bat" />
     </filelist>
   </phprelease>
 
