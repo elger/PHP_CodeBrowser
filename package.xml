@@ -276,11 +276,6 @@
         <min>3.4.0</min>
       </package>
       <package>
-        <name>phpUnderControl</name>
-        <channel>pear.phpundercontrol.org</channel>
-        <min>0.5.0</min>
-      </package>
-      <package>
         <name>PHP_CodeSniffer</name>
         <channel>pear.php.net</channel>
         <min>1.2.0</min>
