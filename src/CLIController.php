@@ -257,8 +257,10 @@ class CbCLIController
         if (isset($this->_projectSource)) {
             foreach ($this->_projectSource as $source) {
                 if (is_dir($source)) {
+                    $factory = new File_Iterator_Factory;
+
                     $sourceHandler->addSourceFiles(
-                        File_Iterator_Factory::getFileIterator(
+                        $factory->getFileIterator(
                             $source, array('php','js','css', 'html')
                         )
                     );

@@ -115,7 +115,8 @@ class CbIssueXml extends DOMDocument
      */
     public function addDirectory($directory)
     {
-        $iterator = File_Iterator_Factory::getFileIterator($directory, 'xml');
+        $factory  = new File_Iterator_Factory;
+        $iterator = $factory->getFileIterator($directory, 'xml');
 
         foreach ($iterator as $current) {
             $realFileName = realpath($current);
