@@ -63,10 +63,3 @@ if (!defined('PHPCB_TEST_OUTPUT')) {
 
 require_once PHPCB_SOURCE . '/Autoload.php';
 require_once 'PHPUnit/Util/Filter.php';
-
-if (method_exists('PHPUnit_Util_Filter', 'addDirectoryToWhitelist')) {
-    PHPUnit_Util_Filter::addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
-} else {
-    PHP_CodeCoverage_Filter::getInstance()
-        ->addDirectoryToWhitelist(realpath(PHPCB_SOURCE));
-}

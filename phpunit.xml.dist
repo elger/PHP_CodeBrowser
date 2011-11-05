@@ -28,4 +28,10 @@
     <!--TODO: Remove this when E_STRICT stops crashing the tests -->
     <ini name="error_reporting" value="E_ALL"/>
   </php>
+
+  <filter>
+    <whitelist>
+      <directory>src</directory>
+    </whitelist>
+  </filter>
 </phpunit>
