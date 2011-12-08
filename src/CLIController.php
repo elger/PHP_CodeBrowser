@@ -172,7 +172,7 @@ class CbCLIController
     public function __construct($logPath,       Array $projectSource,
                                 $htmlOutputDir, Array $excludeExpressions,
                                 Array $excludePatterns, Array $pluginOptions,
-                                $ioHelper, $debugLog)
+                                $ioHelper, $debugLog, $phpSuffixes = null)
     {
         $this->_logDir             = $logPath;
         $this->_projectSource      = $projectSource;
@@ -185,6 +185,7 @@ class CbCLIController
         $this->_ioHelper           = $ioHelper;
         $this->_debugLog           = $debugLog;
         $this->_registeredPlugins  = array();
+        $this->_phpSuffixes = $phpSuffixes;
     }
 
     /**
@@ -229,7 +230,9 @@ class CbCLIController
         $cbViewReview  = new CbViewReview(
             PHPCB_TEMPLATE_DIR,
             $this->_htmlOutputDir,
-            $this->_ioHelper
+            $this->_ioHelper,
+            isset($this->_phpSuffixes) ? explode(',', $this->_phpSuffixes) 
+            : array('php')
         );
 
         $sourceHandler = new CbSourceHandler($this->_debugLog);
@@ -259,9 +262,18 @@ class CbCLIController
                 if (is_dir($source)) {
                     $factory = new File_Iterator_Factory;
 
+                    $phpSuffixes = !isset($this->_phpSuffixes) ? 
+                        array() :
+                        explode(',', $this->_phpSuffixes);
+
+                    $suffixes = array_merge(
+                        $phpSuffixes, 
+                        array('php','js','css', 'html')
+                    );
+
                     $sourceHandler->addSourceFiles(
                         $factory->getFileIterator(
-                            $source, array('php','js','css', 'html')
+                            $source, $suffixes
                         )
                     );
                 } else {
@@ -355,7 +367,8 @@ class CbCLIController
                                    : array(),
             new CbIOHelper(),
             $opts['debugExcludes'] ? Log::factory('console', '', 'PHPCB')
-                                   : Log::factory('null')
+                                   : Log::factory('null'),
+            $opts['phpSuffixes'] 
         );
 
         $plugins = self::getAvailablePlugins();
@@ -472,6 +485,17 @@ HERE
                 'short_name'  => '-l',
                 'long_name'   => '--log',
                 'help_name'   => '<directory>'
+            )
+        );
+
+        $parser->addOption(
+            'phpSuffixes',
+            array(
+                'description' => 'A comma separated list of php file extensions'
+                                    .' to include.',
+                                    'short_name'  => '-S',
+                                    'long_name'   => '--extensions',
+                'help_name'   => '<extensions>'
             )
         );
 

@@ -76,6 +76,7 @@ class CbViewReview extends CbViewAbstract
      * @var Array
      */
     protected $_phpHighlightColorMap;
+    protected $_phpFilesSuffixes;
 
     /**
      * Default constructor
@@ -85,8 +86,11 @@ class CbViewReview extends CbViewAbstract
      * @param String $templateDir   The directory containing the templates.
      * @param String $outputDir     The directory where the reviews should be.
      * @param CbIOHelper $ioHelper  The CbIOHelper object to use for I/O.
+     * @param Array $phpSuffixes    The array with extensions of php files.
      */
-    public function __construct($templateDir, $outputDir, $ioHelper)
+    public function __construct($templateDir, $outputDir, $ioHelper, 
+        $phpSuffixes = array('php')
+    )
     {
         parent::__construct($templateDir, $outputDir, $ioHelper);
         $this->_phpHighlightColorMap = array(
@@ -95,7 +99,8 @@ class CbViewReview extends CbViewAbstract
             ini_get('highlight.keyword') => 'keyword',
             ini_get('highlight.default') => 'default',
             ini_get('highlight.html')    => 'html',
-        );
+          );
+        $this->phpSuffixes = $phpSuffixes;
     }
 
     /**
@@ -331,8 +336,8 @@ class CbViewReview extends CbViewAbstract
 
         $extension = strrchr($file, '.');
         $sourceCode = $this->_ioHelper->loadFile($file);
-
-        if ('.php' === $extension) {
+        $extensionWhPeriod = str_replace('.', '', $extension);
+        if (in_array($extensionWhPeriod, $this->phpSuffixes)) {
             return $this->_highlightPhpCode($sourceCode);
         } else if (class_exists('Text_Highlighter', false)
         && isset($highlightMap[$extension])) {
