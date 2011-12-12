@@ -78,6 +78,13 @@ class CbViewReview extends CbViewAbstract
     protected $_phpHighlightColorMap;
 
     /**
+     * Suffixes for php files.
+     *
+     * @var Array
+     */
+    protected $_phpSuffixes;
+
+    /**
      * Default constructor
      *
      * Highlighting strings are set.
@@ -85,8 +92,10 @@ class CbViewReview extends CbViewAbstract
      * @param String $templateDir   The directory containing the templates.
      * @param String $outputDir     The directory where the reviews should be.
      * @param CbIOHelper $ioHelper  The CbIOHelper object to use for I/O.
+     * @param Array $phpSuffixes    The array with extensions of php files.
      */
-    public function __construct($templateDir, $outputDir, $ioHelper)
+    public function __construct($templateDir, $outputDir, $ioHelper,
+                                $phpSuffixes = array('php'))
     {
         parent::__construct($templateDir, $outputDir, $ioHelper);
         $this->_phpHighlightColorMap = array(
@@ -95,7 +104,8 @@ class CbViewReview extends CbViewAbstract
             ini_get('highlight.keyword') => 'keyword',
             ini_get('highlight.default') => 'default',
             ini_get('highlight.html')    => 'html',
-        );
+          );
+        $this->_phpSuffixes = $phpSuffixes;
     }
 
     /**
@@ -329,13 +339,13 @@ class CbViewReview extends CbViewAbstract
             '.css'  => 'CSS',
         );
 
-        $extension = strrchr($file, '.');
         $sourceCode = $this->_ioHelper->loadFile($file);
+        $extension  = pathinfo($file, PATHINFO_EXTENSION);
 
-        if ('.php' === $extension) {
+        if (in_array($extension, $this->_phpSuffixes)) {
             return $this->_highlightPhpCode($sourceCode);
         } else if (class_exists('Text_Highlighter', false)
-        && isset($highlightMap[$extension])) {
+                && isset($highlightMap[$extension])) {
             $renderer = new Text_Highlighter_Renderer_Html(
                 array(
                     'numbers' => HL_NUMBERS_LI,
