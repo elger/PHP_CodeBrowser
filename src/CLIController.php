@@ -147,8 +147,17 @@ class CbCLIController
      *          'threshold' => 2
      *      )
      *  )
+     *
+     * @var array
      */
     private $_pluginOptions = array();
+
+    /**
+     * File extensions that we take as php files.
+     *
+     * @var array
+     */
+    private $_phpSuffixes;
 
     /**
      * The constructor
@@ -169,8 +178,8 @@ class CbCLIController
      * @param CbIOHelper $ioHelper     The CbIOHelper object to be used for
      *                                 filesystem interaction.
      */
-    public function __construct($logPath,       Array $projectSource,
-                                $htmlOutputDir, Array $excludeExpressions,
+    public function __construct($logPath,               Array $projectSource,
+                                $htmlOutputDir,         Array $excludeExpressions,
                                 Array $excludePatterns, Array $pluginOptions,
                                 $ioHelper, $debugLog, $phpSuffixes = null)
     {
@@ -185,7 +194,7 @@ class CbCLIController
         $this->_ioHelper           = $ioHelper;
         $this->_debugLog           = $debugLog;
         $this->_registeredPlugins  = array();
-        $this->_phpSuffixes = $phpSuffixes;
+        $this->_phpSuffixes        = $phpSuffixes;
     }
 
     /**
@@ -273,7 +282,8 @@ class CbCLIController
 
                     $sourceHandler->addSourceFiles(
                         $factory->getFileIterator(
-                            $source, $suffixes
+                            $source,
+                            $suffixes
                         )
                     );
                 } else {
@@ -493,8 +503,8 @@ HERE
             array(
                 'description' => 'A comma separated list of php file extensions'
                                     .' to include.',
-                                    'short_name'  => '-S',
-                                    'long_name'   => '--extensions',
+                'short_name'  => '-S',
+                'long_name'   => '--extensions',
                 'help_name'   => '<extensions>'
             )
         );
