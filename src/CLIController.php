@@ -181,7 +181,8 @@ class CbCLIController
     public function __construct($logPath,               Array $projectSource,
                                 $htmlOutputDir,         Array $excludeExpressions,
                                 Array $excludePatterns, Array $pluginOptions,
-                                $ioHelper, $debugLog, $phpSuffixes = null)
+                                $ioHelper,                    $debugLog,
+                                Array $phpSuffixes)
     {
         $this->_logDir             = $logPath;
         $this->_projectSource      = $projectSource;
@@ -240,8 +241,7 @@ class CbCLIController
             PHPCB_TEMPLATE_DIR,
             $this->_htmlOutputDir,
             $this->_ioHelper,
-            isset($this->_phpSuffixes) ? explode(',', $this->_phpSuffixes) 
-            : array('php')
+            $this->_phpSuffixes
         );
 
         $sourceHandler = new CbSourceHandler($this->_debugLog);
@@ -271,12 +271,8 @@ class CbCLIController
                 if (is_dir($source)) {
                     $factory = new File_Iterator_Factory;
 
-                    $phpSuffixes = !isset($this->_phpSuffixes) ? 
-                        array() :
-                        explode(',', $this->_phpSuffixes);
-
                     $suffixes = array_merge(
-                        $phpSuffixes, 
+                        $this->_phpSuffixes,
                         array('php','js','css', 'html')
                     );
 
@@ -378,7 +374,8 @@ class CbCLIController
             new CbIOHelper(),
             $opts['debugExcludes'] ? Log::factory('console', '', 'PHPCB')
                                    : Log::factory('null'),
-            $opts['phpSuffixes'] 
+            $opts['phpSuffixes'] ? explode(',', $opts['phpSuffixes'])
+                                 : array('php')
         );
 
         $plugins = self::getAvailablePlugins();
