@@ -339,13 +339,13 @@ class CbViewReview extends CbViewAbstract
             '.css'  => 'CSS',
         );
 
-        $extension = strrchr($file, '.');
         $sourceCode = $this->_ioHelper->loadFile($file);
-        $extensionWhPeriod = str_replace('.', '', $extension);
-        if (in_array($extensionWhPeriod, $this->_phpSuffixes)) {
+        $extension  = pathinfo($file, PATHINFO_EXTENSION);
+
+        if (in_array($extension, $this->_phpSuffixes)) {
             return $this->_highlightPhpCode($sourceCode);
         } else if (class_exists('Text_Highlighter', false)
-        && isset($highlightMap[$extension])) {
+                && isset($highlightMap[$extension])) {
             $renderer = new Text_Highlighter_Renderer_Html(
                 array(
                     'numbers' => HL_NUMBERS_LI,
