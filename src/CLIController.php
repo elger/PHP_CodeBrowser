@@ -56,10 +56,10 @@ if (strpos('@php_dir@', '@php_dir') === false) {
     }
 } else {
     if (!defined('PHPCB_ROOT_DIR')) {
-        define('PHPCB_ROOT_DIR', dirname(__FILE__) . '/../');
+        define('PHPCB_ROOT_DIR', realpath(dirname(__FILE__) . '/../'));
     }
     if (!defined('PHPCB_TEMPLATE_DIR')) {
-        define('PHPCB_TEMPLATE_DIR', dirname(__FILE__) . '/../templates');
+        define('PHPCB_TEMPLATE_DIR', realpath(dirname(__FILE__) . '/../templates'));
     }
 }
 
