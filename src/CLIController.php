@@ -584,9 +584,7 @@ HERE
         );
 
         $plugins = array_map(
-            function($class) {
-                return '"' . substr($class, strlen('CbError')) . '"';
-            },
+            array(__CLASS__, 'arrayMapCallback'),
             self::getAvailablePlugins()
         );
 
@@ -617,5 +615,10 @@ HERE
         );
 
         return $parser;
+    }
+
+    private static function arrayMapCallback($class)
+    {
+        return '"' . substr($class, strlen('CbError')) . '"';
     }
 }
