@@ -78,7 +78,8 @@ class CLIControllerTest extends CbAbstractTests
         array(),
         array(),
         new CbIOHelper(),
-        Log::singleton('null')
+        Log::singleton('null'),
+        array('php')
     );
 
     $controller->addErrorPlugins(
