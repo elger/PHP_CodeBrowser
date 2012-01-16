@@ -1,3 +1,8 @@
+PHP_CodeBrowser 1.0.2
+-------------------
+* Fixed some bugs.
+* Allow custom extensions for php files
+
 PHP_CodeBrowser 1.0
 -------------------
 
