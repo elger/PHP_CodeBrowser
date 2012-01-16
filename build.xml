@@ -72,7 +72,7 @@
  <!-- Generate API documentation -->
  <target name="phpdoc">
   <exec executable="phpdoc">
-   <arg line="-d src -t build/api" />
+   <arg line="-s src -d build/api" />
   </exec>
  </target>
 
