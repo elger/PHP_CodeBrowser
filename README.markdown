@@ -23,7 +23,7 @@
 
 ### Git Checkout ###
 
-    $ git clone git://github.com/mayflowergmbh/PHP_CodeBrowser.git
+    $ git clone git://github.com/Mayflower/PHP_CodeBrowser.git
 
 ### Installation with PEAR Installer ###
 
@@ -36,7 +36,7 @@
 
     Try ./bin/phpcb.php -h for usage information.
 
-### Integration in CruiseControl and Hudson ###
+### Integration in Jenkins, CruiseControl and Hudson ###
 
     ...
     <!-- phpcb should be called after xml file generation -->
