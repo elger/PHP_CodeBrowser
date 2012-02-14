@@ -23,17 +23,6 @@
   <exec executable="phpunit" failonerror="true"/>
  </target>
 
- <!-- Run pdepend, phpmd, phpcpd, and phpcs in parallel -->
- <target name="parallelTasks">
-  <parallel>
-   <antcall target="pdepend"/>
-   <antcall target="phpmd"/>
-   <antcall target="phpcpd"/>
-   <antcall target="phpcs"/>
-   <antcall target="phpdoc"/>
-  </parallel>
- </target>
-
  <!-- Generate jdepend.xml and software metrics charts -->
  <target name="pdepend">
   <exec executable="pdepend">
@@ -84,5 +73,14 @@
   </exec>
  </target>
 
- <target name="build" depends="clean,parallelTasks,phpunit,phpcb"/>
+ <target name="build">
+   <antcall target="clean"/>
+   <antcall target="pdepend"/>
+   <antcall target="phpmd"/>
+   <antcall target="phpcpd"/>
+   <antcall target="phpcs"/>
+   <antcall target="phpdoc"/>
+   <antcall target="phpunit"/>
+   <antcall target="phpcb"/>
+ </target>
 </project>
