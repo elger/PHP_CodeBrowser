@@ -249,6 +249,20 @@ class CbViewReview extends CbViewAbstract
     protected function _highlightPhpCode($sourceCode)
     {
         $code = highlight_string($sourceCode, true);
+        if (extension_loaded('mbstring') && !mb_check_encoding($code, 'UTF-8')) {
+            $detectOrder = mb_detect_order();
+            $detectOrder[] = 'iso-8859-1';
+
+            $encoding = mb_detect_encoding($code, $detectOrder, true);
+            if ($encoding === false) {
+                error_log('Error detecting file encoding');
+            }
+            $code = mb_convert_encoding(
+                $code,
+                'UTF-8',
+                $encoding
+            );
+        }
 
         $sourceDom = new DOMDocument();
         $sourceDom->loadHTML('<?xml encoding="UTF-8">' . $code);
