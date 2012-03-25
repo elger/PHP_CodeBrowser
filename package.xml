@@ -283,6 +283,9 @@
         <channel>pear.php.net</channel>
         <min>1.4.3</min>
       </package>
+      <extension>
+          <name>mbstring</name>
+      </extension>
     </optional>
   </dependencies>
 
