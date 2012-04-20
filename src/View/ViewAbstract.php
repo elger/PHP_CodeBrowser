@@ -182,7 +182,8 @@ class CbViewAbstract
      * @return boolean
      */
     public static function hasFileAnyIssues(CbFile $file) {
-        return (bool) $file->getIssues();
+        $issues = $file->getIssues();
+        return !empty($issues);
     }
 
     /**
