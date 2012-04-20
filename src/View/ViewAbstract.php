@@ -159,7 +159,7 @@ class CbViewAbstract
      *
      * @return void
      */
-    public function generateIndex(Array $fileList, $excludeOK)
+    public function generateIndex(Array $fileList, $excludeOK = false)
     {
         //we want to exclude files without issues
         if ($excludeOK) {
