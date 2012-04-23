@@ -15,22 +15,16 @@
   <description>A code browser that augments the code with information from various QA tools.</description>
 
   <lead>
-    <name>Elger Thiele</name>
-    <user>elger</user>
-    <email>elger.thiele@mayflower.de</email>
-    <active>yes</active>
-  </lead>
-  <developer>
     <name>Simon Kohlmeyer</name>
     <user>simon</user>
     <email>simon.kohlmeyer@mayflower.de</email>
     <active>yes</active>
-  </developer>
+  </lead>
 
-  <date>2012-01-16</date>
+  <date>2012-04-23</date>
 
   <version>
-    <release>1.0.2</release>
+    <release>1.0.3</release>
     <api>1.0.0</api>
   </version>
 
@@ -486,6 +480,22 @@
         <notes>
             - Fixed some bugs.
             - Allow custom extensions for php files.
+        </notes>
+    </release>
+    <release>
+        <version>
+            <release>1.0.3</release>
+            <api>1.0.0</api>
+        </version>
+        <stability>
+            <release>stable</release>
+            <api>stable</api>
+        </stability>
+        <date>2012-04-23</date>
+        <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
+        <notes>
+            - If mbstring is available, we'll now try to detect file encodings
+            - Allow the exclusion of files without errors
         </notes>
     </release>
   </changelog>

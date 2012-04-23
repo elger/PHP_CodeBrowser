@@ -1,3 +1,8 @@
+PHP_CodeBrowser 1.0.3
+-------------------
+* If mbstring is available, we'll now try to detect file encodings
+* Allow the exclusion of files without errors
+
 PHP_CodeBrowser 1.0.2
 -------------------
 * Fixed some bugs.
