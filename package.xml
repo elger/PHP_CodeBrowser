@@ -9,7 +9,7 @@
 
   <name>PHP_CodeBrowser</name>
 
-  <channel>pear.phpunit.de</channel>
+  <channel>pear.phpqatools.org</channel>
 
   <summary>A code browser that augments the code with information from various QA tools.</summary>
   <description>A code browser that augments the code with information from various QA tools.</description>
@@ -21,7 +21,7 @@
     <active>yes</active>
   </lead>
 
-  <date>2012-04-23</date>
+  <date>2012-04-24</date>
 
   <version>
     <release>1.0.3</release>
