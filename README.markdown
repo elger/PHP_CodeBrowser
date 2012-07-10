@@ -27,8 +27,8 @@
 
 ### Installation with PEAR Installer ###
 
-    $ pear channel-discover pear.phpunit.de
-    $ pear install --alldeps phpunit/PHP_CodeBrowser
+    $ pear channel-discover pear.phpqatools.org
+    $ pear install --alldeps phpqatools/PHP_CodeBrowser
 
 ## Usage ##
 
