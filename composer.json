@@ -14,7 +14,7 @@
     "classmap" : [ "src/" ]
   }, 
   "include-path": [ "src/" ], 
-  "bin" : [ "bin/phpcb.php" ], 
+  "bin" : [ "bin/phpcb" ], 
   "extra" : {
     "branch-alias": {
       "dev-master": "1.0.x-dev"
