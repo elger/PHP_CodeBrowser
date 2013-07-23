@@ -257,7 +257,7 @@ class CbErrorHandler
     public function getFilesWithErrors ($cbXMLFileName)
     {
         $element = $this->cbXMLHandler->loadXML($cbXMLFileName);
-        $files   = null;
+        $files   = array();
         $path    = '';
         
         foreach ($element->children() as $file) {
