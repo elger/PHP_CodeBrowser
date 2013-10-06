@@ -1,3 +1,7 @@
+PHP_CodeBrowser 1.0.4
+-------------------
+* Fix invalid XML errors
+
 PHP_CodeBrowser 1.0.3
 -------------------
 * If mbstring is available, we'll now try to detect file encodings

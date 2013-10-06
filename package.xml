@@ -21,10 +21,10 @@
     <active>yes</active>
   </lead>
 
-  <date>2012-04-24</date>
+  <date>2013-10-06</date>
 
   <version>
-    <release>1.0.3</release>
+    <release>1.0.4</release>
     <api>1.0.0</api>
   </version>
 
@@ -34,7 +34,7 @@
   </stability>
 
   <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
-  <notes>http://github.com/mayflowergmbh/PHP_CodeBrowser/blob/master/CHANGELOG.markdown</notes>
+  <notes>http://github.com/Mayflower/PHP_CodeBrowser/blob/master/CHANGELOG.markdown</notes>
 
   <contents>
     <dir name="/">
@@ -496,6 +496,21 @@
         <notes>
             - If mbstring is available, we'll now try to detect file encodings
             - Allow the exclusion of files without errors
+        </notes>
+    </release>
+    <release>
+        <version>
+            <release>1.0.4</release>
+            <api>1.0.0</api>
+        </version>
+        <stability>
+            <release>stable</release>
+            <api>stable</api>
+        </stability>
+        <date>2013-10-06</date>
+        <license uri="http://www.opensource.org/licenses/bsd-license.php">BSD License</license>
+        <notes>
+            - Fix invalid XML errors
         </notes>
     </release>
   </changelog>
