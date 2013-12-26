@@ -1,9 +1,6 @@
-#!/usr/bin/env php
 <?php
 /**
- * PHP_CodeBrowser
- *
- * PHP Version 5.2.6
+ * Test bootstrapping
  *
  * Copyright (c) 2007-2009, Mayflower GmbH
  * All rights reserved.
@@ -37,16 +34,29 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @category  PHP_CodeBrowser
- * @package   PHP_CodeBrowser
- * @author    Elger Thiele <elger.thiele@mayflower.de>
- * @copyright 2007-2009 Mayflower GmbH
- * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
- * @version   SVN: $Id$
- * @link      http://www.phpunit.de/
- * @since     File available since  0.1.0
+ * @category   PHP_CodeBrowser
+ * @package    PHP_CodeBrowser
+ * @subpackage PHPUnit
+ * @author     Simon Kohlmeyer <simon.kohlmeyer@mayflower.de>
+ * @copyright  2007-2010 Mayflower GmbH
+ * @license    http://www.opensource.org/licenses/bsd-license.php  BSD License
+ * @version    SVN: $Id$
+ * @link       http://www.phpunit.de/
+ * @since      File available since  0.9.0
  */
 
-require_once dirname( __FILE__ ) . '/../vendor/autoload.php';
+if (!defined('PHPCB_SOURCE_DIR')) {
+ define('PHPCB_SOURCE_DIR', realpath(dirname(__FILE__) . '/../'));
+}
 
-PHPCodeBrowser\CLIController::main();
+if (!defined('PHPCB_TEST_DIR')) {
+ define('PHPCB_TEST_DIR', realpath(PHPCB_SOURCE_DIR) . DIRECTORY_SEPARATOR . 'Tests' . DIRECTORY_SEPARATOR . 'testData');
+}
+if (!defined('PHPCB_TEST_LOGS')) {
+ define('PHPCB_TEST_LOGS', PHPCB_TEST_DIR . '/logs');
+}
+if (!defined('PHPCB_TEST_OUTPUT')) {
+    define('PHPCB_TEST_OUTPUT', PHPCB_TEST_DIR . DIRECTORY_SEPARATOR . 'output');
+}
+
+require_once dirname(__FILE__) . '/../../../vendor/autoload.php';

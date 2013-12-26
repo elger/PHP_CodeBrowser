@@ -37,7 +37,7 @@
                 <table border="0" cellspacing="2" cellpadding="3">
 <?php
 $oddrow = true;
-$preLen = strlen(CbIOHelper::getCommonPathPrefix(array_keys($fileList)));
+$preLen = strlen(PHPCodeBrowser\Helper\IOHelper::getCommonPathPrefix(array_keys($fileList)));
 
 // Find out which types of errors have been found
 $occuringErrorTypes = array (
