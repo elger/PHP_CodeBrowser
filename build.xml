@@ -49,12 +49,12 @@
 
  <!-- Generate checkstyle.xml -->
  <target name="phpcs">
-  <exec executable="phpcs" output="/dev/null">
-   <arg line="--report=checkstyle
-              --report-file='${basedir}/build/logs/checkstyle.xml'
-              --standard=Zend
-              --ignore='${basedir}/tests/testData'
-              src tests" />
+  <exec executable="phpcs">
+   <arg value="--report=checkstyle" />
+   <arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
+   <arg value="--standard=PSR2" />
+   <arg value="--extensions=php" />
+   <arg path="${basedir}/src" />
   </exec>
  </target>
 
@@ -66,7 +66,7 @@
  </target>
 
  <target name="phpcb">
-  <exec executable="${basedir}/bin/phpcb.php">
+  <exec executable="${basedir}/bin/phpcb">
    <arg line="--log    '${basedir}/build/logs'
               --source '${basedir}/src'
               --output '${basedir}/build/code-browser'" />

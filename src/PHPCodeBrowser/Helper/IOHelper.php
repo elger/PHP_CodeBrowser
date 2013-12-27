@@ -54,7 +54,7 @@ use DirectoryIterator;
 /**
  * IOHelper
  *
- * Input output helper class provides several mehtods for writing and
+ * Input output helper class provides several methods for writing and
  * reading files or directories.
  *
  * @category  PHP_CodeBrowser
@@ -124,7 +124,8 @@ class IOHelper
 
         $fileName = basename($fileSource);
         self::createFile(
-            $sourceFolder . '/' . $fileName, self::loadFile($fileSource)
+            $sourceFolder . '/' . $fileName,
+            self::loadFile($fileSource)
         );
     }
 
@@ -231,7 +232,8 @@ class IOHelper
                 && !in_array($item, $exclude)
             ) {
                 self::copyDirectory(
-                    $source . '/' . $item, $target . '/' . $item
+                    $source . '/' . $item,
+                    $target . '/' . $item
                 );
             }
             $iterator->next();
@@ -250,7 +252,7 @@ class IOHelper
         }
         $prefix = dirname(array_shift($filenames));
         foreach ($filenames as $filename) {
-            $prefix = self::_getCommonPathPrefix($prefix, $filename);
+            $prefix = self::getCurrentCommonPathPrefix($prefix, $filename);
         }
 
         if (substr($prefix, -1, 1) !== DIRECTORY_SEPARATOR) {
@@ -265,7 +267,7 @@ class IOHelper
      * @param string $path
      * @return string
      */
-    protected static function _getCommonPathPrefix($currentPrefix, $path)
+    protected static function getCurrentCommonPathPrefix($currentPrefix, $path)
     {
         if (strpos($path, $currentPrefix . DIRECTORY_SEPARATOR) === 0
                 || $currentPrefix == DIRECTORY_SEPARATOR
@@ -274,6 +276,6 @@ class IOHelper
                 || preg_match('/^[A-Z]\:\\\\$/', $currentPrefix) === 1) {
             return $currentPrefix;
         }
-        return self::_getCommonPathPrefix(dirname($currentPrefix), $path);
+        return self::getCurrentCommonPathPrefix(dirname($currentPrefix), $path);
     }
 }

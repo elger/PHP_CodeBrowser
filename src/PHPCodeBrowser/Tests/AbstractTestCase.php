@@ -68,49 +68,49 @@ class AbstractTestCase extends \PHPUnit_Framework_TestCase
      *
      * @var string
      */
-    protected static $_ccXMLFile;
+    protected static $ccXMLFile;
 
     /**
      * PHP_CodeBrowser error file
      *
      * @var string
      */
-    protected static $_xmlFile;
+    protected static $xmlFile;
 
     /**
      * Basic XML file with valid headers
      *
      * @var string
      */
-    protected static $_xmlBasic;
+    protected static $xmlBasic;
 
     /**
      * Path information for a dummy TXT file
      *
      * @var string
      */
-    protected static $_testFile;
+    protected static $testFile;
 
     /**
      * Path information for a dummy XML file
      *
      * @var string
      */
-    protected static $_testXML;
+    protected static $testXML;
 
     /**
      * File of serialized error list
      *
      * @var string
      */
-    protected static $_serializedErrors;
+    protected static $serializedErrors;
 
     /**
      * Path information for generated XML test file
      *
      * @var string
      */
-    protected static $_generatedXMLTest;
+    protected static $generatedXMLTest;
 
     /**
      * Global setup method for all test cases. Basic variables are initialized.
@@ -121,10 +121,10 @@ class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         parent::setUp();
 
-        self::$_xmlBasic = PHPCB_TEST_LOGS . '/basic.xml';
+        self::$xmlBasic = PHPCB_TEST_LOGS . '/basic.xml';
 
         if (is_dir(PHPCB_TEST_OUTPUT)) {
-            $this->_cleanUp(PHPCB_TEST_OUTPUT);
+            $this->cleanUp(PHPCB_TEST_OUTPUT);
             rmdir(PHPCB_TEST_OUTPUT);
         }
 
@@ -141,7 +141,7 @@ class AbstractTestCase extends \PHPUnit_Framework_TestCase
     {
         parent::tearDown();
 
-        $this->_cleanUp(PHPCB_TEST_OUTPUT);
+        $this->cleanUp(PHPCB_TEST_OUTPUT);
         rmdir(PHPCB_TEST_OUTPUT);
     }
 
@@ -150,9 +150,9 @@ class AbstractTestCase extends \PHPUnit_Framework_TestCase
      *
      * @return array List of cb errors
      */
-    protected function _getSerializedErrors()
+    protected function getSerializedErrors()
     {
-        return unserialize(file_get_contents(self::$_serializedErrors));
+        return unserialize(file_get_contents(self::$serializedErrors));
     }
 
     /**
@@ -162,17 +162,19 @@ class AbstractTestCase extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    protected function _cleanUp($dir)
+    protected function cleanUp($dir)
     {
         $iterator = new \DirectoryIterator($dir);
         while ($iterator->valid()) {
 
             // delete file
-            if ($iterator->isFile()) unlink($dir . '/' . $iterator->current());
+            if ($iterator->isFile()) {
+                unlink($dir . '/' . $iterator->current());
+            }
 
             // delete folder recursive
             if (! $iterator->isDot() && $iterator->isDir()) {
-                $this->_cleanUp($dir . '/' . $iterator->current());
+                $this->cleanUp($dir . '/' . $iterator->current());
                 rmdir($dir . '/' . $iterator->current());
             }
             $iterator->next();

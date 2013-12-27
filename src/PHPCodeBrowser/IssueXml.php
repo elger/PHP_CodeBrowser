@@ -79,7 +79,7 @@ class IssueXml extends DOMDocument
      *
      * @var \DOMXPath
      */
-    protected $_xpath;
+    protected $xpath;
 
     /**
      * Do not preserve white spaces.
@@ -99,7 +99,7 @@ class IssueXml extends DOMDocument
     /**
      * Default constructor
      *
-     * @param string $version  The version definitio for DomDocument
+     * @param string $version  The version definition for DomDocument
      * @param string $encoding The used encoding for DomDocument
      */
     public function __construct($version = '1.0', $encoding = 'UTF-8')
@@ -112,7 +112,7 @@ class IssueXml extends DOMDocument
 
     /**
      * Parses directory for XML report files, generating a single DomDocument
-     * inheritting all files and issues.
+     * inheriting all files and issues.
      *
      * @param string $directory The path to directory where xml files are stored
      *
@@ -169,14 +169,14 @@ class IssueXml extends DOMDocument
      */
     public function query($expression, DOMNode $contextNode = null)
     {
-        if (!isset($this->_xpath)) {
-            $this->_xpath = new DOMXPath($this);
+        if (!isset($this->xpath)) {
+            $this->xpath = new DOMXPath($this);
         }
 
         if ($contextNode) {
-            $result = $this->_xpath->query($expression, $contextNode);
+            $result = $this->xpath->query($expression, $contextNode);
         } else {
-            $result = $this->_xpath->query($expression);
+            $result = $this->xpath->query($expression);
         }
         return $result;
     }

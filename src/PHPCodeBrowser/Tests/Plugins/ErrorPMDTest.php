@@ -75,14 +75,14 @@ class ErrorPMDTest extends AbstractTestCase
      *
      * @var ErrorPMD
      */
-    protected $_errorPmd;
+    protected $errorPmd;
 
     /**
      * The xml string to test the plugin against.
      *
      * @var string
      */
-    protected $_testXml = <<<HERE
+    protected $testXml = <<<HERE
 <?xml version="1.0" encoding="UTF-8" ?>
 <pmd version="0.2.6" timestamp="2010-07-17T02:38:00-07:00">
   <file name="/some/file">
@@ -112,7 +112,7 @@ class ErrorPMDTest extends AbstractTestCase
 HERE;
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPDoc)
      * @see tests/cbAbstractTests#setUp()
      */
     protected function setUp()
@@ -120,17 +120,17 @@ HERE;
         parent::setUp();
         $issueXML = new IssueXML();
         $xml = new DOMDocument('1.0', 'UTF-8');
-        $xml->loadXML($this->_testXml);
+        $xml->loadXML($this->testXml);
         $issueXML->addXMLFile($xml);
-        $this->_errorPmd = new ErrorPMD($issueXML);
+        $this->errorPmd = new ErrorPMD($issueXML);
     }
 
     /**
-     * Test getFilelist
+     * Test getFileList
      *
      * @return  void
      */
-    public function test__getFilelist()
+    public function testGettingFileList()
     {
         $expected = array(
             new File(
@@ -172,7 +172,7 @@ HERE;
                 array()
             )
         );
-        $actual = $this->_errorPmd->getFilelist();
+        $actual = $this->errorPmd->getFileList();
         $this->assertEquals($expected, $actual);
     }
 }

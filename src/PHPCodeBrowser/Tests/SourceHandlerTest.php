@@ -77,7 +77,7 @@ class SourceHandlerTest extends AbstractTestCase
      *
      * @var SourceHandler
      */
-    protected $_sourceHandler;
+    protected $sourceHandler;
 
     /**
      * Plugin array populated with example files.
@@ -85,9 +85,7 @@ class SourceHandlerTest extends AbstractTestCase
      *
      * @var array of PluginsAbstract
      */
-    protected $_plugins;
-
-    /**
+    protected $plugins;
 
     /**
      * Initializes common values.
@@ -105,7 +103,7 @@ class SourceHandlerTest extends AbstractTestCase
     </file>
 </pmd>
 HERE
-,
+        ,
             <<<HERE
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="1.2.0RC3">
@@ -129,23 +127,23 @@ HERE
             $xml->loadXML($xmlString);
             $issueXML->addXMLFile($xml);
         }
-        $this->_plugins = array(
+        $this->plugins = array(
             new ErrorCheckstyle($issueXML),
             new ErrorPMD($issueXML)
         );
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPDoc)
      * @see AbstractTests#setUp()
      */
     protected function setUp()
     {
         parent::setUp();
-        $this->_sourceHandler = new SourceHandler(new Logger('PHPCodeBrowser'));
+        $this->sourceHandler = new SourceHandler(new Logger('PHPCodeBrowser'));
         array_walk(
-            $this->_plugins,
-            array($this->_sourceHandler, 'addPlugin')
+            $this->plugins,
+            array($this->sourceHandler, 'addPlugin')
         );
     }
 
@@ -154,13 +152,13 @@ HERE
      *
      * @return void.
      */
-    public function test__construct()
+    public function testInstantiation()
     {
         $sourceHandler = new SourceHandler(
             new Logger('PHPCodeBrowser'),
-            $this->_plugins
+            $this->plugins
         );
-        $this->assertEquals($this->_sourceHandler, $sourceHandler);
+        $this->assertEquals($this->sourceHandler, $sourceHandler);
     }
 
     /**
@@ -168,43 +166,27 @@ HERE
      *
      * @return void
      */
-    public function test__getFiles()
+    public function testGetFiles()
     {
         $expected = array(
             '/a/nother/dir/src.php' => new File(
                 '/a/nother/dir/src.php',
                 array(
-                    new Issue(
-                        '/a/nother/dir/src.php',
-                        39, 39, 'Checkstyle',
-                        'm3', 'error'
-                    ),
-                    new Issue(
-                        '/a/nother/dir/src.php',
-                        40, 40, 'Checkstyle',
-                        'm4', 'error'
-                    ),
-                    new Issue(
-                        '/a/nother/dir/src.php',
-                        291, 291, 'PMD',
-                        'descr', 'error'
-                    )
+                    new Issue('/a/nother/dir/src.php', 39, 39, 'Checkstyle', 'm3', 'error'),
+                    new Issue('/a/nother/dir/src.php', 40, 40, 'Checkstyle', 'm4', 'error'),
+                    new Issue('/a/nother/dir/src.php', 291, 291, 'PMD', 'descr', 'error')
                 )
             ),
             '/a/dir/source.php' => new File(
                 '/a/dir/source.php',
                 array(
-                    new Issue(
-                        '/a/dir/source.php',
-                        37, 37, 'Checkstyle',
-                        'm1', 'error'
-                    )
+                    new Issue('/a/dir/source.php', 37, 37, 'Checkstyle', 'm1', 'error')
                 )
             )
         );
         File::sort($expected);
 
-        $actual = $this->_sourceHandler->getFiles();
+        $actual = $this->sourceHandler->getFiles();
         $this->assertEquals($expected, $actual);
     }
 
@@ -213,13 +195,13 @@ HERE
      *
      * @return void
      */
-    public function test__getFilesWithIssues()
+    public function testGetFilesWithIssues()
     {
         $expectedFiles = array (
             '/a/dir/source.php',
             '/a/nother/dir/src.php'
         );
-        $actualFiles = $this->_sourceHandler->getFilesWithIssues();
+        $actualFiles = $this->sourceHandler->getFilesWithIssues();
         $this->assertEquals($expectedFiles, $actualFiles);
     }
 
@@ -228,29 +210,23 @@ HERE
      *
      * @return void
      */
-    public function test__addSourceFiles()
+    public function testAddSourceFiles()
     {
-        $this->_sourceHandler->addSourceFiles(
-            array(
-                new SplFileInfo(__FILE__),
-                __FILE__
-            )
+        $this->sourceHandler->addSourceFiles(
+            array(new SplFileInfo(__FILE__), __FILE__)
         );
-        $this->assertContains(
-            __FILE__,
-            array_keys($this->_sourceHandler->getFiles())
-        );
+        $this->assertContains(__FILE__, array_keys($this->sourceHandler->getFiles()));
     }
 
     /**
-     * Test if addSourceFile chokes on nonexistant files.
+     * Test if addSourceFile chokes on non-existent files.
      *
      * @return void
      */
-    public function test__addSourceFilesWithNonexisting()
+    public function testAddSourceFilesWithNonExisting()
     {
         try {
-            $this->_sourceHandler->addSourceFiles(
+            $this->sourceHandler->addSourceFiles(
                 array(new SplFileInfo('/i/do/not/exist'))
             );
         } catch (Exception $e) {
@@ -265,10 +241,10 @@ HERE
      *
      * @return void
      */
-    public function test__getCommonPathPrefix()
+    public function testGetCommonPathPrefix()
     {
         $expected = '/a/';
-        $actual   = $this->_sourceHandler->getCommonPathPrefix();
+        $actual   = $this->sourceHandler->getCommonPathPrefix();
         $this->assertEquals($expected, $actual);
     }
 
@@ -277,22 +253,18 @@ HERE
      *
      * @return void
      */
-    public function test__excludeMatchingPCRE()
+    public function testExcludeMatchingPCRE()
     {
         $expected = array(
             '/a/dir/source.php' => new File(
                 '/a/dir/source.php',
                 array(
-                    new Issue(
-                        '/a/dir/source.php',
-                        37, 37, 'Checkstyle',
-                        'm1', 'error'
-                    )
+                    new Issue('/a/dir/source.php', 37, 37, 'Checkstyle', 'm1', 'error')
                 )
             )
         );
-        $this->_sourceHandler->excludeMatchingPCRE('/^\/a.*src\.php$/');
-        $this->assertEquals($expected, $this->_sourceHandler->getFiles());
+        $this->sourceHandler->excludeMatchingPCRE('/^\/a.*src\.php$/');
+        $this->assertEquals($expected, $this->sourceHandler->getFiles());
     }
 
     /**
@@ -300,21 +272,17 @@ HERE
      *
      * @return void
      */
-    public function test__excludeMatchingPattern()
+    public function testExcludeMatchingPattern()
     {
         $expected = array(
             '/a/dir/source.php' => new File(
                 '/a/dir/source.php',
                 array(
-                    new Issue(
-                        '/a/dir/source.php',
-                        37, 37, 'Checkstyle',
-                        'm1', 'error'
-                    )
+                    new Issue('/a/dir/source.php', 37, 37, 'Checkstyle', 'm1', 'error')
                 )
             )
         );
-        $this->_sourceHandler->excludeMatchingPattern('*src.php');
-        $this->assertEquals($expected, $this->_sourceHandler->getFiles());
+        $this->sourceHandler->excludeMatchingPattern('*src.php');
+        $this->assertEquals($expected, $this->sourceHandler->getFiles());
     }
 }

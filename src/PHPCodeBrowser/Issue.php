@@ -120,19 +120,19 @@ class Issue
      * @param string  $description The description of the issue.
      * @param string  $severity
      */
-    public function __construct($fileName,
-                                $lineStart,
-                                $lineEnd,
-                                $foundBy,
-                                $description,
-                                $severity)
-    {
+    public function __construct(
+        $fileName,
+        $lineStart,
+        $lineEnd,
+        $foundBy,
+        $description,
+        $severity
+    ) {
         $this->fileName    = $fileName;
         $this->lineStart   = $lineStart;
         $this->lineEnd     = $lineEnd;
         $this->foundBy     = $foundBy;
         $this->description = $description;
         $this->severity    = $severity;
-
     }
 }

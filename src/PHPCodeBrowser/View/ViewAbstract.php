@@ -1,6 +1,6 @@
 <?php
 /**
- * View Abtract
+ * View Abstract
  *
  * PHP Version 5.3.0
  *
@@ -49,6 +49,7 @@
  */
 
 namespace PHPCodeBrowser\View;
+
 use Exception;
 use PHPCodeBrowser\File;
 use PHPCodeBrowser\Helper\IOHelper;
@@ -76,28 +77,28 @@ class ViewAbstract
      *
      * @var string
      */
-    protected $_templateDir;
+    protected $templateDir;
 
     /**
      * Output directory
      *
      * @var string
      */
-    protected $_outputDir;
+    protected $outputDir;
 
     /**
-     * Available ressource folders
+     * Available resource folders
      *
      * @var array
      */
-    protected $_ressourceFolders = array('css', 'js', 'img');
+    protected $resourceFolders = array('css', 'js', 'img');
 
     /**
      * IOHelper for filesystem interaction.
      *
      * @var IOHelper
      */
-    protected $_ioHelper;
+    protected $ioHelper;
 
     /**
      * Default Constructor
@@ -109,22 +110,22 @@ class ViewAbstract
      */
     public function __construct($templateDir, $outputDir, IOHelper $ioHelper)
     {
-        $this->_templateDir = realpath($templateDir);
-        if (!$this->_templateDir) {
+        $this->templateDir = realpath($templateDir);
+        if (!$this->templateDir) {
             throw new Exception(
                 "Specified template directory '$templateDir' does not exist"
             );
         }
 
-        $this->_outputDir = realpath($outputDir);
-        if (!$this->_outputDir) {
+        $this->outputDir = realpath($outputDir);
+        if (!$this->outputDir) {
             throw new Exception(
                 "Specified output directory '$outputDir' does not exist"
             );
         }
-        $this->_outputDir .= DIRECTORY_SEPARATOR;
+        $this->outputDir .= DIRECTORY_SEPARATOR;
 
-        $this->_ioHelper = $ioHelper;
+        $this->ioHelper = $ioHelper;
     }
 
     /**
@@ -134,12 +135,12 @@ class ViewAbstract
      * @throws Exception
      * @see IOHelper->copyFile
      */
-    public function copyRessourceFolders()
+    public function copyResourceFolders()
     {
-        foreach ($this->_ressourceFolders as $folder) {
-            $this->_ioHelper->copyDirectory(
-                $this->_templateDir . DIRECTORY_SEPARATOR . $folder,
-                $this->_outputDir . DIRECTORY_SEPARATOR . $folder
+        foreach ($this->resourceFolders as $folder) {
+            $this->ioHelper->copyDirectory(
+                $this->templateDir . DIRECTORY_SEPARATOR . $folder,
+                $this->outputDir . DIRECTORY_SEPARATOR . $folder
             );
         }
     }
@@ -152,9 +153,9 @@ class ViewAbstract
      */
     public function copyNoErrorsIndex()
     {
-        $this->_ioHelper->createFile(
-            $this->_outputDir . '/index.html',
-            $this->_render('noErrors', array())
+        $this->ioHelper->createFile(
+            $this->outputDir . '/index.html',
+            $this->render('noErrors', array())
         );
     }
 
@@ -170,15 +171,15 @@ class ViewAbstract
     {
         //we want to exclude files without issues
         if ($excludeOK) {
-            $fileList = array_filter($fileList, array('ViewAbstract', 'hasFileAnyIssues'));
+            $fileList = array_filter($fileList, array('PHPCodeBrowser\\View\\ViewAbstract', 'hasFileAnyIssues'));
         }
 
-        $data['treeList'] = $this->_getTreeListHtml($fileList);
+        $data['treeList'] = $this->getTreeListHtml($fileList);
         $data['fileList'] = $fileList;
 
-        $this->_ioHelper->createFile(
-            $this->_outputDir . '/index.html',
-            $this->_render('index', $data)
+        $this->ioHelper->createFile(
+            $this->outputDir . '/index.html',
+            $this->render('index', $data)
         );
     }
 
@@ -188,7 +189,8 @@ class ViewAbstract
      * @param File $file
      * @return boolean
      */
-    public static function hasFileAnyIssues(File $file) {
+    public static function hasFileAnyIssues(File $file)
+    {
         $issues = $file->getIssues();
         return !empty($issues);
     }
@@ -201,7 +203,7 @@ class ViewAbstract
      *
      * @return string  The html fragment.
      */
-    protected function _getTreeListHtml(array $fileList, $hrefPrefix = '')
+    protected function getTreeListHtml(array $fileList, $hrefPrefix = '')
     {
         /*
          * In this method, all directories have a trailing DIRECTORY_SEPARATOR.
@@ -219,12 +221,11 @@ class ViewAbstract
 
             // Go back until the file is somewhere below curDir
             while (strpos($dir, $curDir) !== 0) {
-                // chop off one subdir from $curDir
+                // chop off one subDir from $curDir
                 $curDir = substr(
                     $curDir,
                     0,
                     strrpos($curDir, DIRECTORY_SEPARATOR, -2) + 1
-                    //strrpos($curDir, DIRECTORY_SEPARATOR)
                 );
                 $ret    .= str_pad(' ', $indent);
                 $ret    .= '</ul>' . PHP_EOL;
@@ -234,7 +235,7 @@ class ViewAbstract
             }
 
             if ($dir !== $curDir) {
-                // File is in a subdir of current directory
+                // File is in a subDir of current directory
                 // relDir has no leading or trailing slash.
                 $relDir  = substr($dir, strlen($curDir), -1);
                 $relDirs = explode(DIRECTORY_SEPARATOR, $relDir);
@@ -242,7 +243,7 @@ class ViewAbstract
                 foreach ($relDirs as $dirName) {
                     $curDir .= $dirName . DIRECTORY_SEPARATOR;
                     // Check how many errors/warnings are in this dir.
-                    //TODO: Optimize this. Counts get recalculated for subdirs.
+                    //TODO: Optimize this. Counts get recalculated for subDirs.
                     $errors   = 0;
                     $warnings = 0;
                     foreach (array_keys($fileList) as $fName) {
@@ -309,9 +310,9 @@ class ViewAbstract
      *
      * @return string              HTML files as string from output buffer
      */
-    protected function _render($templateName, $data)
+    protected function render($templateName, $data)
     {
-        $filePath = $this->_templateDir . DIRECTORY_SEPARATOR
+        $filePath = $this->templateDir . DIRECTORY_SEPARATOR
                   . $templateName . '.tpl';
 
         extract($data, EXTR_SKIP);

@@ -68,41 +68,40 @@ use PHPCodeBrowser\Helper\IOHelper;
 class CLIControllerTest extends AbstractTestCase
 {
 
-  /**
-   * Run a full system test based on phpcs output.
-   *
-   * @return void
-   */
-  public function test__main()
-  {
-    $controller = new CLIController(
-        null,
-        array(PHPCB_SOURCE_DIR),
-        PHPCB_TEST_OUTPUT,
-        array(),
-        array(),
-        array(),
-        new IOHelper(),
-        new Logger('PHPCodeBrowser'),
-        array('php')
-    );
+    /**
+     * Run a full system test based on phpcs output.
+     *
+     * @return void
+     */
+    public function testMain()
+    {
+        $controller = new CLIController(
+            null,
+            array(PHPCB_SOURCE_DIR),
+            PHPCB_TEST_OUTPUT,
+            array(),
+            array(),
+            array(),
+            new IOHelper(),
+            new Logger('PHPCodeBrowser'),
+            array('php')
+        );
 
-    $controller->addErrorPlugins(
-        array(
-            'ErrorCheckstyle',
-            'ErrorPMD',
-            'ErrorCPD',
-            'ErrorPadawan',
-            'ErrorCoverage',
-            'ErrorCRAP'
-        )
-    );
+        $controller->addErrorPlugins(
+            array(
+                'ErrorCheckstyle',
+                'ErrorPMD',
+                'ErrorCPD',
+                'ErrorPadawan',
+                'ErrorCoverage',
+                'ErrorCRAP'
+            )
+        );
 
-    $controller->run();
+        $controller->run();
 
-    $this->assertFileExists(PHPCB_TEST_OUTPUT . '/index.html');
-    $this->assertFileExists(PHPCB_TEST_OUTPUT . '/CLIController.php.html');
-    $this->assertFileExists(PHPCB_TEST_OUTPUT . '/css');
-  }
-
+        $this->assertFileExists(PHPCB_TEST_OUTPUT . '/index.html');
+        $this->assertFileExists(PHPCB_TEST_OUTPUT . '/CLIController.php.html');
+        $this->assertFileExists(PHPCB_TEST_OUTPUT . '/css');
+    }
 }

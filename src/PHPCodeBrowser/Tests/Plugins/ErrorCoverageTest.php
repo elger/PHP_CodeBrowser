@@ -75,14 +75,14 @@ class ErrorCoverageTest extends AbstractTestCase
      *
      * @var ErrorCoverage
      */
-    protected $_errorCoverage;
+    protected $errorCoverage;
 
     /**
      * The xml string to test the plugin against.
      *
      * @var string
      */
-    protected $_testXml = <<<HERE
+    protected $testXml = <<<HERE
 <?xml version="1.0" encoding="UTF-8"?>
 <coverage generated="1279365369">
   <project timestamp="1279365369">
@@ -122,7 +122,7 @@ class ErrorCoverageTest extends AbstractTestCase
 HERE;
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPDoc)
      * @see tests/cbAbstractTests#setUp()
      */
     protected function setUp()
@@ -130,17 +130,17 @@ HERE;
         parent::setUp();
         $issueXML = new IssueXML();
         $xml = new DOMDocument('1.0', 'UTF-8');
-        $xml->loadXML($this->_testXml);
+        $xml->loadXML($this->testXml);
         $issueXML->addXMLFile($xml);
-        $this->_errorCoverage = new ErrorCoverage($issueXML);
+        $this->errorCoverage = new ErrorCoverage($issueXML);
     }
 
     /**
-     * Test getFilelist
+     * Test getFileList
      *
      * @return  void
      */
-    public function test__getFilelist()
+    public function testGettingFileList()
     {
         $expected = array(
             new File(
@@ -174,8 +174,7 @@ HERE;
                 )
             )
         );
-        $actual = $this->_errorCoverage->getFilelist();
+        $actual = $this->errorCoverage->getFileList();
         $this->assertEquals($expected, $actual);
     }
-
 }

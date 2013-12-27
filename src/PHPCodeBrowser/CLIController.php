@@ -84,56 +84,56 @@ class CLIController
      *
      * @var string
      */
-    private $_logDir;
+    private $logDir;
 
     /**
      * Path to the code browser html output folder
      *
      * @var string
      */
-    private $_htmlOutputDir;
+    private $htmlOutputDir;
 
     /**
      * Path to the project source code files
      *
      * @var string
      */
-    private $_projectSource;
+    private $projectSource;
 
     /**
      * array of PCREs. Matching files will not appear in the output.
      *
      * @var array
      */
-    private $_excludeExpressions;
+    private $excludeExpressions;
 
     /**
      * array of glob patterns. Matching files will not appear in the output.
      *
      * @var array
      */
-    private $_excludePatterns;
+    private $excludePatterns;
 
     /**
      * The error plugin classes
      *
      * @var array
      */
-    private $_registeredPlugins;
+    private $registeredPlugins;
 
     /**
      * The IOHelper used for filesystem interaction.
      *
      * @var IOHelper
      */
-    private $_ioHelper;
+    private $ioHelper;
 
     /**
      * Pear Log object where debug output should go to.
      *
      * @var Logger
      */
-    private $_debugLog;
+    private $debugLog;
 
     /**
      * Plugin-specific options. Formatted like
@@ -145,21 +145,21 @@ class CLIController
      *
      * @var array
      */
-    private $_pluginOptions = array();
+    private $pluginOptions = array();
 
     /**
      * File extensions that we take as php files.
      *
      * @var array
      */
-    private $_phpSuffixes;
+    private $phpSuffixes;
 
     /**
      * We want to exclude files with no issues
      *
      * @var boolean
      */
-    private $_excludeOK;
+    private $excludeOK;
 
     /**
      * The constructor
@@ -177,26 +177,31 @@ class CLIController
      * @param array    $phpSuffixes
      * @param bool     $excludeOK
      */
-    public function __construct($logPath,               array  $projectSource,
-                                $htmlOutputDir,         array  $excludeExpressions,
-                                array $excludePatterns, array  $pluginOptions,
-                                $ioHelper,              Logger $debugLog,
-                                array $phpSuffixes,
-                                $excludeOK = false)
-    {
-        $this->_logDir             = $logPath;
-        $this->_projectSource      = $projectSource;
-        $this->_htmlOutputDir      = $htmlOutputDir;
-        $this->_excludeExpressions = $excludeExpressions;
-        $this->_excludePatterns    = $excludePatterns;
+    public function __construct(
+        $logPath,
+        array $projectSource,
+        $htmlOutputDir,
+        array $excludeExpressions,
+        array $excludePatterns,
+        array $pluginOptions,
+        $ioHelper,
+        Logger $debugLog,
+        array $phpSuffixes,
+        $excludeOK = false
+    ) {
+        $this->logDir             = $logPath;
+        $this->projectSource      = $projectSource;
+        $this->htmlOutputDir      = $htmlOutputDir;
+        $this->excludeExpressions = $excludeExpressions;
+        $this->excludePatterns    = $excludePatterns;
         foreach ($pluginOptions as $plugin => $options) {
-            $this->_pluginOptions["Error$plugin"] = $options;
+            $this->pluginOptions["Error$plugin"] = $options;
         }
-        $this->_ioHelper           = $ioHelper;
-        $this->_debugLog           = $debugLog;
-        $this->_registeredPlugins  = array();
-        $this->_phpSuffixes        = $phpSuffixes;
-        $this->_excludeOK          = $excludeOK;
+        $this->ioHelper           = $ioHelper;
+        $this->debugLog           = $debugLog;
+        $this->registeredPlugins  = array();
+        $this->phpSuffixes        = $phpSuffixes;
+        $this->excludeOK          = $excludeOK;
     }
 
     /**
@@ -210,7 +215,7 @@ class CLIController
     public function addErrorPlugins($classNames)
     {
         foreach ((array) $classNames as $className) {
-            $this->_registeredPlugins[] = $className;
+            $this->registeredPlugins[] = $className;
         }
     }
 
@@ -220,45 +225,45 @@ class CLIController
      * Following steps are resolved:
      * 1. Clean-up output directory
      * 2. Merge xml log files
-     * 3. Generate XML file via errorlist from plugins
+     * 3. Generate XML file via error list from plugins
      * 4. Save the ErrorList as XML file
      * 5. Generate HTML output from XML
-     * 6. Copy ressources (css, js, images) from template directory to output
+     * 6. Copy resources (css, js, images) from template directory to output
      *
      * @return void
      */
     public function run()
     {
         // clear and create output directory
-        if (is_dir($this->_htmlOutputDir)) {
-            $this->_ioHelper->deleteDirectory($this->_htmlOutputDir);
-        } else if (is_file($this->_htmlOutputDir)) {
-            $this->_ioHelper->deleteFile($this->_htmlOutputDir);
+        if (is_dir($this->htmlOutputDir)) {
+            $this->ioHelper->deleteDirectory($this->htmlOutputDir);
+        } elseif (is_file($this->htmlOutputDir)) {
+            $this->ioHelper->deleteFile($this->htmlOutputDir);
         }
-        $this->_ioHelper->createDirectory($this->_htmlOutputDir);
+        $this->ioHelper->createDirectory($this->htmlOutputDir);
 
         // init needed classes
         $viewReview  = new ViewReview(
             PHPCB_TEMPLATE_DIR,
-            $this->_htmlOutputDir,
-            $this->_ioHelper,
-            $this->_phpSuffixes
+            $this->htmlOutputDir,
+            $this->ioHelper,
+            $this->phpSuffixes
         );
 
-        $sourceHandler = new SourceHandler($this->_debugLog);
+        $sourceHandler = new SourceHandler($this->debugLog);
 
-        if (isset($this->_logDir)) {
+        if (isset($this->logDir)) {
             $issueXml    = new IssueXml();
 
             // merge xml files
-            $issueXml->addDirectory($this->_logDir);
+            $issueXml->addDirectory($this->logDir);
 
             // conversion of XML file cc to cb format
-            foreach ($this->_registeredPlugins as $className) {
-                if (array_key_exists($className, $this->_pluginOptions)) {
+            foreach ($this->registeredPlugins as $className) {
+                if (array_key_exists($className, $this->pluginOptions)) {
                     $plugin = new $className(
                         $issueXml,
-                        $this->_pluginOptions[$className]
+                        $this->pluginOptions[$className]
                     );
                 } else {
                     $plugin = new $className($issueXml);
@@ -267,13 +272,13 @@ class CLIController
             }
         }
 
-        if (isset($this->_projectSource)) {
-            foreach ($this->_projectSource as $source) {
+        if (isset($this->projectSource)) {
+            foreach ($this->projectSource as $source) {
                 if (is_dir($source)) {
                     $factory = new File_Iterator_Factory;
 
                     $suffixes = array_merge(
-                        $this->_phpSuffixes,
+                        $this->phpSuffixes,
                         array('php','js','css', 'html')
                     );
 
@@ -290,11 +295,11 @@ class CLIController
         }
 
         array_walk(
-            $this->_excludeExpressions,
+            $this->excludeExpressions,
             array($sourceHandler, 'excludeMatchingPCRE')
         );
         array_walk(
-            $this->_excludePatterns,
+            $this->excludePatterns,
             array($sourceHandler, 'excludeMatchingPattern')
         );
 
@@ -314,14 +319,14 @@ class CLIController
                     $file->getIssues(),
                     $file->name(),
                     $commonPathPrefix,
-                    $this->_excludeOK
+                    $this->excludeOK
                 );
             }
             ini_set('error_reporting', $error_reporting);
 
             // Copy needed ressources (eg js libraries) to output directory
-            $viewReview->copyRessourceFolders();
-            $viewReview->generateIndex($files, $this->_excludeOK);
+            $viewReview->copyResourceFolders();
+            $viewReview->generateIndex($files, $this->excludeOK);
         }
     }
 
@@ -333,6 +338,7 @@ class CLIController
     public static function main()
     {
         $parser = self::createCommandLineParser();
+        $opts   = array();
 
         try {
             $opts = $parser->parse()->options;
@@ -369,15 +375,12 @@ class CLIController
             $opts['output'],
             $opts['excludePCRE'] ? $opts['excludePCRE'] : array(),
             $opts['excludePattern'] ? $opts['excludePattern'] : array(),
-            $opts['crapThreshold'] ? array('CRAP' => array(
-                                        'threshold' => $opts['crapThreshold'])
-                                     )
-                                   : array(),
+            $opts['crapThreshold'] ? array('CRAP' => array('threshold' => $opts['crapThreshold'])) : array(),
             new IOHelper(),
-            $opts['debugExcludes'] ? new Logger('PHPCodeBrowser') //'console', '', 'PHPCB') FIXME
-                                   : new Logger('PHPCodeBrowser'), //Log::factory('null'),
-            $opts['phpSuffixes'] ? explode(',', $opts['phpSuffixes'])
-                                 : array('php'),
+            $opts['debugExcludes']
+                ? new Logger('PHPCodeBrowser') //'console', '', 'PHPCB') FIXME
+                : new Logger('PHPCodeBrowser'), //Log::factory('null'),
+            $opts['phpSuffixes'] ? explode(',', $opts['phpSuffixes']) : array('php'),
             $opts['excludeOK'] ? $opts['excludeOK'] : false
         );
 
@@ -415,17 +418,17 @@ HERE
      *
      * Currently hard-coded.
      *
-     * @return array of string Classnames of error plugins
+     * @return string[] Class names of error plugins
      */
     public static function getAvailablePlugins()
     {
         return array(
-            'ErrorCheckstyle',
-            'ErrorPMD',
-            'ErrorCPD',
-            'ErrorPadawan',
-            'ErrorCoverage',
-            'ErrorCRAP'
+            'PHPCodeBrowser\\Plugins\\ErrorCheckstyle',
+            'PHPCodeBrowser\\Plugins\\ErrorPMD',
+            'PHPCodeBrowser\\Plugins\\ErrorCPD',
+            'PHPCodeBrowser\\Plugins\\ErrorPadawan',
+            'PHPCodeBrowser\\Plugins\\ErrorCoverage',
+            'PHPCodeBrowser\\Plugins\\ErrorCRAP'
         );
     }
 
@@ -444,16 +447,16 @@ HERE
             if (!isset($opts['source'])) {
                 $errors[] = 'Missing log or source argument.';
             }
-        } else if (!file_exists($opts['log'])) {
+        } elseif (!file_exists($opts['log'])) {
             $errors[] = 'Log directory does not exist.';
-        } else if (!is_dir($opts['log'])) {
+        } elseif (!is_dir($opts['log'])) {
             $errors[] = 'Log argument must be a directory, a file was given.';
         }
 
         if (!isset($opts['output'])) {
             $errors[] = 'Missing output argument.';
-        } else if (file_exists($opts['output']) && !is_dir($opts['output'])) {
-            $errors[] = 'Ouput argument must be a directory, a file was given.';
+        } elseif (file_exists($opts['output']) && !is_dir($opts['output'])) {
+            $errors[] = 'Output argument must be a directory, a file was given.';
         }
 
         if (isset($opts['source'])) {
@@ -556,7 +559,7 @@ HERE
                                     . 'files in the source dir in if one is '
                                     . 'given. Can be given multiple times. Note'
                                     . ' that the match is run against '
-                                    . 'absolute filenames.',
+                                    . 'absolute file names.',
                 'short_name'  => '-e',
                 'long_name'   => '--exclude',
                 'action'      => 'StoreArray',
@@ -595,15 +598,16 @@ HERE
         );
 
         $plugins = array_map(
-            array(__CLASS__, 'arrayMapCallback'),
+            function ($class) {
+                return '"' . substr($class, strlen('Error')) . '"';
+            },
             self::getAvailablePlugins()
         );
 
         $parser->addOption(
             'disablePlugin',
             array(
-                'description' => 'Disable single Plugins. Can be one of '
-                                    . implode(', ', $plugins),
+                'description' => 'Disable single Plugins. Can be one of ' . implode(', ', $plugins),
                 'choices'     => $plugins,
                 'long_name'   => '--disablePlugin',
                 'action'      => 'StoreArray',
@@ -626,10 +630,5 @@ HERE
         );
 
         return $parser;
-    }
-
-    private static function arrayMapCallback($class)
-    {
-        return '"' . substr($class, strlen('Error')) . '"';
     }
 }

@@ -49,8 +49,8 @@
  */
 
 namespace PHPCodeBrowser\Plugins;
-use PHPCodeBrowser\PluginsAbstract;
 
+use PHPCodeBrowser\PluginsAbstract;
 
 /**
  * ErrorPadawan
@@ -81,31 +81,30 @@ class ErrorPadawan extends PluginsAbstract
      * of the issue.
      * @var string
      */
-    protected $_lineStartAttr = 'line';
+    protected $lineStartAttr = 'line';
 
     /**
      * Name of the attribute that holds the number of the last line
      * of the issue.
      * @var string
      */
-    protected $_lineEndAttr = 'line';
+    protected $lineEndAttr = 'line';
 
     /**
      * Name of the attribute that holds message of the issue.
      * @var string
      */
-    protected $_descriptionAttr = 'message';
+    protected $descriptionAttr = 'message';
 
     /**
      * Name of the attribute that holds severity of the issue.
      * @var string
      */
-    protected $_severityAttr = 'severity';
+    protected $severityAttr = 'severity';
 
     /**
      * Default string to use as source for issue.
      * @var string
      */
-    protected $_source = 'Padawan';
-
+    protected $source = 'Padawan';
 }

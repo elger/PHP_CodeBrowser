@@ -82,19 +82,19 @@ class ErrorPMD extends PluginsAbstract
      * of the issue.
      * @var string
      */
-    protected $_lineStartAttr = 'beginline';
+    protected $lineStartAttr = 'beginline';
     /**
      * Name of the attribute that holds the number of the last line
      * of the issue.
      * @var string
      */
-    protected $_lineEndAttr = 'endline';
+    protected $lineEndAttr = 'endline';
 
     /**
      * Default string to use as source for issue.
      * @var string
      */
-    protected $_source = 'PMD';
+    protected $source = 'PMD';
 
     /**
      * Get the severity of an issue.
@@ -103,7 +103,7 @@ class ErrorPMD extends PluginsAbstract
      * @param DOMElement $element
      * @return string
      */
-    protected function _getSeverity(DOMElement $element)
+    protected function getSeverity(DOMElement $element)
     {
         return 'error';
     }
@@ -115,7 +115,7 @@ class ErrorPMD extends PluginsAbstract
      * @param DOMElement $element
      * @return string
      */
-    protected function _getDescription(DOMElement $element)
+    protected function getDescription(DOMElement $element)
     {
         return str_replace(
             '&#10;',

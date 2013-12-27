@@ -75,14 +75,14 @@ class ErrorCPDTest extends AbstractTestCase
      *
      * @var ErrorCPD
      */
-    protected $_errorCPD;
+    protected $errorCPD;
 
     /**
      * The xml string to test the plugin against.
      *
      * @var string
      */
-    protected $_testXml = <<<HERE
+    protected $testXml = <<<HERE
 <?xml version="1.0" encoding="UTF-8"?>
 <pmd-cpd version="phpcpd 1.3.1">
   <duplication lines="1" tokens="2">
@@ -96,7 +96,7 @@ class ErrorCPDTest extends AbstractTestCase
 HERE;
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPDoc)
      * @see tests/cbAbstractTests#setUp()
      */
     protected function setUp()
@@ -104,17 +104,17 @@ HERE;
         parent::setUp();
         $issueXML = new IssueXML();
         $xml = new DOMDocument('1.0', 'UTF-8');
-        $xml->loadXML($this->_testXml);
+        $xml->loadXML($this->testXml);
         $issueXML->addXMLFile($xml);
-        $this->_errorCPD = new ErrorCPD($issueXML);
+        $this->errorCPD = new ErrorCPD($issueXML);
     }
 
     /**
-     * Test getFilelist
+     * Test getFileList
      *
      * @return  void
      */
-    public function test__getFilelist()
+    public function testGettingFileList()
     {
         $expected = array(
             new File(
@@ -144,7 +144,7 @@ HERE;
                 )
             )
         );
-        $actual = $this->_errorCPD->getFilelist();
+        $actual = $this->errorCPD->getFileList();
         $this->assertEquals($expected, $actual);
     }
 }

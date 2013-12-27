@@ -75,14 +75,14 @@ class ErrorCheckstyleTest extends AbstractTestCase
      *
      * @var ErrorCheckstyle
      */
-    protected $_errorCheckstyle;
+    protected $errorCheckstyle;
 
     /**
      * The xml string to test the plugin against.
      *
      * @var string
      */
-    protected $_testXml = <<<HERE
+    protected $testXml = <<<HERE
 <?xml version="1.0" encoding="UTF-8"?>
 <checkstyle version="1.2.2">
  <file name="/some/file">
@@ -110,7 +110,7 @@ class ErrorCheckstyleTest extends AbstractTestCase
 HERE;
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPDoc)
      * @see tests/cbAbstractTests#setUp()
      */
     protected function setUp()
@@ -119,17 +119,17 @@ HERE;
         $issueXML = new IssueXML();
         $xml = new DOMDocument('1.0', 'UTF-8');
         $xml->validateOnParse = true;
-        $xml->loadXML($this->_testXml);
+        $xml->loadXML($this->testXml);
         $issueXML->addXMLFile($xml);
-        $this->_errorCheckstyle = new ErrorCheckstyle($issueXML);
+        $this->errorCheckstyle = new ErrorCheckstyle($issueXML);
     }
 
     /**
-     * Test getFilelist
+     * Test getFileList
      *
      * @return  void
      */
-    public function test__getFilelist()
+    public function testGettingFileList()
     {
         $expected = array(
             new File(
@@ -171,8 +171,7 @@ HERE;
                 array()
             )
         );
-        $actual = $this->_errorCheckstyle->getFilelist();
+        $actual = $this->errorCheckstyle->getFileList();
         $this->assertEquals($expected, $actual);
     }
-
 }

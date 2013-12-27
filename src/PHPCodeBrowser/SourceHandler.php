@@ -49,11 +49,11 @@
  */
 
 namespace PHPCodeBrowser;
+
 use Exception;
 use Monolog\Logger;
 use PHPCodeBrowser\Helper\IOHelper;
 use SplFileInfo;
-
 
 /**
  * SourceHandler
@@ -80,14 +80,14 @@ class SourceHandler
      *
      * @var File[]
      */
-    protected $_files = array();
+    protected $files = array();
 
     /**
      * Pear Log object where debug output should go to.
      *
      * @var Logger
      */
-    protected $_debugLog;
+    protected $debugLog;
 
     /**
      * Default constructor
@@ -97,7 +97,7 @@ class SourceHandler
      */
     public function __construct (Logger $debugLog, array $plugins = array())
     {
-        $this->_debugLog = $debugLog;
+        $this->debugLog = $debugLog;
         array_walk($plugins, array($this, 'addPlugin'));
     }
 
@@ -108,11 +108,11 @@ class SourceHandler
      */
     public function addPlugin(PluginsAbstract $plugin)
     {
-        foreach ($plugin->getFilelist() as $file) {
-            if (array_key_exists($file->name(), $this->_files)) {
-                $this->_files[$file->name()]->mergeWith($file);
+        foreach ($plugin->getFileList() as $file) {
+            if (array_key_exists($file->name(), $this->files)) {
+                $this->files[$file->name()]->mergeWith($file);
             } else {
-                $this->_files[$file->name()] = $file;
+                $this->files[$file->name()] = $file;
             }
         }
     }
@@ -149,8 +149,8 @@ class SourceHandler
             throw new Exception("$filename is no regular file");
         }
 
-        if (!array_key_exists($file, $this->_files)) {
-            $this->_files[$file] = new File($file);
+        if (!array_key_exists($file, $this->files)) {
+            $this->files[$file] = new File($file);
         }
     }
 
@@ -161,7 +161,7 @@ class SourceHandler
      */
     public function getCommonPathPrefix()
     {
-        return IOHelper::getCommonPathPrefix(array_keys($this->_files));
+        return IOHelper::getCommonPathPrefix(array_keys($this->files));
     }
 
     /**
@@ -171,18 +171,18 @@ class SourceHandler
      */
     public function getFiles()
     {
-        File::sort($this->_files);
-        return $this->_files;
+        File::sort($this->files);
+        return $this->files;
     }
 
     /**
-     * Get a unique list of all filenames with issues.
+     * Get a unique list of all file names with issues.
      *
      * @return array
      */
     public function getFilesWithIssues()
     {
-        return array_keys($this->_files);
+        return array_keys($this->files);
     }
 
     /**
@@ -193,12 +193,12 @@ class SourceHandler
      */
     public function excludeMatchingPCRE($expr)
     {
-        foreach (array_keys($this->_files) as $filename) {
+        foreach (array_keys($this->files) as $filename) {
             if (preg_match($expr, $filename)) {
-                $this->_debugLog->debug(
+                $this->debugLog->debug(
                     "Excluding $filename, it matches PCRE $expr"
                 );
-                unset($this->_files[$filename]);
+                unset($this->files[$filename]);
             }
         }
     }
@@ -212,12 +212,12 @@ class SourceHandler
      */
     public function excludeMatchingPattern($pattern)
     {
-        foreach (array_keys($this->_files) as $filename) {
+        foreach (array_keys($this->files) as $filename) {
             if (fnmatch($pattern, $filename)) {
-                $this->_debugLog->debug(
+                $this->debugLog->debug(
                     "Excluding $filename, it matches pattern $pattern"
                 );
-                unset($this->_files[$filename]);
+                unset($this->files[$filename]);
             }
         }
     }

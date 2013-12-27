@@ -83,7 +83,7 @@ abstract class PluginsAbstract
      *
      * @var IssueXml
      */
-    protected $_issueXml;
+    protected $issueXml;
 
     /**
      * Name of the attribute that holds the number of the first line
@@ -91,7 +91,7 @@ abstract class PluginsAbstract
      *
      * @var string
      */
-    protected $_lineStartAttr;
+    protected $lineStartAttr;
 
     /**
      * Name of the attribute that holds the number of the last line
@@ -99,35 +99,35 @@ abstract class PluginsAbstract
      *
      * @var string
      */
-    protected $_lineEndAttr;
+    protected $lineEndAttr;
 
     /**
      * Name of the attribute that holds message of the issue.
      *
      * @var string
      */
-    protected $_descriptionAttr;
+    protected $descriptionAttr;
 
     /**
      * Name of the attribute that holds severity of the issue.
      *
      * @var string
      */
-    protected $_severityAttr;
+    protected $severityAttr;
 
     /**
      * Default string to use as source for issue.
      *
      * @var string
      */
-    protected $_source;
+    protected $source;
 
     /**
      * Plugin-specific options.
      *
      * @var array
      */
-    protected $_options;
+    protected $options;
 
     /**
      * Default Constructor
@@ -137,8 +137,8 @@ abstract class PluginsAbstract
      */
     public function __construct(IssueXml $issueXml, $options = array())
     {
-        $this->_issueXml = $issueXml;
-        $this->_options  = $options;
+        $this->issueXml = $issueXml;
+        $this->options  = $options;
     }
 
     /**
@@ -146,7 +146,7 @@ abstract class PluginsAbstract
      *
      * @return File[] List of files with issues.
      */
-    public function getFilelist()
+    public function getFileList()
     {
         $files = array();
         foreach ($this->getFilesWithIssues() as $name) {
@@ -166,7 +166,7 @@ abstract class PluginsAbstract
     public function getIssuesByFile($filename)
     {
         $issues = array();
-        foreach ($this->_getIssueNodes($filename) as $issueNode) {
+        foreach ($this->getIssueNodes($filename) as $issueNode) {
             $issues = array_merge(
                 $issues,
                 $this->mapIssues($issueNode, $filename)
@@ -182,15 +182,15 @@ abstract class PluginsAbstract
      */
     public function getFilesWithIssues()
     {
-        $filenames  = array();
-        $issueNodes = $this->_issueXml->query(
+        $fileNames  = array();
+        $issueNodes = $this->issueXml->query(
             sprintf('/*/%s/file[@name]', $this->pluginName)
         );
         foreach ($issueNodes as $node) {
-            $filenames[] = $node->getAttribute('name');
+            $fileNames[] = $node->getAttribute('name');
         }
 
-        return array_unique($filenames);
+        return array_unique($fileNames);
     }
 
     /**
@@ -213,11 +213,11 @@ abstract class PluginsAbstract
             }
             $errorList[] = new Issue(
                 $filename,
-                $this->_getLineStart($child),
-                $this->_getLineEnd($child),
-                $this->_getSource($child),
-                $this->_getDescription($child),
-                $this->_getSeverity($child)
+                $this->getLineStart($child),
+                $this->getLineEnd($child),
+                $this->getSource(),
+                $this->getDescription($child),
+                $this->getSeverity($child)
             );
         }
         return $errorList;
@@ -230,9 +230,9 @@ abstract class PluginsAbstract
      *
      * @return DOMNodeList
      */
-    protected function _getIssueNodes($filename)
+    protected function getIssueNodes($filename)
     {
-        return $this->_issueXml->query(
+        return $this->issueXml->query(
             sprintf('/*/%s/file[@name="%s"]', $this->pluginName, $filename)
         );
     }
@@ -245,9 +245,9 @@ abstract class PluginsAbstract
      *
      * @return Integer
      */
-    protected function _getLineStart(DOMElement $element)
+    protected function getLineStart(DOMElement $element)
     {
-        return (int) $element->getAttribute($this->_lineStartAttr);
+        return (int) $element->getAttribute($this->lineStartAttr);
     }
 
     /**
@@ -258,22 +258,20 @@ abstract class PluginsAbstract
      *
      * @return Integer
      */
-    protected function _getLineEnd(DOMElement $element)
+    protected function getLineEnd(DOMElement $element)
     {
-        return (int) $element->getAttribute($this->_lineEndAttr);
+        return (int) $element->getAttribute($this->lineEndAttr);
     }
 
     /**
      * Default method for retrieving the source of an issue.
      * @see self::mapIssues
      *
-     * @param DOMElement $element
-     *
      * @return string
      */
-    protected function _getSource(DOMElement $element)
+    protected function getSource()
     {
-        return $this->_source;
+        return $this->source;
     }
 
     /**
@@ -284,9 +282,9 @@ abstract class PluginsAbstract
      *
      * @return string
      */
-    protected function _getDescription(DOMElement $element)
+    protected function getDescription(DOMElement $element)
     {
-        return htmlentities($element->getAttribute($this->_descriptionAttr));
+        return htmlentities($element->getAttribute($this->descriptionAttr));
     }
 
     /**
@@ -297,8 +295,8 @@ abstract class PluginsAbstract
      *
      * @return string
      */
-    protected function _getSeverity(DOMElement $element)
+    protected function getSeverity(DOMElement $element)
     {
-        return htmlentities($element->getAttribute($this->_severityAttr));
+        return htmlentities($element->getAttribute($this->severityAttr));
     }
 }

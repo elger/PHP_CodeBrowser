@@ -69,18 +69,19 @@ class IssueTest extends AbstractTestCase
      *
      * @var Issue
      */
-    protected $_issue;
+    protected $issue;
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPDoc)
      * @see tests/cbAbstractTests#setUp()
      */
     protected function setUp()
     {
         parent::setUp();
-        $this->_issue = new Issue(
+        $this->issue = new Issue(
             'testFileName',
-            23, 27,
+            23,
+            27,
             'testFinder',
             'testDescription',
             'notice'
@@ -88,7 +89,7 @@ class IssueTest extends AbstractTestCase
     }
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPDoc)
      * @see tests/cbAbstractTests#tearDown()
      */
     protected function tearDown()
@@ -101,13 +102,13 @@ class IssueTest extends AbstractTestCase
      *
      * @return void
      */
-    public function test__construct()
+    public function testInstantiation()
     {
-        $this->assertTrue($this->_issue->fileName    === 'testFileName');
-        $this->assertTrue($this->_issue->lineStart   === 23);
-        $this->assertTrue($this->_issue->lineEnd     === 27);
-        $this->assertTrue($this->_issue->foundBy     === 'testFinder');
-        $this->assertTrue($this->_issue->description === 'testDescription');
-        $this->assertTrue($this->_issue->severity    === 'notice');
+        $this->assertTrue($this->issue->fileName    === 'testFileName');
+        $this->assertTrue($this->issue->lineStart   === 23);
+        $this->assertTrue($this->issue->lineEnd     === 27);
+        $this->assertTrue($this->issue->foundBy     === 'testFinder');
+        $this->assertTrue($this->issue->description === 'testDescription');
+        $this->assertTrue($this->issue->severity    === 'notice');
     }
 }

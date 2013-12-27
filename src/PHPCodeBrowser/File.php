@@ -47,6 +47,7 @@
  */
 
 namespace PHPCodeBrowser;
+
 use PHPCodeBrowser\Helper\IOHelper;
 
 /**
@@ -71,14 +72,14 @@ class File
      *
      * @var string
      */
-    private $_name;
+    private $name;
 
     /**
      * Issues associated with this file.
      *
      * @var Issue[]
      */
-    private $_issues;
+    private $issues;
 
     /**
      * Default constructor.
@@ -88,8 +89,8 @@ class File
      */
     public function __construct($name, array $issues = array())
     {
-        $this->_name = $name;
-        $this->_issues = $issues;
+        $this->name = $name;
+        $this->issues = $issues;
     }
 
     /**
@@ -100,12 +101,12 @@ class File
      */
     public function addIssue(Issue $issue)
     {
-        if ($issue->fileName !== $this->_name) {
+        if ($issue->fileName !== $this->name) {
             throw new \InvalidArgumentException(
                 'Tried to add issue to wrong file.'
             );
         }
-        $this->_issues[] = $issue;
+        $this->issues[] = $issue;
     }
 
     /**
@@ -115,7 +116,7 @@ class File
      */
     public function getIssues()
     {
-        return $this->_issues;
+        return $this->issues;
     }
 
     /**
@@ -125,7 +126,7 @@ class File
      */
     public function name()
     {
-        return $this->_name;
+        return $this->name;
     }
 
     /**
@@ -135,17 +136,17 @@ class File
      */
     public function basename()
     {
-        return basename($this->_name);
+        return basename($this->name);
     }
 
     /**
-     * Returns the dirname of this file.
+     * Returns the dirName of this file.
      *
      * @return string
      */
-    public function dirname()
+    public function dirName()
     {
-        return dirname($this->_name);
+        return dirname($this->name);
     }
 
     /**
@@ -155,7 +156,7 @@ class File
      */
     public function getIssueCount()
     {
-        return count($this->_issues);
+        return count($this->issues);
     }
 
     /**
@@ -166,7 +167,7 @@ class File
     public function getErrorCount()
     {
         $count = 0;
-        foreach ($this->_issues as $issue) {
+        foreach ($this->issues as $issue) {
             if (strcasecmp($issue->severity, 'error') === 0) {
                 $count += 1;
             }
@@ -192,12 +193,12 @@ class File
      */
     public function mergeWith($file)
     {
-        if ($this->_name !== $file->_name) {
+        if ($this->name !== $file->name) {
             throw new \InvalidArgumentException(
                 'Tried to merge different files'
             );
         }
-        $this->_issues = array_merge($this->_issues, $file->_issues);
+        $this->issues = array_merge($this->issues, $file->issues);
     }
 
     /**
@@ -207,38 +208,38 @@ class File
      */
     public static function sort(array &$files)
     {
-        uasort($files, 'PHPCodeBrowser\File::_sort');
+        uasort($files, 'PHPCodeBrowser\File::internalSort');
     }
 
     /**
      * Sorting function used in File::sort()
      */
-    protected static function _sort($first, $second)
+    protected static function internalSort(File $first, File $second)
     {
         $first = $first->name();
         $second = $second->name();
 
         $prefix = IOHelper::getCommonPathPrefix(array($first, $second));
-        $prelen = strlen($prefix);
+        $prefixLength = strlen($prefix);
 
-        $first = substr($first, $prelen);
-        $second = substr($second, $prelen);
+        $first = substr($first, $prefixLength);
+        $second = substr($second, $prefixLength);
 
-        $firstIsInSubdir = (substr_count($first, DIRECTORY_SEPARATOR) !== 0);
-        $secondIsInSubdir = (substr_count($second, DIRECTORY_SEPARATOR) !== 0);
+        $firstIsInSubDir = (substr_count($first, DIRECTORY_SEPARATOR) !== 0);
+        $secondIsInSubDir = (substr_count($second, DIRECTORY_SEPARATOR) !== 0);
 
-        if ($firstIsInSubdir) {
-            if ($secondIsInSubdir) {
+        if ($firstIsInSubDir) {
+            if ($secondIsInSubDir) {
                 // both are subdirectories
                 return strcmp($first, $second);
             } else {
-                // a lies in a subdir of the dir in which b lies,
+                // a lies in a subDir of the dir in which b lies,
                 // so b comes later.
                 return -1;
             }
         } else {
-            if ($secondIsInSubdir) {
-                // b lies in a subdir of the dir in which a lies,
+            if ($secondIsInSubDir) {
+                // b lies in a subDir of the dir in which a lies,
                 // so a comes later.
                 return 1;
             } else {

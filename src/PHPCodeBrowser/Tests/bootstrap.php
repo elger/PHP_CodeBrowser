@@ -46,17 +46,20 @@
  */
 
 if (!defined('PHPCB_SOURCE_DIR')) {
- define('PHPCB_SOURCE_DIR', realpath(dirname(__FILE__) . '/../'));
+    define('PHPCB_SOURCE_DIR', realpath(dirname(__FILE__) . '/../'));
 }
 
 if (!defined('PHPCB_TEST_DIR')) {
- define('PHPCB_TEST_DIR', realpath(PHPCB_SOURCE_DIR) . DIRECTORY_SEPARATOR . 'Tests' . DIRECTORY_SEPARATOR . 'testData');
+    define(
+        'PHPCB_TEST_DIR',
+        realpath(PHPCB_SOURCE_DIR) . DIRECTORY_SEPARATOR . 'Tests' . DIRECTORY_SEPARATOR . 'testData'
+    );
 }
 if (!defined('PHPCB_TEST_LOGS')) {
- define('PHPCB_TEST_LOGS', PHPCB_TEST_DIR . '/logs');
+    define('PHPCB_TEST_LOGS', PHPCB_TEST_DIR . '/logs');
 }
 if (!defined('PHPCB_TEST_OUTPUT')) {
     define('PHPCB_TEST_OUTPUT', PHPCB_TEST_DIR . DIRECTORY_SEPARATOR . 'output');
 }
 
-require_once dirname(__FILE__) . '/../../../vendor/autoload.php';
+$loader = require_once dirname(__FILE__) . '/../../../vendor/autoload.php';

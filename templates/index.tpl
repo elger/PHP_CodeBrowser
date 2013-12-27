@@ -49,8 +49,10 @@ $occuringErrorTypes = array (
     'Padawan'    => false
 );
 
-foreach ($fileList as $file) foreach ($file->getIssues() as $issue) {
-    $occuringErrorTypes[$issue->foundBy] = true;
+foreach ($fileList as $file) {
+    foreach ($file->getIssues() as $issue) {
+        $occuringErrorTypes[$issue->foundBy] = true;
+    }
 }
 
 $occuringErrorTypes = array_keys(array_filter($occuringErrorTypes));

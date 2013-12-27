@@ -49,6 +49,7 @@
 namespace PHPCodeBrowser\Tests\View;
 
 use PHPCodeBrowser\File;
+use PHPCodeBrowser\Helper\IOHelper;
 use PHPCodeBrowser\Issue;
 use PHPCodeBrowser\Tests\AbstractTestCase;
 use PHPCodeBrowser\View\ViewReview;
@@ -73,27 +74,29 @@ class ViewReviewTest extends AbstractTestCase
      *
      * @var ViewReview
      */
-    protected $_viewReview;
+    protected $viewReview;
 
     /**
      * IOHelper mock to simulate filesystem interaction.
+     *
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
-    protected $_ioMock;
+    protected $ioMock;
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPDoc)
      * @see tests/cbAbstractTests#setUp()
      */
     protected function setUp()
     {
         parent::setUp();
 
-        $this->_ioMock = $this->getMock('PHPCodeBrowser\Helper\IOHelper');
+        $this->ioMock = $this->getMock('PHPCodeBrowser\Helper\IOHelper');
 
-        $this->_viewReview = new ViewReview(
+        $this->viewReview = new ViewReview(
             PHPCB_ROOT_DIR . '/../templates/',
             PHPCB_TEST_OUTPUT,
-            $this->_ioMock
+            $this->ioMock
         );
     }
 
@@ -102,19 +105,19 @@ class ViewReviewTest extends AbstractTestCase
      *
      * @return void
      */
-    public function test__generateNoIssues()
+    public function testGenerateNoIssues()
     {
         $expectedFile = PHPCB_TEST_OUTPUT . DIRECTORY_SEPARATOR . basename(__FILE__) . '.html';
 
-        $this->_ioMock->expects($this->once())
+        $this->ioMock->expects($this->once())
                       ->method('loadFile')
                       ->with($this->equalTo(__FILE__))
                       ->will($this->returnValue(file_get_contents(__FILE__)));
-        $this->_ioMock->expects($this->once())
+        $this->ioMock->expects($this->once())
                       ->method('createFile')
                       ->with($this->equalTo($expectedFile));
 
-        $this->_viewReview->generate(
+        $this->viewReview->generate(
             array(),
             __FILE__,
             dirname(__FILE__) . DIRECTORY_SEPARATOR
@@ -126,7 +129,7 @@ class ViewReviewTest extends AbstractTestCase
      *
      * @return void
      */
-    public function test__generate()
+    public function testGenerate()
     {
         $issueList = array(
             new Issue(
@@ -140,15 +143,15 @@ class ViewReviewTest extends AbstractTestCase
         );
 
         $expectedFile = PHPCB_TEST_OUTPUT . DIRECTORY_SEPARATOR . basename(__FILE__) . '.html';
-        $this->_ioMock->expects($this->once())
+        $this->ioMock->expects($this->once())
                       ->method('loadFile')
                       ->with($this->equalTo(__FILE__))
                       ->will($this->returnValue(file_get_contents(__FILE__)));
-        $this->_ioMock->expects($this->once())
+        $this->ioMock->expects($this->once())
                       ->method('createFile')
                       ->with($this->equalTo($expectedFile));
 
-        $this->_viewReview->generate(
+        $this->viewReview->generate(
             $issueList,
             __FILE__,
             dirname(__FILE__) . DIRECTORY_SEPARATOR
@@ -156,41 +159,27 @@ class ViewReviewTest extends AbstractTestCase
     }
 
     /**
-     * Test the generate method with mutliple errors on one line.
+     * Test the generate method with multiple errors on one line.
      *
      * @return void
      */
-    public function test__generateMultiple()
+    public function testGenerateMultiple()
     {
         $issueList = array(
-            new Issue(
-                __FILE__,
-                80,
-                80,
-                'finder',
-                'description',
-                'severe'
-            ),
-            new Issue(
-                __FILE__,
-                80,
-                80,
-                'other finder',
-                'other description',
-                'more severe'
-            )
+            new Issue(__FILE__, 80, 80, 'finder', 'description', 'severe'),
+            new Issue(__FILE__, 80, 80, 'other finder', 'other description', 'more severe')
         );
 
         $expectedFile = PHPCB_TEST_OUTPUT . DIRECTORY_SEPARATOR . basename(__FILE__) . '.html';
-        $this->_ioMock->expects($this->once())
+        $this->ioMock->expects($this->once())
                       ->method('loadFile')
                       ->with($this->equalTo(__FILE__))
                       ->will($this->returnValue(file_get_contents(__FILE__)));
-        $this->_ioMock->expects($this->once())
+        $this->ioMock->expects($this->once())
                       ->method('createFile')
                       ->with($this->equalTo($expectedFile));
 
-        $this->_viewReview->generate(
+        $this->viewReview->generate(
             $issueList,
             __FILE__,
             dirname(__FILE__) . DIRECTORY_SEPARATOR
@@ -202,7 +191,7 @@ class ViewReviewTest extends AbstractTestCase
      *
      * @return void
      */
-    public function test__generateWithTextHighlighter()
+    public function testGenerateWithTextHighlighter()
     {
         if (!class_exists('Text_Highlighter')) {
             $this->markTestIncomplete();
@@ -222,24 +211,19 @@ EOT;
         $fileName = $prefix . 'file.html';
 
         $expectedFile = PHPCB_TEST_OUTPUT . '/file.html.html';
-        $this->_ioMock->expects($this->once())
+        $this->ioMock->expects($this->once())
                       ->method('loadFile')
                       ->with($this->equalTo($fileName))
                       ->will($this->returnValue($html));
-        $this->_ioMock->expects($this->once())
+        $this->ioMock->expects($this->once())
                       ->method('createFile')
                       ->with($this->equalTo($expectedFile));
 
         $issues = array(
-            new Issue(
-                $fileName, 5,
-                5, 'finder',
-                'description',
-                'severity'
-            )
+            new Issue($fileName, 5, 5, 'finder', 'description', 'severity')
         );
-        $file = new File($fileName, $issues);
-        $this->_viewReview->generate($issues, $fileName, $prefix);
+
+        $this->viewReview->generate($issues, $fileName, $prefix);
     }
 
     /**
@@ -247,52 +231,40 @@ EOT;
      *
      * @return void
      */
-    public function test__generateUnknownType()
+    public function testGenerateUnknownType()
     {
-        $expectedFile = PHPCB_TEST_OUTPUT
-            . DIRECTORY_SEPARATOR .
-            basename(self::$_xmlBasic) . '.html';
+        $expectedFile = PHPCB_TEST_OUTPUT . DIRECTORY_SEPARATOR . basename(self::$xmlBasic) . '.html';
 
-        $this->_ioMock->expects($this->once())
+        $this->ioMock->expects($this->once())
                       ->method('createFile')
                       ->with($this->equalTo($expectedFile));
 
         $issueList = array(
-            new Issue(
-                self::$_xmlBasic, 5,
-                5, 'finder',
-                'description',
-                'severity'
-            )
+            new Issue(self::$xmlBasic, 5, 5, 'finder', 'description', 'severity')
         );
 
-        $this->_viewReview->generate(
+        $this->viewReview->generate(
             $issueList,
-            self::$_xmlBasic,
-            dirname(self::$_xmlBasic) . DIRECTORY_SEPARATOR
+            self::$xmlBasic,
+            dirname(self::$xmlBasic) . DIRECTORY_SEPARATOR
         );
     }
 
     /**
-     * Test if the ressource folders are copied.
+     * Test if the resource folders are copied.
      *
      * @return void
      */
-    public function test__copyRessourceFolders()
+    public function testCopyResourceFolders()
     {
-        $this->_ioMock->expects($this->exactly(3))
+        $this->ioMock->expects($this->exactly(3))
                       ->method('copyDirectory')
                       ->with(
                           $this->matchesRegularExpression(
-                              '|^'
-                              . realpath(
-                                  dirname(__FILE__)
-                                  . '/../../../templates/'
-                              )
-                              . '|'
+                              '|^' . realpath(dirname(__FILE__) . '/../../../templates/') . '|'
                           )
                       );
-        $this->_viewReview->copyRessourceFolders();
+        $this->viewReview->copyResourceFolders();
     }
 
     /**
@@ -300,7 +272,7 @@ EOT;
      *
      * @return void
      */
-    public function test__generateIndex()
+    public function testGenerateIndex()
     {
         $files = array(
             "s/A/somefile.php" => new File("s/A/somefile.php"),
@@ -308,13 +280,13 @@ EOT;
             "s/B/anotherfile.php" => new File("s/B/anotherfile.php")
         );
 
-        $this->_ioMock->expects($this->once())
+        $this->ioMock->expects($this->once())
                       ->method('createFile')
                       ->with(
                           $this->logicalAnd(
                               $this->stringEndsWith('index.html')
                           )
                       );
-        $this->_viewReview->generateIndex($files);
+        $this->viewReview->generateIndex($files);
     }
 }

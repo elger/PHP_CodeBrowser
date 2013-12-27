@@ -77,14 +77,14 @@
                                 <?php print $issue->severity;?>
                             </td>
                         </tr>
-                        <?php endforeach; //$issues as $issue ?>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
             <script type="text/javascript" language="javascript">
                 $(initReview);
             </script>
-            <?php endif; // div sidebar ?>
+            <?php endif; ?>
         </div>
     </body>
 </html>

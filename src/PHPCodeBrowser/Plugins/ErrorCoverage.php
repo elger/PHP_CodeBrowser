@@ -85,20 +85,20 @@ class ErrorCoverage extends PluginsAbstract
      * of the issue.
      * @var string
      */
-    protected $_lineStartAttr = 'num';
+    protected $lineStartAttr = 'num';
 
     /**
      * Name of the attribute that holds the number of the last line
      * of the issue.
      * @var string
      */
-    protected $_lineEndAttr = 'num';
+    protected $lineEndAttr = 'num';
 
     /**
      * Default string to use as source for issue.
      * @var string
      */
-    protected $_source = 'Coverage';
+    protected $source = 'Coverage';
 
     /**
      * The detailed mapper method for each single plugin, returning an array
@@ -117,7 +117,6 @@ class ErrorCoverage extends PluginsAbstract
 
         $children = $element->childNodes;
         $childCount = $children->length;
-        $next = 0;
 
         for ($next = 0; $next < $childCount; $next++) {
             $child = $children->item($next);
@@ -175,7 +174,7 @@ class ErrorCoverage extends PluginsAbstract
     public function getFilesWithIssues()
     {
         $filenames  = array();
-        $issueNodes = $this->_issueXml->query(
+        $issueNodes = $this->issueXml->query(
             '/*/'.$this->pluginName.'/*/file[@name]'
         );
 
@@ -192,11 +191,10 @@ class ErrorCoverage extends PluginsAbstract
      * @param string $filename Name of the file to get nodes for.
      * @return DOMNodeList
      */
-    protected function _getIssueNodes($filename)
+    protected function getIssueNodes($filename)
     {
-        return $this->_issueXml->query(
+        return $this->issueXml->query(
             '/*/'.$this->pluginName.'/*/file[@name="'.$filename.'"]'
         );
     }
-
 }

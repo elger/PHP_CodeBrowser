@@ -87,8 +87,9 @@ class ErrorCPD extends PluginsAbstract
     public function mapIssues(DOMNode $element, $filename)
     {
         $parentNode = $element->parentNode;
-        $files      = $this->_issueXml->query(
-            'file[@path="'.$filename.'"]', $parentNode
+        $files      = $this->issueXml->query(
+            'file[@path="'.$filename.'"]',
+            $parentNode
         );
         $lineCount  = (int)$parentNode->getAttribute('lines');
 
@@ -100,7 +101,7 @@ class ErrorCPD extends PluginsAbstract
                 (int) $file->getAttribute('line') + $lineCount,
                 'Duplication',
                 htmlentities(
-                    $this->_CPDgetDescription($parentNode->childNodes, $file)
+                    $this->getCpdDescription($parentNode->childNodes, $file)
                 ),
                 'notice'
             );
@@ -108,18 +109,21 @@ class ErrorCPD extends PluginsAbstract
         return $result;
     }
 
+    /**
+     * @return array
+     */
     public function getFilesWithIssues()
     {
-        $filenames = array();
-        $nodes = $this->_issueXml->query(
+        $fileNames = array();
+        $nodes = $this->issueXml->query(
             '/*/'.$this->pluginName.'/*/file[@path]'
         );
 
         foreach ($nodes as $node) {
-            $filenames[] = $node->getAttribute('path');
+            $fileNames[] = $node->getAttribute('path');
         }
 
-        return array_unique($filenames);
+        return array_unique($fileNames);
     }
 
     /**
@@ -128,9 +132,9 @@ class ErrorCPD extends PluginsAbstract
      * @param string $filename Name of the file to get nodes for.
      * @return DOMNodeList
      */
-    protected function _getIssueNodes($filename)
+    protected function getIssueNodes($filename)
     {
-        return $this->_issueXml->query(
+        return $this->issueXml->query(
             '/*/'.$this->pluginName.'/*/file[@path="'.$filename.'"]'
         );
     }
@@ -139,8 +143,7 @@ class ErrorCPD extends PluginsAbstract
      * We need another version of getDescription, as we need $allNodes
      * to find duplicates.
      */
-    protected function _CPDgetDescription(DOMNodeList $allNodes,
-                                          DOMNode $currentNode)
+    protected function getCpdDescription(DOMNodeList $allNodes, DOMNode $currentNode)
     {
         $source = array();
         foreach ($allNodes as $node) {
@@ -161,7 +164,7 @@ class ErrorCPD extends PluginsAbstract
      * @codeCoverageIgnoreStart
      * This cannot be called because of other overridden methods in this class.
      */
-    protected function _getDescription(DOMElement $element)
+    protected function getDescription(DOMElement $element)
     {
         throw new Exception('ErrorCPD does not support getDescription()!');
     }

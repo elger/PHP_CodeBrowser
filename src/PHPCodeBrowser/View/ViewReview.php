@@ -49,6 +49,7 @@
  */
 
 namespace PHPCodeBrowser\View;
+
 use DOMDocument;
 use DOMElement;
 use DOMXPath;
@@ -77,14 +78,14 @@ class ViewReview extends ViewAbstract
      *
      * @var array
      */
-    protected $_phpHighlightColorMap;
+    protected $phpHighlightColorMap;
 
     /**
      * Suffixes for php files.
      *
      * @var array
      */
-    protected $_phpSuffixes;
+    protected $phpSuffixes;
 
     /**
      * Default constructor
@@ -96,18 +97,19 @@ class ViewReview extends ViewAbstract
      * @param IOHelper $ioHelper  The IOHelper object to use for I/O.
      * @param array $phpSuffixes  The array with extensions of php files.
      */
-    public function __construct($templateDir, $outputDir, $ioHelper,
-                                $phpSuffixes = array('php'))
+    public function __construct($templateDir, $outputDir, $ioHelper, $phpSuffixes = array('php'))
     {
         parent::__construct($templateDir, $outputDir, $ioHelper);
-        $this->_phpHighlightColorMap = array(
+
+        $this->phpHighlightColorMap = array(
             ini_get('highlight.string')  => 'string',
             ini_get('highlight.comment') => 'comment',
             ini_get('highlight.keyword') => 'keyword',
             ini_get('highlight.default') => 'default',
             ini_get('highlight.html')    => 'html',
-          );
-        $this->_phpSuffixes = $phpSuffixes;
+        );
+
+        $this->phpSuffixes = $phpSuffixes;
     }
 
     /**
@@ -131,11 +133,11 @@ class ViewReview extends ViewAbstract
      */
     public function generate(array $issueList, $fileName, $commonPathPrefix, $excludeOK = false)
     {
-        $issues           = $this->_formatIssues($issueList);
+        $issues           = $this->formatIssues($issueList);
         $shortFilename    = substr($fileName, strlen($commonPathPrefix));
         $data['issues']   = $issueList;
         $data['filepath'] = $shortFilename;
-        $data['source']   = $this->_formatSourceCode($fileName, $issues);
+        $data['source']   = $this->formatSourceCode($fileName, $issues);
 
         $depth            = substr_count($shortFilename, DIRECTORY_SEPARATOR);
         $data['csspath']  = str_repeat('../', $depth - 1 >= 0 ? $depth - 1 : 0);
@@ -144,9 +146,9 @@ class ViewReview extends ViewAbstract
         if ($excludeOK && !$data['issues']) {
             return;
         }
-        $this->_ioHelper->createFile(
-            $this->_outputDir . $shortFilename . '.html',
-            $this->_render('review', $data)
+        $this->ioHelper->createFile(
+            $this->outputDir . $shortFilename . '.html',
+            $this->render('review', $data)
         );
     }
 
@@ -161,9 +163,9 @@ class ViewReview extends ViewAbstract
      *
      * @return string Html formatted string
      */
-    private function _formatSourceCode($filename, $outputIssues)
+    private function formatSourceCode($filename, $outputIssues)
     {
-        $sourceDom  = $this->_highlightCode($filename);
+        $sourceDom  = $this->highlightCode($filename);
         $xpath      = new DOMXPath($sourceDom);
         $lines      = $xpath->query('//ol/li');
 
@@ -221,12 +223,12 @@ class ViewReview extends ViewAbstract
             switch ($tmp = (isset($outputIssues[$lineNumber])
                     ? count($outputIssues[$lineNumber])
                     : 0)) {
-                case 0 :
+                case 0:
                     break;
-                case 1 :
+                case 1:
                     $lineClasses[] = $outputIssues[$lineNumber][0]->foundBy;
                     break;
-                case 1 < $tmp :
+                case 1 < $tmp:
                     $lineClasses[] = 'moreErrors';
                     break;
                 // This can't happen, count always returns >= 0
@@ -245,13 +247,13 @@ class ViewReview extends ViewAbstract
      *
      * The source code is highlighted by PHP native method.
      * Afterwords a DOMDocument will be generated with each
-     * line in a seperate node.
+     * line in a separate node.
      *
      * @param string $sourceCode The PHP source code
      *
      * @return DOMDocument
      */
-    protected function _highlightPhpCode($sourceCode)
+    protected function highlightPhpCode($sourceCode)
     {
         $code = highlight_string($sourceCode, true);
         if (extension_loaded('mbstring') && !mb_check_encoding($code, 'UTF-8')) {
@@ -301,7 +303,7 @@ class ViewReview extends ViewAbstract
                 continue;
             }
 
-            $elementClass = $this->_mapPhpColors(
+            $elementClass = $this->mapPhpColors(
                 $sourceElement->getAttribute('style')
             );
 
@@ -332,10 +334,10 @@ class ViewReview extends ViewAbstract
      *
      * @return string
      */
-    protected function _mapPhpColors($style)
+    protected function mapPhpColors($style)
     {
         $color = substr($style, 7);
-        return $this->_phpHighlightColorMap[$color];
+        return $this->phpHighlightColorMap[$color];
     }
 
     /**
@@ -349,7 +351,7 @@ class ViewReview extends ViewAbstract
      *
      * @return DOMDocument Html representation of parsed source code
      */
-    protected function _highlightCode($file)
+    protected function highlightCode($file)
     {
         $highlightMap = array(
             '.js'   => 'JAVASCRIPT',
@@ -357,12 +359,12 @@ class ViewReview extends ViewAbstract
             '.css'  => 'CSS',
         );
 
-        $sourceCode = $this->_ioHelper->loadFile($file);
+        $sourceCode = $this->ioHelper->loadFile($file);
         $extension  = pathinfo($file, PATHINFO_EXTENSION);
 
-        if (in_array($extension, $this->_phpSuffixes)) {
-            return $this->_highlightPhpCode($sourceCode);
-        } else if (class_exists('Text_Highlighter', false)
+        if (in_array($extension, $this->phpSuffixes)) {
+            return $this->highlightPhpCode($sourceCode);
+        } elseif (class_exists('Text_Highlighter', false)
                 && isset($highlightMap[$extension])) {
             $renderer = new Text_Highlighter_Renderer_Html(
                 array(
@@ -399,13 +401,14 @@ class ViewReview extends ViewAbstract
             return $doc;
         } else {
             $sourceCode = preg_replace(
-                '/^.*$/m', '<li>$0</li>',
+                '/^.*$/m',
+                '<li>$0</li>',
                 htmlentities($sourceCode)
             );
             $sourceCode = preg_replace('/ /', '&nbsp;', $sourceCode);
             $sourceCode = '<div class="code"><ol class="code">'
                         . $sourceCode.'</ol></div>';
-            $sourceCode = $this->_stripInvalidXml($sourceCode);
+            $sourceCode = $this->stripInvalidXml($sourceCode);
 
             $doc = new DOMDocument();
             $doc->loadHTML($sourceCode);
@@ -422,7 +425,7 @@ class ViewReview extends ViewAbstract
      *
      * @return array
      */
-    private function _formatIssues($issueList)
+    private function formatIssues($issueList)
     {
         $outputIssues = array();
         foreach ($issueList as $issue) {
@@ -440,7 +443,7 @@ class ViewReview extends ViewAbstract
      * @param string $value
      * @return string
      */
-    private function _stripInvalidXml($value)
+    private function stripInvalidXml($value)
     {
         $ret = "";
         $current = null;
@@ -465,5 +468,4 @@ class ViewReview extends ViewAbstract
         }
         return $ret;
     }
-
 }

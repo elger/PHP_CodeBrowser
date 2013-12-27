@@ -75,14 +75,14 @@ class ErrorCRAPTest extends AbstractTestCase
      *
      * @var ErrorCRAP
      */
-    protected $_errorCrap;
+    protected $errorCrap;
 
     /**
      * The xml string to test the plugin against.
      *
      * @var string
      */
-    protected $_testXml = <<<HERE
+    protected $testXml = <<<HERE
 <?xml version="1.0" encoding="UTF-8"?>
 <coverage generated="1279366386">
   <project timestamp="1279366386">
@@ -121,7 +121,7 @@ class ErrorCRAPTest extends AbstractTestCase
 HERE;
 
     /**
-     * (non-PHPdoc)
+     * (non-PHPDoc)
      * @see tests/cbAbstractTests#setUp()
      */
     protected function setUp()
@@ -129,17 +129,17 @@ HERE;
         parent::setUp();
         $issueXML = new IssueXML();
         $xml = new DOMDocument('1.0', 'UTF-8');
-        $xml->loadXML($this->_testXml);
+        $xml->loadXML($this->testXml);
         $issueXML->addXMLFile($xml);
-        $this->_errorCrap = new ErrorCRAP($issueXML);
+        $this->errorCrap = new ErrorCRAP($issueXML);
     }
 
     /**
-     * Test getFilelist
+     * Test getFileList
      *
      * @return  void
      */
-    public function test__getFilelist()
+    public function testGettingFileList()
     {
         $expected = array(
             new File(
@@ -168,22 +168,22 @@ HERE;
                 array()
             )
         );
-        $actual = $this->_errorCrap->getFilelist();
+        $actual = $this->errorCrap->getFileList();
         $this->assertEquals($expected, $actual);
     }
 
     /**
-     * Test getFilelist with limit set
+     * Test getFileList with limit set
      *
      * @return  void
      */
-    public function test__getFilelistWithLimit()
+    public function testGetFileListWithLimit()
     {
         $issueXML = new IssueXML();
         $xml = new DOMDocument('1.0', 'UTF-8');
-        $xml->loadXML($this->_testXml);
+        $xml->loadXML($this->testXml);
         $issueXML->addXMLFile($xml);
-        $this->_errorCrap = new ErrorCRAP(
+        $this->errorCrap = new ErrorCRAP(
             $issueXML,
             array('threshold' => 30)
         );
@@ -207,8 +207,7 @@ HERE;
                 array()
             )
         );
-        $actual = $this->_errorCrap->getFilelist();
+        $actual = $this->errorCrap->getFileList();
         $this->assertEquals($expected, $actual);
     }
-
 }
