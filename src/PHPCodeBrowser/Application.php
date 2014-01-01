@@ -1,11 +1,10 @@
-#!/usr/bin/env php
 <?php
 /**
- * PHP_CodeBrowser
+ * Application
  *
- * PHP Version 5.2.6
+ * PHP Version 5.3.0
  *
- * Copyright (c) 2007-2009, Mayflower GmbH
+ * Copyright (c) 2007-2014, Mayflower GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,15 +38,65 @@
  *
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
- * @author    Elger Thiele <elger.thiele@mayflower.de>
- * @copyright 2007-2009 Mayflower GmbH
+ * @author    Robin Gloster <robin.gloster@mayflower.de>
+ * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   SVN: $Id$
  * @link      http://www.phpunit.de/
- * @since     File available since  0.1.0
+ * @since     File available since 1.1
  */
+namespace PHPCodeBrowser;
 
-require_once dirname( __FILE__ ) . '/../vendor/autoload.php';
+use PHPCodeBrowser\Command\RunCommand;
+use Symfony\Component\Console\Application as BaseApplication;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Command\Command;
 
-$app = new PHPCodeBrowser\Application();
-$app->run();
+/**
+ * Class Application
+ * @package PHPCodeBrowser
+ */
+class Application extends BaseApplication
+{
+    /**
+     * Gets the name of the command based on input.
+     *
+     * @param InputInterface $input The input interface
+     *
+     * @return string The command name
+     */
+    protected function getCommandName(InputInterface $input)
+    {
+        return 'phpcb:run';
+    }
+
+    /**
+     * Gets the default commands that should always be available.
+     *
+     * @return Command[] An array of default Command instances
+     */
+    protected function getDefaultCommands()
+    {
+        // Adds HelpCommand for --help
+        $defaultCommands = parent::getDefaultCommands();
+
+        $defaultCommands[] = new RunCommand();
+
+        return $defaultCommands;
+    }
+
+    /**
+     * Gets the InputDefinition related to this Application.
+     *
+     * @return InputDefinition The InputDefinition instance
+     */
+    public function getDefinition()
+    {
+        $inputDefinition = parent::getDefinition();
+        // clear out the normal first argument, which is the command name
+        $inputDefinition->setArguments();
+
+        return $inputDefinition;
+    }
+}

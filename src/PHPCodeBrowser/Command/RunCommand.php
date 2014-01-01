@@ -1,11 +1,10 @@
-#!/usr/bin/env php
 <?php
 /**
- * PHP_CodeBrowser
+ * RunCommand
  *
- * PHP Version 5.2.6
+ * PHP Version 5.3.0
  *
- * Copyright (c) 2007-2009, Mayflower GmbH
+ * Copyright (c) 2007-2014, Mayflower GmbH
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -39,15 +38,44 @@
  *
  * @category  PHP_CodeBrowser
  * @package   PHP_CodeBrowser
- * @author    Elger Thiele <elger.thiele@mayflower.de>
- * @copyright 2007-2009 Mayflower GmbH
+ * @author    Robin Gloster <robin.gloster@mayflower.de>
+ * @copyright 2007-2010 Mayflower GmbH
  * @license   http://www.opensource.org/licenses/bsd-license.php  BSD License
  * @version   SVN: $Id$
  * @link      http://www.phpunit.de/
- * @since     File available since  0.1.0
+ * @since     File available since 1.1
  */
 
-require_once dirname( __FILE__ ) . '/../vendor/autoload.php';
+namespace PHPCodeBrowser\Command;
 
-$app = new PHPCodeBrowser\Application();
-$app->run();
+
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+/**
+ * Class RunCommand
+ * @package PHPCodeBrowser\Command
+ */
+class RunCommand extends Command
+{
+    protected function configure()
+    {
+        $this->setName('phpcb:run');
+    }
+
+    /**
+     * Executes the current command.
+     *
+     * @param InputInterface  $input  An InputInterface instance
+     * @param OutputInterface $output An OutputInterface instance
+     *
+     * @return null|integer null or 0 if everything went fine, or an error code
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $output->writeln("Hello phpcb");
+
+        return 0;
+    }
+}
