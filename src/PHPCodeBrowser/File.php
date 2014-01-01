@@ -191,7 +191,7 @@ class File
      * @param File $file The file to merge with.
      * @throws \InvalidArgumentException
      */
-    public function mergeWith($file)
+    public function mergeWith(File $file)
     {
         if ($this->name !== $file->name) {
             throw new \InvalidArgumentException(
