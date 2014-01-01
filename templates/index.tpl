@@ -50,6 +50,7 @@ $occuringErrorTypes = array (
 );
 
 foreach ($fileList as $file) {
+    /** @var $file PHPCodeBrowser\File */
     foreach ($file->getIssues() as $issue) {
         $occuringErrorTypes[$issue->foundBy] = true;
     }
@@ -72,6 +73,7 @@ foreach ($occuringErrorTypes as $errorType) {
 echo '                    </tr>' . PHP_EOL;
 
 // Print the file table
+/** @var $f PHPCodeBrowser\File */
 foreach ($fileList as $filename => $f) {
     $tag = $oddrow ? 'odd' : 'even';
     $oddrow = !$oddrow;

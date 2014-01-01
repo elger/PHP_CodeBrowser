@@ -177,6 +177,8 @@ class ViewReview extends ViewAbstract
 
         $lineNumber = 0;
         $linePlaces = floor(log($lines->length, 10)) + 1;
+
+        /** @var $line DOMElement:: */
         foreach ($lines as $line) {
             ++$lineNumber;
             $line->setAttribute('id', 'line_' . $lineNumber);
@@ -353,52 +355,11 @@ class ViewReview extends ViewAbstract
      */
     protected function highlightCode($file)
     {
-        $highlightMap = array(
-            '.js'   => 'JAVASCRIPT',
-            '.html' => 'HTML',
-            '.css'  => 'CSS',
-        );
-
         $sourceCode = $this->ioHelper->loadFile($file);
         $extension  = pathinfo($file, PATHINFO_EXTENSION);
 
         if (in_array($extension, $this->phpSuffixes)) {
             return $this->highlightPhpCode($sourceCode);
-        } elseif (class_exists('Text_Highlighter', false)
-                && isset($highlightMap[$extension])) {
-            $renderer = new \Text_Highlighter_Renderer_Html(
-                array(
-                    'numbers' => HL_NUMBERS_LI,
-                    'tabsize' => 4,
-                    'class_map' => array(
-                        'comment'    => 'comment',
-                        'main'       => 'code',
-                        'table'      => 'table',
-                        'gutter'     => 'gutter',
-                        'brackets'   => 'brackets',
-                        'builtin'    => 'keyword',
-                        'code'       => 'code',
-                        'default'    => 'default',
-                        'identifier' => 'default',
-                        'inlinedoc'  => 'inlinedoc',
-                        'inlinetags' => 'inlinetags',
-                        'mlcomment'  => 'mlcomment',
-                        'number'     => 'number',
-                        'quotes'     => 'string',
-                        'reserved'   => 'keyword',
-                        'special'    => 'special',
-                        'string'     => 'string',
-                        'url'        => 'url',
-                        'var'        => 'var',
-                    )
-                )
-            );
-            $highlighter = \Text_Highlighter::factory($highlightMap[$extension]);
-            $highlighter->setRenderer($renderer);
-
-            $doc = new DOMDocument();
-            $doc->loadHTML($highlighter->highlight($sourceCode));
-            return $doc;
         } else {
             $sourceCode = preg_replace(
                 '/^.*$/m',

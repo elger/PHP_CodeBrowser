@@ -49,7 +49,6 @@
 namespace PHPCodeBrowser\Tests\View;
 
 use PHPCodeBrowser\File;
-use PHPCodeBrowser\Helper\IOHelper;
 use PHPCodeBrowser\Issue;
 use PHPCodeBrowser\Tests\AbstractTestCase;
 use PHPCodeBrowser\View\ViewReview;

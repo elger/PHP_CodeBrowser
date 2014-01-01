@@ -9,7 +9,7 @@
          processIsolation="false"
          stopOnFailure="false"
          syntaxCheck="false"
-         bootstrap="./src/PHPCodeBrowser/Tests/bootstrap.php"
+         bootstrap="./vendor/autoload.php"
 >
     <testsuites>
         <testsuite name="PHP_CodeBrowser">

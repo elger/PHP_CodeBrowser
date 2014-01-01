@@ -304,8 +304,8 @@ HERE
      */
     private function handleBackwardCompatibility(array $option)
     {
-        if (count($option) == 1 && strpos($option, ',') !== false) {
-            $option = explode(',', $option);
+        if (count($option) == 1 && strpos($option[0], ',') !== false) {
+            $option = explode(',', $option[0]);
             error_log('Usage of comma-separated options is deprecated, specify them one-by-one.', E_DEPRECATED);
         }
 

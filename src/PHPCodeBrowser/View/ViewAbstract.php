@@ -198,7 +198,7 @@ class ViewAbstract
     /**
      * Convert a list of files to a html fragment for jstree.
      *
-     * @param array $fileList       The files, format: array('name' => File).
+     * @param File[] $fileList       The files, format: array('name' => File).
      * @param string $hrefPrefix    The prefix to put before all href= tags.
      *
      * @return string  The html fragment.

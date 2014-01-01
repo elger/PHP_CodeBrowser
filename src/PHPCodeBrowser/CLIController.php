@@ -309,9 +309,6 @@ class CLIController
             // Get the path prefix all files have in common
             $commonPathPrefix = $sourceHandler->getCommonPathPrefix();
 
-            $error_reporting = ini_get('error_reporting');
-            // Disable E_Strict, Text_Highlighter might throw up
-            ini_set('error_reporting', $error_reporting & ~E_STRICT);
             foreach ($files as $file) {
                 $viewReview->generate(
                     $file->getIssues(),
@@ -320,7 +317,6 @@ class CLIController
                     $this->excludeOK
                 );
             }
-            ini_set('error_reporting', $error_reporting);
 
             // Copy needed resources (eg js libraries) to output directory
             $viewReview->copyResourceFolders();
