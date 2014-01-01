@@ -49,8 +49,6 @@
 
 namespace PHPCodeBrowser;
 
-use Console_CommandLine;
-use Exception;
 use File_Iterator_Factory;
 use Monolog\Logger;
 use PHPCodeBrowser\Helper\IOHelper;

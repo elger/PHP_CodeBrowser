@@ -366,7 +366,7 @@ class ViewReview extends ViewAbstract
             return $this->highlightPhpCode($sourceCode);
         } elseif (class_exists('Text_Highlighter', false)
                 && isset($highlightMap[$extension])) {
-            $renderer = new Text_Highlighter_Renderer_Html(
+            $renderer = new \Text_Highlighter_Renderer_Html(
                 array(
                     'numbers' => HL_NUMBERS_LI,
                     'tabsize' => 4,
@@ -393,7 +393,7 @@ class ViewReview extends ViewAbstract
                     )
                 )
             );
-            $highlighter = Text_Highlighter::factory($highlightMap[$extension]);
+            $highlighter = \Text_Highlighter::factory($highlightMap[$extension]);
             $highlighter->setRenderer($renderer);
 
             $doc = new DOMDocument();

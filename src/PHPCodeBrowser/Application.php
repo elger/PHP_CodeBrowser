@@ -50,7 +50,6 @@ namespace PHPCodeBrowser;
 use PHPCodeBrowser\Command\RunCommand;
 use Symfony\Component\Console\Application as BaseApplication;
 use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Command\Command;
 
 /**
