@@ -48,6 +48,7 @@
 namespace PHPCodeBrowser\Tests;
 
 use Exception;
+use Monolog\Handler\NullHandler;
 use Monolog\Logger;
 use PHPCodeBrowser\File;
 use PHPCodeBrowser\Issue;
@@ -86,6 +87,11 @@ class SourceHandlerTest extends AbstractTestCase
      * @var array of PluginsAbstract
      */
     protected $plugins;
+
+    /**
+     * @var Logger
+     */
+    private $logger;
 
     /**
      * Initializes common values.
@@ -140,7 +146,11 @@ HERE
     protected function setUp()
     {
         parent::setUp();
-        $this->sourceHandler = new SourceHandler(new Logger('PHPCodeBrowser'));
+
+        $this->logger = new Logger('PHPCodeBrowser');
+        $this->logger->pushHandler(new NullHandler());
+
+        $this->sourceHandler = new SourceHandler($this->logger);
         array_walk(
             $this->plugins,
             array($this->sourceHandler, 'addPlugin')
@@ -155,7 +165,7 @@ HERE
     public function testInstantiation()
     {
         $sourceHandler = new SourceHandler(
-            new Logger('PHPCodeBrowser'),
+            $this->logger,
             $this->plugins
         );
         $this->assertEquals($this->sourceHandler, $sourceHandler);

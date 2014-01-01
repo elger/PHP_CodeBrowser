@@ -62,11 +62,9 @@ class Application extends BaseApplication
     /**
      * Gets the name of the command based on input.
      *
-     * @param InputInterface $input The input interface
-     *
      * @return string The command name
      */
-    protected function getCommandName(InputInterface $input)
+    protected function getCommandName()
     {
         return 'phpcb:run';
     }

@@ -93,7 +93,7 @@ class IOHelper
     /**
      * Delete a file. The filename could inherit a absolute or relative
      * path-to-file,
-     * e.g. foo/bar/myfile.php
+     * e.g. foo/bar/myFile.php
      *
      * @param string $fileName The (path-to) filename
      *
@@ -147,7 +147,7 @@ class IOHelper
 
     /**
      * Create a directory and its inherit path to directory if not present,
-     * e.g. path/that/does/not/exist/myfolder/
+     * e.g. path/that/does/not/exist/myFolder/
      *
      * @param string $target The target folder to create
      *
@@ -242,16 +242,16 @@ class IOHelper
 
     /**
      * Get the prefix all paths in an array of paths have in common.
-     * @param array $filenames
+     * @param array $fileNames
      * @return string
      */
-    public static function getCommonPathPrefix(array $filenames)
+    public static function getCommonPathPrefix(array $fileNames)
     {
-        if (empty($filenames)) {
+        if (empty($fileNames)) {
             return '/';
         }
-        $prefix = dirname(array_shift($filenames));
-        foreach ($filenames as $filename) {
+        $prefix = dirname(array_shift($fileNames));
+        foreach ($fileNames as $filename) {
             $prefix = self::getCurrentCommonPathPrefix($prefix, $filename);
         }
 

@@ -306,7 +306,7 @@ class ViewAbstract
      * Rendered content is read from output buffer.
      *
      * @param string $templateName Template file to use for rendering
-     * @param array  $data         Given dataset to use for rendering
+     * @param array  $data         Given data set to use for rendering
      *
      * @return string              HTML files as string from output buffer
      */

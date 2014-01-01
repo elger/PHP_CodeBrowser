@@ -3,8 +3,6 @@
     "description": "A code browser that augments the code with information from various QA tools.",
     "license": "BSD-2-Clause",
     "require": {
-        "pear/console_commandline": "dev-trunk",
-        "pear/pear_exception": "dev-master",
         "phpunit/php-file-iterator": "~1.3",
         "monolog/monolog": "~1.7",
         "symfony/console": "~2.4"

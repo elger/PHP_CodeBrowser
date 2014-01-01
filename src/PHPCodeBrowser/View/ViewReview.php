@@ -347,7 +347,7 @@ class ViewReview extends ViewAbstract
      * If PEAR Text_Highlighter is installed all defined files in $highlightMap
      * will be highlighted as well.
      *
-     * @param string $file The filename / realpath to file
+     * @param string $file The filename / real path to file
      *
      * @return DOMDocument Html representation of parsed source code
      */

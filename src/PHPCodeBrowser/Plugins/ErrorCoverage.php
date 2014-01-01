@@ -173,16 +173,16 @@ class ErrorCoverage extends PluginsAbstract
      */
     public function getFilesWithIssues()
     {
-        $filenames  = array();
+        $fileNames  = array();
         $issueNodes = $this->issueXml->query(
             '/*/'.$this->pluginName.'/*/file[@name]'
         );
 
         foreach ($issueNodes as $node) {
-            $filenames[] = $node->getAttribute('name');
+            $fileNames[] = $node->getAttribute('name');
         }
 
-        return array_unique($filenames);
+        return array_unique($fileNames);
     }
 
     /**
