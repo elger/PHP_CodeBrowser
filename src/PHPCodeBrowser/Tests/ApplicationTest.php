@@ -1,10 +1,8 @@
 <?php
 
 namespace PHPCodeBrowser\Tests;
-use PHPCodeBrowser\Application;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\StringInput;
 
+use PHPCodeBrowser\Application;
 
 /**
  * Class ApplicationTest
