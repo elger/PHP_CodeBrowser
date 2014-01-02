@@ -57,6 +57,7 @@ use PHPCodeBrowser\Helper\IOHelper;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Class RunCommand
@@ -144,11 +145,12 @@ class RunCommand extends Command
     /**
      * Executes the current command.
      *
-     * @param InputInterface  $input  An InputInterface instance
+     * @param InputInterface $input An InputInterface instance
+     * @param OutputInterface $output
      *
      * @return null|integer null or 0 if everything went fine, or an error code
      */
-    protected function execute(InputInterface $input)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->checkErrors($input);
 
