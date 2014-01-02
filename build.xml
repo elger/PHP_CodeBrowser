@@ -13,12 +13,12 @@
 
  <!-- Run unit tests and generate junit.xml and clover.xml -->
  <target name="phpunit">
-  <exec executable="phpunit" failonerror="true"/>
+     <exec executable="vendor/bin/phpunit" failonerror="true"/>
  </target>
 
  <!-- Generate jdepend.xml and software metrics charts -->
  <target name="pdepend">
-  <exec executable="pdepend">
+  <exec executable="vendor/bin/pdepend">
    <arg line="--jdepend-xml='${basedir}/build/logs/jdepend.xml'
               --jdepend-chart='${basedir}/build/pdepend/dependencies.svg'
               --overview-pyramid='${basedir}/build/pdepend/overview-pyramid.svg'
@@ -28,21 +28,21 @@
 
  <!-- Generate pmd.xml -->
  <target name="phpmd">
-  <exec executable="phpmd">
+  <exec executable="vendor/bin/phpmd">
    <arg line="src xml codesize,design,naming,unusedcode --reportfile '${basedir}/build/logs/pmd.xml'" />
   </exec>
  </target>
 
  <!-- Generate pmd-cpd.xml -->
  <target name="phpcpd">
-  <exec executable="phpcpd">
+  <exec executable="vendor/bin/phpcpd">
    <arg line="--log-pmd '${basedir}/build/logs/pmd-cpd.xml' src" />
   </exec>
  </target>
 
  <!-- Generate checkstyle.xml -->
  <target name="phpcs">
-  <exec executable="phpcs">
+  <exec executable="vendor/bin/phpcs">
    <arg value="--report=checkstyle" />
    <arg value="--report-file=${basedir}/build/logs/checkstyle.xml" />
    <arg value="--standard=PSR2" />
@@ -72,7 +72,7 @@
    <antcall target="phpmd"/>
    <antcall target="phpcpd"/>
    <antcall target="phpcs"/>
-   <antcall target="phpdoc"/>
+   <!-- <antcall target="phpdoc"/> -->
    <antcall target="phpunit"/>
    <antcall target="phpcb"/>
  </target>
