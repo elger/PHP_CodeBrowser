@@ -120,7 +120,7 @@ class SourceHandler
     /**
      * Add source files to the list.
      *
-     * @param SplFileInfo[]|string[] $files The files to add
+     * @param SplFileInfo[]|string[]|\AppendIterator $files The files to add
      */
     public function addSourceFiles($files)
     {

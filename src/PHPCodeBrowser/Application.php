@@ -65,7 +65,7 @@ class Application extends BaseApplication
      */
     protected function getCommandName()
     {
-        return 'phpcb:run';
+        return 'phpcb';
     }
 
     /**

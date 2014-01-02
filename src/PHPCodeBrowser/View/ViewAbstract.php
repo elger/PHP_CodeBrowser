@@ -110,14 +110,14 @@ class ViewAbstract
      */
     public function __construct($templateDir, $outputDir, IOHelper $ioHelper)
     {
-        $this->templateDir = realpath($templateDir);
+        $this->templateDir = $templateDir;
         if (!$this->templateDir) {
             throw new Exception(
                 "Specified template directory '$templateDir' does not exist"
             );
         }
 
-        $this->outputDir = realpath($outputDir);
+        $this->outputDir = $outputDir;
         if (!$this->outputDir) {
             throw new Exception(
                 "Specified output directory '$outputDir' does not exist"
