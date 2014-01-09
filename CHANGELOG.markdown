@@ -1,3 +1,7 @@
+PHP_CodeBrowser 1.1.0
+-------------------
+* Switch to stable composer dependencies (Symfony2 Console and Monolog)
+
 PHP_CodeBrowser 1.0.4
 -------------------
 * Fix invalid XML errors
