@@ -36,6 +36,10 @@
 Add this line to the require section in composer.json:
 
     "mayflower/php-codebrowser": "~1.1"
+
+Or to install it globally
+
+    composer global require "mayflower/php-codebrowser=~1.1"
     
 ### Get PHAR ###
     
