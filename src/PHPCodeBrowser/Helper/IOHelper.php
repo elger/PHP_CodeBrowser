@@ -158,9 +158,9 @@ class IOHelper
         $target = rtrim($target, DIRECTORY_SEPARATOR);
 
         if (!is_dir($target))
-		{
-			mkdir($target, 0777, true);
-		}
+	{
+		mkdir($target, 0777, true);
+	}
     }
 
     /**
