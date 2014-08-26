@@ -175,7 +175,7 @@ class ErrorCoverage extends PluginsAbstract
     {
         $fileNames  = array();
         $issueNodes = $this->issueXml->query(
-            '/*/'.$this->pluginName.'/*/file[@name]'
+            '/*/'.$this->pluginName.'/*//file[@name]'
         );
 
         foreach ($issueNodes as $node) {
@@ -194,7 +194,7 @@ class ErrorCoverage extends PluginsAbstract
     protected function getIssueNodes($filename)
     {
         return $this->issueXml->query(
-            '/*/'.$this->pluginName.'/*/file[@name="'.$filename.'"]'
+            '/*/'.$this->pluginName.'/*//file[@name="'.$filename.'"]'
         );
     }
 }
