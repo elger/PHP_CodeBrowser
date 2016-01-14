@@ -155,15 +155,11 @@ class IOHelper
      */
     public function createDirectory($target)
     {
-        if (DIRECTORY_SEPARATOR == substr($target, - 1, 1)) {
-            $target = substr($target, 0, -1);
-        }
-        $dirs = explode(DIRECTORY_SEPARATOR, $target);
-        $path = '';
-        foreach ($dirs as $folder) {
-            if (!is_dir($path = $path . $folder . DIRECTORY_SEPARATOR)) {
-                mkdir($path);
-            }
+        $target = rtrim($target, DIRECTORY_SEPARATOR);
+
+        if (!is_dir($target))
+        {
+            mkdir($target, 0777, true);
         }
     }
 
