@@ -89,6 +89,11 @@ class File
      */
     public function __construct($name, array $issues = array())
     {
+        if (DIRECTORY_SEPARATOR !== '/')
+        {
+            $name = str_replace('/', DIRECTORY_SEPARATOR, $name);
+        }
+
         $this->name = $name;
         $this->issues = $issues;
     }
