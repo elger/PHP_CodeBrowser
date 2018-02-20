@@ -5,19 +5,27 @@
         "Herrera\\Box\\Compactor\\Json",
         "Herrera\\Box\\Compactor\\Php"
     ],
-    "directories": ["src/", "vendor", "templates"],
+    "directories": ["src", "templates"],
     "extract": true,
     "files": [
-        "LICENSE"
+        "LICENSE",
+        "vendor/autoload.php"
     ],
     "finder": [
         {
             "name": "*.php",
-            "exclude": [
-                "phpunit",
-                "phpunit-test-case",
-                "Tester",
+            "path": [
+                "composer",
+                "monolog/monolog",
+                "phpunit/php-file-iterator",
+                "symfony/console",
+                "symfony/polyfill-mbstring",
+                "myclabs/deep-copy",
+                "psr/log"
+            ],
+            "notPath": [
                 "Tests",
+                "test",
                 "tests"
             ],
             "in": "vendor"
