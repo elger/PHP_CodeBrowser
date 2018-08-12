@@ -8,6 +8,11 @@
             "name": "Robin Gloster",
             "email": "robin.gloster@mayflower.de",
             "role": "developer"
+        },
+        {
+            "name": "Christian Albrecht",
+            "email": "christian.albrecht@mayflower.de",
+            "role": "developer"
         }
     ],
     "require": {
