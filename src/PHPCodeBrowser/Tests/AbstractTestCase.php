@@ -183,7 +183,7 @@ class AbstractTestCase extends \PHPUnit\Framework\TestCase
             }
 
             // delete folder recursive
-            if (! $iterator->isDot() && $iterator->isDir()) {
+            if (!$iterator->isDot() && $iterator->isDir()) {
                 $this->cleanUp($dir.'/'.$iterator->current());
                 rmdir($dir.'/'.$iterator->current());
             }

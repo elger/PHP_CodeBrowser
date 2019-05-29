@@ -203,7 +203,7 @@ class IOHelper
             }
 
             // delete folder recursive
-            if (! $iterator->isDot() && $iterator->isDir()) {
+            if (!$iterator->isDot() && $iterator->isDir()) {
                 $this->deleteDirectory($src);
             }
 
