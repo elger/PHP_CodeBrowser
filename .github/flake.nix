@@ -18,9 +18,9 @@
       });
 
       phpVersions = [
-        "php73"
-        "php74"
         "php80"
+        "php81"
+        "php82"
       ];
     in
     {
