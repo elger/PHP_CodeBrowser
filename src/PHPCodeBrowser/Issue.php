@@ -83,21 +83,21 @@ class Issue
      *
      * @var string
      */
-    public $fileName;
+    private $fileName;
 
     /**
      * Starting Line of the Issue.
      *
      * @var int
      */
-    public $lineStart;
+    private $lineStart;
 
     /**
      * Ending Line of the Issue.
      *
      * @var int
      */
-    public $lineEnd;
+    private $lineEnd;
 
     /**
      * Name of the Plugin that found the Issue.
@@ -105,21 +105,21 @@ class Issue
      *
      * @var string
      */
-    public $foundBy;
+    private $foundBy;
 
     /**
      * Issue Description text.
      *
      * @var string
      */
-    public $description;
+    private $description;
 
     /**
      * Severity of the issue.
      *
      * @var string
      */
-    public $severity;
+    private $severity;
 
     /**
      * Default constructor
@@ -139,5 +139,101 @@ class Issue
         $this->foundBy     = $foundBy;
         $this->description = $description;
         $this->severity    = $severity;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFileName(): string
+    {
+        return $this->fileName;
+    }
+
+    /**
+     * @param string $fileName
+     */
+    public function setFileName(string $fileName): void
+    {
+        $this->fileName = $fileName;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLineStart(): int
+    {
+        return $this->lineStart;
+    }
+
+    /**
+     * @param int $lineStart
+     */
+    public function setLineStart(int $lineStart): void
+    {
+        $this->lineStart = $lineStart;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLineEnd(): int
+    {
+        return $this->lineEnd;
+    }
+
+    /**
+     * @param int $lineEnd
+     */
+    public function setLineEnd(int $lineEnd): void
+    {
+        $this->lineEnd = $lineEnd;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFoundBy(): string
+    {
+        return $this->foundBy;
+    }
+
+    /**
+     * @param string $foundBy
+     */
+    public function setFoundBy(string $foundBy): void
+    {
+        $this->foundBy = $foundBy;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    /**
+     * @param string $description
+     */
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSeverity(): string
+    {
+        return $this->severity;
+    }
+
+    /**
+     * @param string $severity
+     */
+    public function setSeverity(string $severity): void
+    {
+        $this->severity = $severity;
     }
 }

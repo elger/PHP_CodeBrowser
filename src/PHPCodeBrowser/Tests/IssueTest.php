@@ -115,11 +115,11 @@ class IssueTest extends AbstractTestCase
      */
     public function testInstantiation(): void
     {
-        $this->assertSame($this->issue->fileName, 'testFileName');
-        $this->assertSame($this->issue->lineStart, 23);
-        $this->assertSame($this->issue->lineEnd, 27);
-        $this->assertSame($this->issue->foundBy, 'testFinder');
-        $this->assertSame($this->issue->description, 'testDescription');
-        $this->assertSame($this->issue->severity, 'notice');
+        $this->assertSame($this->issue->getFileName(), 'testFileName');
+        $this->assertSame($this->issue->GetLineStart(), 23);
+        $this->assertSame($this->issue->GetLineEnd(), 27);
+        $this->assertSame($this->issue->GetFoundBy(), 'testFinder');
+        $this->assertSame($this->issue->GetDescription(), 'testDescription');
+        $this->assertSame($this->issue->GetSeverity(), 'notice');
     }
 }
