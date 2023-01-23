@@ -17,7 +17,8 @@
                 "phpunit/php-file-iterator",
                 "psr/log",
                 "symfony/console",
-                "symfony/service-contracts"
+                "symfony/service-contracts",
+                "symfony/string"
             ],
             "notPath": [
                 "Tests",
@@ -29,5 +30,5 @@
     ],
     "git-commit": "git-commit",
     "git-version": "git-version",
-    "output": "phpcb-3.0.1.phar"
+    "output": "phpcb-3.0.2.phar"
 }
